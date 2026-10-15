@@ -63,7 +63,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Todo en espa�
    {"fecha": "AAAA-MM-DD", "titulo": "...", "url_fuente": "...", "video": "videos/AAAA-MM-DD.mp4", "metricool": "<plannerUrl o id>"}
    ```
    Commit + push.
-9. **Limpieza.** Borrá con `git rm` los MP4 de `videos/` con más de 14 días (ya publicados) para que el repo no crezca. Nunca toques `plantilla/` ni `historial.json` salvo para agregar entradas.
+9. **Limpieza.** Metricool descarga el video y guarda su propia copia (la respuesta trae `media` en `static.metricool.com`), así que el MP4 ya no hace falta en el repo. Borrá con `git rm` los MP4 de `videos/` con más de 3 días para que el repo no crezca. Nunca toques `plantilla/` ni `historial.json` salvo para agregar entradas.
 10. **Informe final** (2–4 líneas): título elegido, fuente, hora programada y link de Metricool, o el motivo por el que no se publicó.
 
 ## Prohibido
