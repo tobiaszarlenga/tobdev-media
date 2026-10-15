@@ -11,7 +11,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Todo en espa�
 | Metricool blogId | `7428605` (marca tobdev.ia, timezone `America/Buenos_Aires`) |
 | Red | solo Instagram, tipo `REEL` |
 | Hora de publicación | 19:00 hora Argentina del mismo día |
-| MODO | `aprobacion` → `autoPublish: false` (Tob confirma desde la app de Metricool). Cambiar a `automatico` → `autoPublish: true` cuando Tob lo pida. |
+| MODO | `automatico` → `autoPublish: true`. Se programa a la mañana y se publica solo a las 19:00; Tob puede vetarlo borrándolo en Metricool antes. Si Tob pide `aprobacion`, usar `autoPublish: false`. |
 | Tope mensual | 18 reels publicados por mes calendario (el plan gratis de Metricool permite 20; dejamos margen) |
 
 ## Pasos
@@ -45,7 +45,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Todo en espa�
    - `info`:
      ```json
      {
-       "autoPublish": false,
+       "autoPublish": true,
        "draft": false,
        "text": "<caption>",
        "firstCommentText": "",
@@ -71,4 +71,4 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Todo en espa�
 - Subir a este repo cualquier video o dato de clientes (es público).
 - Publicar sin `isAiGenerated: true`.
 - Temas políticos, de salud, finanzas especulativas o rumores sin fuente oficial.
-- Cambiar `autoPublish` a `true` si MODO sigue en `aprobacion`.
+- Programar para una hora ya pasada o para otro día: siempre hoy a las 19:00. Si ya son más de las 18:30, no publiques e informalo.
