@@ -1,1 +1,11 @@
-{"publicados": []}
+{
+ "publicados": [
+  {
+   "fecha": "2026-10-14",
+   "titulo": "Google usa IA en Android para frenar estafas",
+   "url_fuente": "https://www.infobae.com/tecno/2026/10/14/google-reforzo-la-deteccion-de-estafas-en-android-con-un-nuevo-modo-de-inteligencia-artificial/",
+   "video": "videos/2026-10-14.mp4",
+   "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-8815107791017786175"
+  }
+ ]
+}
