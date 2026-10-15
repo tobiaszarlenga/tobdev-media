@@ -27,13 +27,16 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Todo en espa�
    ```json
    {
      "fecha": "16 OCT",
-     "titulo": "30–75 caracteres, concreto, sin clickbait",
+     "titulo": "30–75 caracteres, declarativo, concreto, sin clickbait",
+     "destacado": "las 2–4 palabras FINALES del título que van en degradé (la idea clave)",
      "puntos": ["≤100 caracteres", "≤100 caracteres", "≤100 caracteres"],
      "negocio": "≤110 caracteres: qué significa para un negocio real",
      "fuente": "Medio u organización (ej. Anthropic, blog oficial)"
    }
    ```
    Reglas: solo datos que estén en la fuente; nada de cifras inventadas; sin emojis dentro del video; nombres propios bien escritos.
+   Voz de marca TobDev: español rioplatense con voseo, directo, técnico, **sin hype** ("sin promesas infladas"). Nada de "revolucionario", "increíble", "cambia todo".
+   El diseño (colores, fuentes, logo) ya está fijo en la plantilla según el sistema de diseño de TobDev: no lo toques.
 5. **Render.** Si falta numpy/scipy: `pip install --break-system-packages numpy scipy`. Después:
    ```bash
    python3 plantilla/make_reel.py noticia.json videos/AAAA-MM-DD.mp4
