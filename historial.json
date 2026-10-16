@@ -1,18 +1,25 @@
 {
- "publicados": [
-  {
-   "fecha": "2026-10-14",
-   "titulo": "Google usa IA en Android para frenar estafas",
-   "url_fuente": "https://www.infobae.com/tecno/2026/10/14/google-reforzo-la-deteccion-de-estafas-en-android-con-un-nuevo-modo-de-inteligencia-artificial/",
-   "video": "videos/2026-10-14.mp4",
-   "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-8815107791017786175"
-  },
-  {
-   "fecha": "2026-10-15",
-   "titulo": "Gemini 4 Argon ya está disponible para empresas",
-   "url_fuente": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/",
-   "video": "videos/2026-10-15.mp4",
-   "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=2849333810663213765"
-  }
- ]
+  "publicados": [
+    {
+      "fecha": "2026-10-14",
+      "titulo": "Google usa IA en Android para frenar estafas",
+      "url_fuente": "https://www.infobae.com/tecno/2026/10/14/google-reforzo-la-deteccion-de-estafas-en-android-con-un-nuevo-modo-de-inteligencia-artificial/",
+      "video": "videos/2026-10-14.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-8815107791017786175"
+    },
+    {
+      "fecha": "2026-10-15",
+      "titulo": "Gemini 4 Argon ya está disponible para empresas",
+      "url_fuente": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/",
+      "video": "videos/2026-10-15.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=2849333810663213765"
+    },
+    {
+      "fecha": "2026-10-16",
+      "titulo": "Microsoft lanza Copilot para el trabajo legal",
+      "url_fuente": "https://www.lawnext.com/2026/10/microsoft-launches-copilot-for-legal-becoming-the-fourth-ai-giant-in-five-months-to-build-out-a-legal-vertical.html",
+      "video": "videos/2026-10-16.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=8997401282500840008"
+    }
+  ]
 }
