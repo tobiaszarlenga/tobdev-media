@@ -1,0 +1,52 @@
+{
+  "fecha": "18 OCT",
+  "fuente": "OpenAI · centro de ayuda",
+  "acento": "#19C37D",
+  "voz": "em_alex",
+  "beats": [
+    {
+      "texto": "Escribís *una frase*, y {ChatGPT|chat yi pi ti} te arma la *presentación entera*.",
+      "escena": {"tipo": "prompt", "texto": "Armame 6 diapositivas para presentarle el presupuesto a un cliente"}
+    },
+    {
+      "texto": "{OpenAI|open ei ai} acaba de sumar *{Slides|slaids}* adentro de {ChatGPT|chat yi pi ti}.",
+      "escena": {"tipo": "capas", "items": ["Presupuesto 2027", "Alcance", "Etapas de obra", "Costos", "Próximos pasos"]}
+    },
+    {
+      "texto": "Le pasás un *archivo*, una *charla* o un *esquema*, y lo convierte en diapositivas que podés editar.",
+      "escena": {"tipo": "flujo", "entradas": [{"texto": "presupuesto.xlsx", "icono": "archivo", "en": "archivo"}, {"texto": "Conversación", "icono": "chat", "en": "charla"}, {"texto": "Esquema", "icono": "lista", "en": "esquema"}], "salida": "Presentación editable", "en": "convierte"}
+    },
+    {
+      "texto": "Tu equipo la edita *al mismo tiempo*. Y si en un comentario arrobás a {ChatGPT|chat yi pi ti}, *hace el cambio solo*.",
+      "escena": {"tipo": "cursores", "personas": ["Sofi", "Martín"], "comentario": "@ChatGPT acortá este título", "en_comentario": "comentario", "antes": "Propuesta comercial y presupuesto detallado del proyecto 2027", "despues": "Propuesta 2027", "en_cambio": "cambio"}
+    },
+    {
+      "texto": "Después la exportás a {PowerPoint|pauer point}, {PDF|pe de efe} o {Google Slides|gugol slaids}.",
+      "escena": {"tipo": "chips", "estilo": "archivo", "items": [{"texto": "PowerPoint", "sub": "PPTX", "en": "PowerPoint"}, {"texto": "PDF", "sub": "PDF", "en": "PDF"}, {"texto": "Google Slides", "sub": "SLIDES", "en": "Google"}]}
+    },
+    {
+      "texto": "Por ahora está en los planes *{Pro|pro}*, *{Business|bísnes}* y *{Enterprise|énterprais}*, y se habilita *de a poco*.",
+      "escena": {"tipo": "chips", "estilo": "etiqueta", "items": [{"texto": "Pro", "en": "Pro"}, {"texto": "Business", "en": "Business"}, {"texto": "Enterprise", "en": "Enterprise"}], "barra": {"texto": "Habilitándose", "valor": 0.4, "en": "habilita"}}
+    },
+    {
+      "texto": "¿Y para *tu negocio?*",
+      "escena": {"tipo": "frase"}
+    },
+    {
+      "texto": "Presupuestos, propuestas o informes para clientes,",
+      "escena": {"tipo": "lista", "items": [{"texto": "Presupuestos", "en": "Presupuestos"}, {"texto": "Propuestas", "en": "propuestas"}, {"texto": "Informes para clientes", "en": "informes"}]}
+    },
+    {
+      "texto": "en *minutos*, y no en una tarde.",
+      "escena": {"tipo": "reloj", "antes": "Una tarde", "despues": "Minutos", "en": "minutos"}
+    },
+    {
+      "texto": "Eso sí: *revisá los números* antes de mandarla. La {IA|i a} se puede equivocar.",
+      "escena": {"tipo": "alerta", "titulo": "Revisá antes de mandar", "filas": [["Materiales", "$ 1.240.000"], ["Mano de obra", "$ 860.000"], ["Total", "$ 2.010.000"]], "marcar": 2, "en": "números"}
+    },
+    {
+      "texto": "Seguí a {@tobdev.ia|tob dev punto i a} para más {IA|i a} aplicada a negocios.",
+      "escena": {"tipo": "cierre"}
+    }
+  ]
+}
