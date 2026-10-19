@@ -9,7 +9,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
 | Clave | Valor |
 |---|---|
 | Repo | `tobiaszarlenga/tobdev-media` (público, GitHub Pages en `main` / raíz) |
-| URL pública de videos | `https://tobiaszarlenga.github.io/tobdev-media/videos/<archivo>.mp4` |
+| URL pública de videos | `https://raw.githubusercontent.com/tobiaszarlenga/tobdev-media/main/videos/<archivo>.mp4` (respaldo: GitHub Pages) |
 | Metricool blogId | `7428605` (marca tobdev.ia, timezone `America/Buenos_Aires`) |
 | Red | solo Instagram, tipo `REEL` |
 | Hora de publicación | 19:00 hora Argentina del mismo día |
@@ -35,12 +35,16 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    - Voz de marca TobDev: español rioplatense con voseo, directo, técnico, **sin hype**. Nada de "revolucionario", "increíble", "cambia todo".
    - Último beat: `cierre`.
    El diseño base (fondo, fuentes, logo, cierre) está fijo en la plantilla según el sistema de diseño de TobDev: no lo toques. Hay un guion de ejemplo en `plantilla/ejemplo-guion.json`.
-5. **Render.** Instalá lo que falte: `pip install --break-system-packages numpy scipy soundfile kokoro-onnx`. Después:
+5. **Revisar y renderizar.** Instalá lo que falte: `pip install --break-system-packages numpy scipy soundfile kokoro-onnx`. Después, en dos pasos:
+   ```bash
+   python3 plantilla/make_reel2.py guion.json videos/AAAA-MM-DD.mp4 --revisar
+   ```
+   Valida el guion (`ERROR` frena: corregí y repetí; `AVISO`: corregilo si tiene sentido), arma la voz y el HTML (menos de 1 minuto) e imprime `REVISAR <ruta>`: una hoja de contacto con un fotograma por escena. Mirala con Read (es una sola imagen): texto cortado, superposiciones, algo fuera de pantalla o una escena vacía. Si hay que corregir, cambiá el guion y repetí `--revisar` (máximo 2 veces).
    ```bash
    python3 plantilla/make_reel2.py guion.json videos/AAAA-MM-DD.mp4
    ```
-   Tarda 8 a 10 minutos. Verificá con `ffprobe` que dure entre 35 y 60 s y sea 1080x1920. Extraé 4 fotogramas (al 15 %, 40 %, 65 % y 85 % de la duración) y miralos con Read: texto cortado, superposiciones, algo fuera de pantalla o una escena vacía. Si algo falla, corregí el guion (textos más cortos, otra escena) y volvé a renderizar (máximo 2 intentos). Si sigue fallando, no publiques e informá el error.
-6. **Subir.** `git add videos/AAAA-MM-DD.mp4 && git commit && git push`. Esperá ~2 minutos a que GitHub Pages lo publique.
+   Reusa lo que armó `--revisar`, renderiza (4 a 6 minutos; correlo en primer plano con timeout de 10 minutos) y verifica duración y tamaño solo. Si imprime `OK`, listo: no hace falta mirar fotogramas del video final. Si falla dos veces, no publiques e informá el error.
+6. **Subir.** `git add videos/AAAA-MM-DD.mp4 && git commit && git push`. No hace falta esperar a GitHub Pages.
 7. **Programar en Metricool** con `createScheduledPost`:
    - `blogId`: `7428605`; `date`: hoy 19:00 `-03:00`.
    - `info`:
@@ -50,7 +54,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
        "draft": false,
        "text": "<caption>",
        "firstCommentText": "",
-       "media": ["https://tobiaszarlenga.github.io/tobdev-media/videos/AAAA-MM-DD.mp4"],
+       "media": ["https://raw.githubusercontent.com/tobiaszarlenga/tobdev-media/main/videos/AAAA-MM-DD.mp4"],
        "providers": [{"network": "instagram"}],
        "publicationDate": {"dateTime": "AAAA-MM-DDT19:00:00", "timezone": "America/Buenos_Aires"},
        "instagramData": {"type": "REEL", "showReelOnFeed": true, "isAiGenerated": true},
@@ -58,7 +62,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
      }
      ```
    - Caption según `CONTENIDO.md`: primera línea = gancho (≤90 caracteres); 2–4 líneas con valor que no está en el video; la pregunta o el llamado a la acción del pilar; "Fuente: <fuente>" si hay; "Seguí a @tobdev.ia"; 4–6 hashtags del pilar. Máximo 1.200 caracteres.
-   - Si Metricool rechaza la URL, probá una vez con `https://raw.githubusercontent.com/tobiaszarlenga/tobdev-media/main/videos/AAAA-MM-DD.mp4`. Si también falla, informá el error textual.
+   - La URL de `raw.githubusercontent.com` funciona apenas hacés push (GitHub Pages a veces tarda o no se actualiza). Si Metricool la rechaza, esperá 2 minutos y probá una vez con `https://tobiaszarlenga.github.io/tobdev-media/videos/AAAA-MM-DD.mp4`. Si también falla, informá el error textual.
 8. **Historial.** Agregá a `historial.json` → `publicados`:
    ```json
    {"fecha": "AAAA-MM-DD", "pilar": "tip", "serie": "TIP #2", "titulo": "...", "url_fuente": "...", "video": "videos/AAAA-MM-DD.mp4", "metricool": "<plannerUrl o id>", "acento": "#hex", "escenas": ["prompt", "capas", "..."]}
@@ -66,6 +70,14 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    Si el tema salió de `IDEAS.md`, marcalo como usado (`[x]` y fecha). Commit + push.
 9. **Limpieza.** Metricool descarga el video y guarda su propia copia (la respuesta trae `media` en `static.metricool.com`), así que el MP4 ya no hace falta en el repo. Borrá con `git rm` los MP4 de `videos/` con más de 3 días para que el repo no crezca. Nunca toques `plantilla/` ni `CONTENIDO.md`; en `historial.json` e `IDEAS.md` solo agregás entradas o marcás ideas usadas.
 10. **Informe final** (2–4 líneas): pilar y serie, título, fuente, hora programada y link de Metricool. Si no se publicó, el motivo (solo puede ser un error técnico o el tope mensual).
+
+## Para gastar menos y tardar menos
+
+- **Sin subagentes.** Hacé todo en esta sesión: cada subagente arranca de cero y multiplica el consumo.
+- Leé solo `TAREA.md`, `CONTENIDO.md`, `IDEAS.md`, `plantilla/ESCENAS.md` y `historial.json`, una vez cada uno. No abras `make_reel2.py` ni el resto de `plantilla/` salvo que el script dé un error que no se entienda.
+- Para elegir y verificar el tema: 2 a 5 búsquedas y WebFetch con un pedido concreto ("devolvé solo la fecha y el nombre de…"), no páginas enteras.
+- Para revisar el video alcanza la hoja de contacto de `--revisar`. No extraigas fotogramas del video final.
+- No esperes con `sleep` ni consultes el render en bucle: corré el comando en primer plano.
 
 ## Prohibido
 

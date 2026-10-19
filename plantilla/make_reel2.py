@@ -2,7 +2,8 @@
 """Reel de noticias v2 de TobDev: voz IA + subtítulos palabra por palabra + escenas animadas.
 
 Uso:
-  python3 plantilla/make_reel2.py guion.json videos/AAAA-MM-DD.mp4 [--solo-html] [--snap 1,5,9]
+  python3 plantilla/make_reel2.py guion.json videos/AAAA-MM-DD.mp4 --revisar   # valida + voz + HTML + hoja de contacto
+  python3 plantilla/make_reel2.py guion.json videos/AAAA-MM-DD.mp4             # render final (reusa lo anterior) + verificación
 
 El guion (ver plantilla/ESCENAS.md) es una lista de "beats": cada beat es una frase que dice la voz
 y la escena que se ve mientras la dice. Marcado dentro de "texto":
@@ -1054,38 +1055,155 @@ def find_browser():
     return None
 
 
-def main():
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
-    guion = json.load(open(args[0]))
-    out = os.path.abspath(args[1])
-    beats = layout_beats(guion)
-    voice, D = synth(guion, beats)
-    if beats[-1]["escena"]["tipo"] == "cierre":
-        D = max(D, beats[-1]["t_speech"] + 3.4)
-    D = round(D + 0.5, 3)
-    groups = caption_groups(beats)
-    work = os.environ.get("REEL_WORK") or tempfile.mkdtemp(prefix="reel2-")
-    os.makedirs(os.path.join(work, "assets"), exist_ok=True)
-    shutil.copytree(os.path.join(HERE, "fonts"), os.path.join(work, "assets", "fonts"), dirs_exist_ok=True)
-    for f in ("mark-white.svg", "grain.png"):
-        shutil.copy(os.path.join(HERE, "marca", f), os.path.join(work, "assets", f))
-    shutil.copy(os.path.join(HERE, "gsap.min.js"), os.path.join(work, "assets", "gsap.min.js"))
-    open(os.path.join(work, "index.html"), "w").write(build_html(guion, beats, groups, D))
-    open(os.path.join(work, "meta.json"), "w").write('{"id":"reel","name":"reel"}')
-    mix_audio(work, voice, D, beats, groups)
-    json.dump({"duracion": D, "escenas": [[b["escena"]["tipo"], b["t0"], b["t1"]] for b in beats]},
-              open(os.path.join(work, "tiempos.json"), "w"), indent=1)
-    print("WORK", work, "DUR", D)
-    if "--solo-html" in sys.argv:
-        return
+REQUIRED = {"terminal": "lineas", "linea_tiempo": "hitos", "chips": "items", "lista": "items", "flujo": "entradas",
+            "numero": "valor", "particulas": "valor", "comparacion": "despues", "grafico": "barras", "celular": "mensajes",
+            "alerta": "filas", "reloj": "despues", "prompt": "texto", "cursores": "despues", "capas": "items"}
+ENGLISH = {"claude", "chatgpt", "openai", "google", "microsoft", "gemini", "whatsapp", "iphone", "slides", "app", "apps",
+           "prompt", "prompts", "code", "copilot", "meta", "apple", "android", "windows", "excel", "powerpoint", "notion",
+           "canva", "youtube", "instagram", "tiktok", "linkedin", "email", "online", "software", "startup", "freelance",
+           "skills", "hooks", "plugin", "plugins", "web", "chatbot", "deep", "blue", "watson", "anthropic", "nvidia",
+           "github", "vercel", "supabase", "mercadolibre", "business", "pro", "enterprise", "team", "plus", "max", "agents"}
+
+
+def validar(guion, historial=None):
+    """Revisa el guion antes de gastar tiempo en voz y render. Devuelve (errores, avisos)."""
+    err, warn = [], []
+    beats = guion.get("beats") or []
+    if not beats:
+        return ["el guion no tiene beats"], []
+    tipos = []
+    for i, b in enumerate(beats, 1):
+        e = b.get("escena") or {}
+        t = e.get("tipo")
+        tipos.append(t)
+        if t not in SCENE_TYPES:
+            err.append(f"beat {i}: escena '{t}' no existe (ver ESCENAS.md)")
+            continue
+        req = REQUIRED.get(t)
+        if req and not e.get(req):
+            err.append(f"beat {i}: la escena '{t}' necesita '{req}'")
+        txt = b.get("texto", "")
+        if not txt.strip():
+            err.append(f"beat {i}: texto vacío")
+        if txt.count("*") % 2:
+            err.append(f"beat {i}: hay un '*' sin cerrar")
+        if txt.count("{") != txt.count("}"):
+            err.append(f"beat {i}: hay una llave {{ }} sin cerrar")
+        if txt.count("*") // 2 > 2:
+            warn.append(f"beat {i}: más de 2 palabras clave; si todo está destacado, nada lo está")
+        plano = re.sub(r"\{[^}]*\}", " ", txt)
+        for w in re.findall(r"[@\w./+-]+", plano):
+            wl = w.strip(".,;:!?¿¡").lower()
+            if (re.search(r"[a-záéíóú][A-Z]", w) or (len(w) > 1 and w.isupper() and w.isalpha()) or "@" in w
+                    or re.search(r"\w\.\w", w) or wl in ENGLISH):
+                warn.append(f"beat {i}: '{w}' sin pronunciación; usá {{{w}|cómo se dice}}")
+    if tipos and tipos[-1] != "cierre":
+        err.append("el último beat tiene que ser 'cierre'")
+    for i in range(1, len(tipos)):
+        if tipos[i] == tipos[i - 1]:
+            warn.append(f"beats {i} y {i + 1}: misma escena '{tipos[i]}' seguida")
+    if len(set(t for t in tipos if t != "cierre")) < 5:
+        warn.append("menos de 5 tipos de escena distintos")
+    if not 8 <= len(beats) <= 12:
+        warn.append(f"{len(beats)} beats (lo recomendado es 8 a 12)")
+    if historial:
+        prev = [x for x in historial.get("publicados", []) if x.get("escenas")]
+        if prev:
+            last = prev[-1]
+            if last["escenas"][0] == tipos[0]:
+                warn.append(f"arranca con '{tipos[0]}', igual que el reel anterior")
+            if last.get("acento", "").lower() == str(guion.get("acento", "")).lower():
+                warn.append("mismo color de acento que el reel anterior")
+    return err, warn
+
+
+def browser_env():
     env = dict(os.environ)
     br = find_browser()
     if br:
         env["HYPERFRAMES_BROWSER_PATH"] = br
+    return env
+
+
+def main():
+    """
+    python3 make_reel2.py guion.json salida.mp4 --revisar   valida, arma voz y HTML y saca una hoja de contacto (sin render)
+    python3 make_reel2.py guion.json salida.mp4             render final (reusa lo armado si el guion no cambió) y verifica
+    python3 make_reel2.py guion.json salida.mp4 --solo-html arma voz y HTML sin hoja de contacto ni render
+    """
+    import hashlib
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    raw = open(args[0], "rb").read()
+    guion = json.loads(raw)
+    out = os.path.abspath(args[1])
+    hist_p = os.path.join(os.path.dirname(HERE), "historial.json")
+    hist = json.load(open(hist_p)) if os.path.exists(hist_p) else None
+    if hist and os.path.basename(out).replace(".mp4", "") in {x.get("fecha") for x in hist.get("publicados", [])}:
+        hist = {"publicados": [x for x in hist["publicados"] if x.get("fecha") != os.path.basename(out).replace(".mp4", "")]}
+    err, warn = validar(guion, hist)
+    for w in warn:
+        print("AVISO", w)
+    if err:
+        for e in err:
+            print("ERROR", e)
+        sys.exit(2)
+    key = hashlib.sha256(raw + open(os.path.abspath(__file__), "rb").read()).hexdigest()[:12]
+    work = os.environ.get("REEL_WORK") or os.path.join(tempfile.gettempdir(), "reel2-" + key)
+    ready = all(os.path.exists(os.path.join(work, f)) for f in ("index.html", "assets/audio.mp3", "tiempos.json")) \
+        and open(os.path.join(work, ".key")).read() == key if os.path.exists(os.path.join(work, ".key")) else False
+    if ready:
+        D = json.load(open(os.path.join(work, "tiempos.json")))["duracion"]
+        print("REUSO", work, "DUR", D)
+    else:
+        beats = layout_beats(guion)
+        voice, D = synth(guion, beats)
+        if beats[-1]["escena"]["tipo"] == "cierre":
+            D = max(D, beats[-1]["t_speech"] + 3.4)
+        D = round(D + 0.5, 3)
+        groups = caption_groups(beats)
+        os.makedirs(os.path.join(work, "assets"), exist_ok=True)
+        shutil.copytree(os.path.join(HERE, "fonts"), os.path.join(work, "assets", "fonts"), dirs_exist_ok=True)
+        for f in ("mark-white.svg", "grain.png"):
+            shutil.copy(os.path.join(HERE, "marca", f), os.path.join(work, "assets", f))
+        shutil.copy(os.path.join(HERE, "gsap.min.js"), os.path.join(work, "assets", "gsap.min.js"))
+        open(os.path.join(work, "index.html"), "w").write(build_html(guion, beats, groups, D))
+        open(os.path.join(work, "meta.json"), "w").write('{"id":"reel","name":"reel"}')
+        mix_audio(work, voice, D, beats, groups)
+        json.dump({"duracion": D, "escenas": [[b["escena"]["tipo"], b["t0"], b["t1"]] for b in beats]},
+                  open(os.path.join(work, "tiempos.json"), "w"), indent=1)
+        open(os.path.join(work, ".key"), "w").write(key)
+        print("WORK", work, "DUR", D)
+    if not 35 <= D <= 62:
+        print(f"AVISO dura {D} s (lo recomendado es 40 a 55)")
+    if "--solo-html" in sys.argv:
+        return
+    env = browser_env()
+    if "--revisar" in sys.argv:
+        esc_t = json.load(open(os.path.join(work, "tiempos.json")))["escenas"]
+        ats = ",".join(str(round(t0 + (t1 - t0) * 0.72, 2)) for _, t0, t1 in esc_t)
+        r = subprocess.run(["npx", "--yes", HF, "snapshot", "--at", ats], cwd=work, env=env, capture_output=True, text=True)
+        sheets = re.findall(r"(\S+contact-sheet[^\s]*\.jpg)", r.stdout + r.stderr)
+        if not sheets:
+            print((r.stdout + r.stderr)[-1500:])
+            sys.exit(3)
+        for sh in sheets:
+            print("REVISAR", sh if os.path.isabs(sh) else os.path.join(work, sh))
+        print("Escenas:", ", ".join(f"{i + 1}.{t}" for i, (t, _, _) in enumerate(esc_t)))
+        return
     os.makedirs(os.path.dirname(out), exist_ok=True)
-    subprocess.run(["npx", "--yes", HF, "render", "-o", out, "--quality", "high", "--video-bitrate", "10M"],
+    extra = ["--no-low-memory-mode", "--workers", "2"] if (os.cpu_count() or 1) >= 2 else []
+    subprocess.run(["npx", "--yes", HF, "render", "-o", out, "--quality", "high", "--video-bitrate", "10M", "--quiet"] + extra,
                    cwd=work, env=env, check=True)
-    print("OK", out)
+    pr = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration:stream=width,height", "-of", "json", out],
+                        capture_output=True, text=True, check=True)
+    info = json.loads(pr.stdout)
+    w_h = [(s_.get("width"), s_.get("height")) for s_ in info.get("streams", []) if s_.get("width")]
+    dur = float(info["format"]["duration"])
+    if w_h and w_h[0] == (1080, 1920) and abs(dur - D) < 1.0:
+        print(f"OK {out} · {dur:.1f} s · 1080x1920")
+    else:
+        print(f"ERROR video inesperado: {w_h} {dur:.1f} s (esperado 1080x1920, {D} s)")
+        sys.exit(4)
 
 
 if __name__ == "__main__":

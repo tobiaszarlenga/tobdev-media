@@ -77,7 +77,11 @@ Iconos disponibles: `archivo`, `chat`, `lista`, `check`, `alerta`, `candado`, `r
 
 ```bash
 pip install --break-system-packages numpy scipy soundfile kokoro-onnx
-python3 plantilla/make_reel2.py guion.json videos/AAAA-MM-DD.mp4
+python3 plantilla/make_reel2.py guion.json videos/AAAA-MM-DD.mp4 --revisar   # valida, voz, HTML y hoja de contacto (<1 min)
+python3 plantilla/make_reel2.py guion.json videos/AAAA-MM-DD.mp4             # render final (4–6 min) y verificación
 ```
 
-Tarda 8 a 10 minutos (la primera vez baja el modelo de voz, ~350 MB, desde GitHub). Con `--solo-html` arma voz, audio y HTML sin renderizar; la carpeta de trabajo queda en la ruta que imprime `WORK` (o en `$REEL_WORK`) y ahí se puede correr `npx --yes hyperframes@0.8.157 snapshot --at 2,10,20` para revisar fotogramas antes del render.
+- `--revisar` valida el guion antes de gastar tiempo: `ERROR` (escena inexistente, falta un parámetro, falta el cierre, llaves o asteriscos sin cerrar) frena; `AVISO` (palabras en inglés o siglas sin pronunciación, escenas repetidas seguidas, pocos tipos, mismo arranque o acento que el reel anterior) avisa. Después imprime `REVISAR <ruta>`: una imagen con un fotograma por escena.
+- El segundo comando reusa la voz y el HTML si el guion no cambió (si cambiaste algo, vuelve a armar todo), renderiza con 2 procesos en paralelo y verifica duración y tamaño (`OK`).
+- La primera vez baja el modelo de voz (~350 MB) desde GitHub a `~/.cache/kokoro`.
+- `--solo-html` arma voz y HTML sin hoja de contacto ni render. La carpeta de trabajo queda en `/tmp/reel2-<hash>` (o en `$REEL_WORK`).
