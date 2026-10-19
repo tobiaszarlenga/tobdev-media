@@ -1,0 +1,53 @@
+# Banco de ideas
+
+Ideas para los días sin noticia y para cada pilar. **Antes de usar cualquiera, verificá los datos** según `CONTENIDO.md` (las que dicen "verificar" tienen datos que todavía nadie confirmó). Marcá las usadas con `[x]` y la fecha. Cuando un pilar tenga menos de 3 ideas libres, agregá nuevas.
+
+## tip (lunes) — Claude, Claude Code, API
+
+- [x] CLAUDE.md y `/init`: dejarle escrito cómo es tu proyecto para no explicarlo en cada sesión (2026-10-19)
+- [ ] Modo plan: que primero arme el plan y recién después toque código (verificar atajo y nombre en la doc)
+- [ ] `/clear` y `/compact`: no llenar el contexto con conversaciones viejas (verificar qué hace cada uno)
+- [ ] Volver atrás: deshacer lo que hizo Claude Code en una sesión (verificar atajo o comando de rewind/checkpoints)
+- [ ] Pegarle una captura de pantalla para que entienda el error o el diseño (verificar cómo se pega en la terminal)
+- [ ] Skills: enseñarle un procedimiento una vez y que lo use siempre (verificar en la doc de skills)
+- [ ] Hooks: bloquear acciones que nunca querés que haga, por ejemplo tocar un archivo (la doc menciona PreToolUse)
+- [ ] Subagentes: dividir una tarea grande en partes (verificar en la doc)
+- [ ] `CLAUDE.local.md`: preferencias tuyas que no se suben al repo (está en la doc de memoria)
+- [ ] `.claude/rules/`: reglas que solo cargan para ciertos archivos (está en la doc de memoria)
+- [ ] Modo no interactivo (`claude -p`) para usarlo en scripts (verificar)
+- [ ] Proyectos en claude.ai: subir tus archivos una vez y que los use en cada chat (verificar en support.claude.com)
+
+## historia (miércoles)
+
+- [ ] 1969: el primer mensaje de ARPANET iba a ser "LOGIN" y el sistema se colgó después de "LO" (verificar)
+- [ ] 1947: el "primer bug" fue una polilla real pegada en el cuaderno del Harvard Mark II (verificar quién la encontró y qué dice la anotación)
+- [ ] 1966: ELIZA, el primer chatbot, y la gente que se encariñó con un programa de pocas reglas (verificar)
+- [ ] 1950: Turing propone el "juego de la imitación" (verificar)
+- [ ] 1956: la conferencia de Dartmouth y el nacimiento del término "inteligencia artificial" (verificar)
+- [ ] 1920: la palabra "robot" viene de una obra de teatro checa (R.U.R., Karel Čapek) (verificar)
+- [ ] 1843: Ada Lovelace y el primer algoritmo pensado para una máquina (verificar)
+- [ ] 1997: Deep Blue le gana a Kasparov (verificar)
+- [ ] 2016: AlphaGo y la jugada 37 (verificar)
+- [ ] 2017: "Attention Is All You Need", el paper de donde sale la T de GPT (verificar)
+- [ ] 1991: la primera página web todavía está online (verificar)
+- [ ] 2011: Watson gana Jeopardy! (verificar)
+
+## negocio (viernes) — plata y casos con IA
+
+- [ ] Detrás de escena: este reel lo hace un agente de IA solo, todos los días (busca el tema, escribe el guion, pone la voz, edita y publica). Real: es este mismo sistema.
+- [ ] Detrás de escena: cómo tobdev arma la landing de un comercio con agentes de IA (real: pipeline de tobdev; sin nombrar clientes)
+- [ ] 5 servicios con IA que le podés vender a un comercio de tu barrio (landing, turnos por WhatsApp, reels, presupuestos, respuestas a reseñas)
+- [ ] Cobrar por mes en vez de una sola vez: por qué conviene cobrar una cuota por un servicio con IA
+- [ ] El error de prometer de más: qué no hace la IA y conviene aclararlo antes de venderla
+- [ ] Cómo conseguir el primer cliente: mostrarle una demo hecha con sus datos públicos (sin usar datos privados)
+- [ ] Freelance con IA: hacer en una tarde lo que antes llevaba una semana, y qué hacer con ese tiempo
+
+## uso (martes o jueves sin noticia) — IA en tu negocio
+
+- [ ] Contestar consultas de WhatsApp fuera de horario
+- [ ] Armar presupuestos en minutos a partir de una lista de precios
+- [ ] Responder reseñas de Google con el tono del negocio
+- [ ] Resumir audios largos de clientes o proveedores
+- [ ] Escribir descripciones de productos para la tienda online
+- [ ] Ordenar facturas y gastos del mes
+- [ ] Detectar las preguntas que más te hacen y armar las respuestas frecuentes

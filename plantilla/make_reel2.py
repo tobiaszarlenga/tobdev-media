@@ -22,7 +22,7 @@ MODEL_URLS = {
     "kokoro-v1.0.onnx": "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx",
     "voices-v1.0.bin": "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin",
 }
-SCENE_TYPES = {"prompt", "capas", "flujo", "cursores", "chips", "frase", "lista", "reloj", "alerta", "numero",
+SCENE_TYPES = {"terminal", "linea_tiempo", "prompt", "capas", "flujo", "cursores", "chips", "frase", "lista", "reloj", "alerta", "numero",
                "navegador", "celular", "grafico", "comparacion", "particulas", "cierre"}
 NOCAPS = {"frase", "cierre"}          # escenas que ya muestran el texto: sin subtítulos arriba
 PUNCT_PAUSE = {",": 0.10, ";": 0.16, ":": 0.18, ".": 0.24, "?": 0.26, "!": 0.24, "…": 0.26}
@@ -384,10 +384,33 @@ def scene_html(sid, b, D):
         a = e.get("antes", {}); d = e.get("despues", {})
         col = lambda x, cls, ic: (f'<div class="cm-col {cls} glass" id="{p}-{cls}"><div class="eyebrow">{esc(x.get("titulo", ""))}</div>' +
                                   "".join(f'<div class="cm-it">{icon(ic, 34, "currentColor")}<span>{esc(s)}</span></div>' for s in x.get("items", [])[:4]) + '</div>')
-        return f'<div class="cm-wrap">{col(a, "an", "reloj")}<div class="cm-vs mono" id="{p}-vs">VS</div>{col(d, "de", "check")}</div>'
+        return f'<div class="cm-wrap">{col(a, "an", a.get("icono", "reloj"))}<div class="cm-vs mono" id="{p}-vs">VS</div>{col(d, "de", d.get("icono", "check"))}</div>'
     if t == "particulas":
         return (f'<canvas class="pa-cv" id="{p}-cv" width="1080" height="1010"></canvas><div class="pa-box"><div class="nu-v sm"><span class="nu-pre">{esc(e.get("prefijo", ""))}</span>'
                 f'<span id="{p}-n">0</span><span class="nu-suf">{esc(e.get("sufijo", ""))}</span></div><div class="nu-l">{kw_text(e.get("etiqueta", ""))}</div></div>')
+    if t == "terminal":
+        rows = []
+        for i, ln in enumerate(e.get("lineas", [])[:7]):
+            k = ln.get("tipo", "out")
+            txt = ln.get("texto", "")
+            if k == "cmd":
+                chars = "".join(f'<span class="ch">{esc(c)}</span>' for c in txt)
+                rows.append(f'<div class="tm-l cmd" id="{p}-ln{i}"><span class="tm-pr">&gt;</span><span>{chars}</span></div>')
+            elif k == "ok":
+                rows.append(f'<div class="tm-l ok" id="{p}-ln{i}">{icon("check", 34, "var(--acc)")}<span>{esc(txt)}</span></div>')
+            else:
+                rows.append(f'<div class="tm-l out" id="{p}-ln{i}"><span class="tm-dot">⏺</span><span>{esc(txt)}</span></div>')
+        return (f'<div class="tm-win" id="{p}-win"><div class="tm-top"><div class="cu-dots"><i></i><i></i><i></i></div>'
+                f'<div class="mono tm-t">{esc(e.get("titulo", "claude — ~/mi-proyecto"))}</div></div>'
+                f'<div class="tm-body mono">{"".join(rows)}<div class="tm-cur" id="{p}-cur"></div></div></div>')
+    if t == "linea_tiempo":
+        hs = e.get("hitos", [])[:4]
+        n = max(1, len(hs))
+        gap = 860 // n
+        items = "".join(f'<div class="lt-h" id="{p}-h{i}" style="top:{60 + i * gap}px"><div class="lt-dot" id="{p}-d{i}"></div>'
+                        f'<div class="lt-y">{esc(h.get("anio", ""))}</div><div class="lt-t">{kw_text(h.get("texto", ""))}</div></div>'
+                        for i, h in enumerate(hs))
+        return f'<div class="lt-rail"></div><div class="lt-fill" id="{p}-fill"></div>{items}'
     if t == "cierre":
         return (f'<div class="end"><img id="{p}-mark" src="assets/mark-white.svg" alt="TobDev"/>'
                 f'<div class="wm" id="{p}-wm">Tob<span class="grad">Dev</span></div>'
@@ -426,9 +449,22 @@ def scene_params(b, t0, t1):
         p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
         if t == "alerta":
             p["mk"] = e.get("marcar", -1); p["n"] = len(e.get("filas", [])[:5])
+    elif t == "terminal":
+        lns = e.get("lineas", [])[:7]
+        p["cues"] = scene_cues(b, [x.get("en", "") for x in lns], t0, t1)
+        for i in range(1, len(p["cues"])):
+            if p["cues"][i] <= p["cues"][i - 1] + 0.25:
+                p["cues"][i] = round(p["cues"][i - 1] + 0.45, 3)
+        p["tipos"] = [x.get("tipo", "out") for x in lns]
+        p["lens"] = [len(x.get("texto", "")) for x in lns]
+    elif t == "linea_tiempo":
+        hs = e.get("hitos", [])[:4]
+        p["cues"] = scene_cues(b, [x.get("en", x.get("anio", "")) for x in hs], t0, t1)
+        p["n"] = len(hs)
     elif t in ("numero", "particulas"):
         p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
-        p.update(val=float(e.get("valor", 100)), dec=int(e.get("decimales", 0)), desde=float(e.get("desde", 0)))
+        p.update(val=float(e.get("valor", 100)), dec=int(e.get("decimales", 0)), desde=float(e.get("desde", 0)),
+                 sep=bool(e.get("separador", True)))
     elif t == "navegador":
         p["n"] = len((e.get("pestanas") or ["x"])[:3])
         p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
@@ -501,7 +537,7 @@ def build_html(guion, beats, groups, D):
                        "k": [[f"k{gi}_{k}", round(w["t0"], 3)] for k, w in enumerate(ws) if w["kw"] is not None and (k == 0 or ws[k - 1]["kw"] != w["kw"])]})
     end_t = beats[-1]["t0"] if beats[-1]["escena"]["tipo"] == "cierre" else D
     hdr = (f'<div id="hdr" class="clip hdr" data-start="0" data-duration="{round(end_t + 0.3, 3)}" data-track-index="4">'
-           f'<img src="assets/mark-white.svg" alt=""/><span class="h">tobdev.ia</span><span class="d">{esc(guion.get("fecha", ""))}</span></div>')
+           f'<img src="assets/mark-white.svg" alt=""/><span class="h">tobdev.ia</span><span class="d">{esc(guion.get("etiqueta", guion.get("fecha", "")))}</span></div>')
     js = (JS.replace("__ACC__", acc).replace("__D__", str(round(D, 3)))
           .replace("__CALLS__", json.dumps(calls)).replace("__CAPS__", json.dumps(cap_js))
           .replace("__ENDT__", str(round(end_t, 3))))
@@ -710,6 +746,24 @@ display:flex;align-items:center;justify-content:center;font-size:30px;font-weigh
 /* particulas */
 .pa-cv{position:absolute;left:0;top:0;width:1080px;height:1010px}
 .pa-box{position:absolute;left:60px;right:60px;top:300px;padding:40px;text-align:center;background:radial-gradient(ellipse,rgba(10,14,26,.92) 30%,transparent 72%)}
+/* terminal */
+.tm-win{position:absolute;left:50px;right:50px;top:150px;height:640px;border-radius:28px;background:#0B0F1C;border:1px solid rgba(255,255,255,.12);
+box-shadow:0 40px 90px -30px rgba(0,0,0,.95),0 0 0 8px rgba(var(--acc-rgb),.05);overflow:hidden}
+.tm-top{height:76px;display:flex;align-items:center;gap:24px;padding:0 28px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.07)}
+.tm-t{font-size:24px;color:var(--text-muted)}
+.tm-body{padding:44px 44px;font-size:40px;line-height:1.38}
+.tm-l{display:flex;gap:18px;align-items:flex-start;margin-bottom:26px;opacity:0}
+.tm-l.cmd{color:#fff;font-weight:700}.tm-pr{color:var(--acc)}
+.tm-l.out{color:var(--text-soft)}.tm-dot{color:var(--acc);font-size:26px;margin-top:6px}
+.tm-l.ok{color:var(--acc);font-weight:700}.tm-l.ok svg{flex:none;margin-top:6px}
+.tm-cur{width:20px;height:40px;background:var(--acc);opacity:0}
+/* linea de tiempo */
+.lt-rail,.lt-fill{position:absolute;left:170px;top:80px;width:6px;height:860px;border-radius:3px;background:rgba(255,255,255,.12)}
+.lt-fill{background:var(--acc);transform-origin:50% 0;transform:scaleY(0);box-shadow:0 0 30px rgba(var(--acc-rgb),.5)}
+.lt-h{position:absolute;left:0;right:60px;height:200px;opacity:0}
+.lt-dot{position:absolute;left:153px;top:22px;width:40px;height:40px;border-radius:50%;background:#0A0E1A;border:6px solid var(--acc)}
+.lt-y{position:absolute;left:230px;top:-6px;font-weight:700;font-size:92px;letter-spacing:-.04em;line-height:1;color:var(--acc)}
+.lt-t{position:absolute;left:232px;right:0;top:100px;font-size:40px;font-weight:700;line-height:1.15;color:var(--text-soft);letter-spacing:-.01em}
 /* cierre */
 .end{position:absolute;left:84px;right:84px;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .end img{width:260px;height:260px}
@@ -731,7 +785,7 @@ function F(el, from, to, at){ to.immediateRender = false; return tl.fromTo(el, f
 function show(el, at, d, from){ return F(el, Object.assign({opacity:0}, from||{y:40}), {opacity:1, x:0, y:0, scale:1, rotation:0, duration:d||.5, ease:E}, at); }
 function pop(el, at){ return F(el, {opacity:0, scale:.6}, {opacity:1, scale:1, duration:.45, ease:"back.out(1.8)"}, at); }
 function seeded(n){ let s = n*9301+49297; return () => { s = (s*9301+49297) % 233280; return s/233280; }; }
-const fmt = (v, dec) => v.toLocaleString("es-AR", {minimumFractionDigits:dec, maximumFractionDigits:dec});
+const fmt = (v, dec, sep) => sep === false ? v.toFixed(dec) : v.toLocaleString("es-AR", {minimumFractionDigits:dec, maximumFractionDigits:dec});
 
 // fondo
 tl.fromTo("#b1",{x:0,y:0},{x:-170,y:100,duration:D,ease:"sine.inOut"},0);
@@ -861,7 +915,7 @@ alerta(c, p){
 },
 numero(c, p){
   const id = "#"+c.id, o = {v:p.desde};
-  F(o, {v:p.desde}, {v:p.val, duration:1.3, ease:"power3.out", onUpdate:()=>{ $(id+"-n").textContent = fmt(o.v, p.dec); }}, p.cue-.1);
+  F(o, {v:p.desde}, {v:p.val, duration:1.3, ease:"power3.out", onUpdate:()=>{ $(id+"-n").textContent = fmt(o.v, p.dec, p.sep); }}, p.cue-.1);
   show(id+"-l", p.cue+.4, .5, {y:30});
 },
 particulas(c, p){
@@ -905,6 +959,34 @@ comparacion(c, p){
   show(id+"-an", p.cues[0]-.1, .5, {y:-50});
   pop(id+"-vs", (p.cues[0]+p.cues[1])/2);
   show(id+"-de", p.cues[1]-.1, .5, {y:60});
+},
+terminal(c, p){
+  const id = "#"+c.id;
+  F(id+"-win", {rotationX:10, rotationY:-8}, {rotationX:0, rotationY:4, duration:c.t1-c.t0, ease:"sine.inOut"}, c.t0);
+  p.cues.forEach((t, i) => {
+    const ln = id+"-ln"+i;
+    if (p.tipos[i] === "cmd"){
+      tl.set(ln, {opacity:1}, t-.05);
+      const chs = $$(ln+" .ch"), dt = Math.min(.06, .7/Math.max(1, chs.length));
+      chs.forEach((ch, j) => { tl.set(ch, {opacity:1, boxShadow:"4px 0 0 0 "+ACC}, t+j*dt); if (j < chs.length-1) tl.set(ch, {boxShadow:"0 0 0 0 rgba(0,0,0,0)"}, t+(j+1)*dt); });
+      if (chs.length) tl.set(chs[chs.length-1], {boxShadow:"0 0 0 0 rgba(0,0,0,0)"}, t+chs.length*dt+.25);
+    } else {
+      F(ln, {opacity:0, x:-24}, {opacity:1, x:0, duration:.3, ease:E}, t-.05);
+    }
+  });
+  const last = p.cues.length ? p.cues[p.cues.length-1]+.5 : c.t0+.5;
+  F(id+"-cur", {opacity:0}, {opacity:1, duration:.01, repeat:Math.max(1, Math.floor((c.t1-last)/.5)), yoyo:true, repeatDelay:.25}, last);
+},
+linea_tiempo(c, p){
+  const id = "#"+c.id;
+  const fr = (i) => p.n > 1 ? (60 + i*(860/p.n) + 42)/860 : .1;
+  F(id+"-fill", {scaleY:0}, {scaleY:fr(0), duration:.5, ease:E}, c.t0+.2);
+  p.cues.forEach((t, i) => {
+    if (i > 0) F(id+"-fill", {scaleY:fr(i-1)}, {scaleY:fr(i), duration:.5, ease:"power2.inOut"}, t-.35);
+    F(id+"-h"+i, {opacity:0, x:60}, {opacity:1, x:0, duration:.45, ease:E}, t-.1);
+    F(id+"-d"+i, {scale:.3}, {scale:1, duration:.4, ease:"back.out(2.4)"}, t-.1);
+    if (i > 0) F(id+"-h"+(i-1), {opacity:1}, {opacity:.45, duration:.3}, t);
+  });
 },
 cierre(c, p){
   const id = "#"+c.id;

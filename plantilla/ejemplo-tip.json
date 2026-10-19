@@ -1,0 +1,145 @@
+{
+ "etiqueta": "TIP #1",
+ "fuente": "Documentación oficial de Claude Code",
+ "acento": "#D97757",
+ "voz": "em_alex",
+ "beats": [
+  {
+   "texto": "Si cada vez que abrís {Claude Code|clod coud} le volvés a explicar tu proyecto, *estás perdiendo tiempo*.",
+   "escena": {
+    "tipo": "terminal",
+    "titulo": "claude — ~/mi-tienda",
+    "lineas": [
+     {
+      "tipo": "cmd",
+      "texto": "te explico de nuevo: el proyecto usa Next.js y Supabase…",
+      "en": "abrís"
+     },
+     {
+      "tipo": "out",
+      "texto": "¿Con qué comando corro los tests?",
+      "en": "proyecto"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Cada sesión arranca con el *contexto vacío*.",
+   "escena": {
+    "tipo": "capas",
+    "items": [
+     "Sesión del lunes",
+     "Sesión del martes",
+     "Sesión del miércoles",
+     "Sesión de hoy"
+    ],
+    "en": "vacío"
+   }
+  },
+  {
+   "texto": "La solución es un archivo: *{CLAUDE.md|clod punto em de}*. {Claude Code|clod coud} lo lee al empezar cada sesión.",
+   "escena": {
+    "tipo": "flujo",
+    "entradas": [
+     {
+      "texto": "CLAUDE.md",
+      "icono": "archivo",
+      "en": "archivo"
+     }
+    ],
+    "salida": "Cada sesión nueva",
+    "en": "lee"
+   }
+  },
+  {
+   "texto": "Y no hace falta escribirlo a mano: corrés *{/init|barra init}*, y analiza tu proyecto para armarlo.",
+   "escena": {
+    "tipo": "terminal",
+    "titulo": "claude — ~/mi-tienda",
+    "lineas": [
+     {
+      "tipo": "cmd",
+      "texto": "/init",
+      "en": "init"
+     },
+     {
+      "tipo": "out",
+      "texto": "Analizando el proyecto…",
+      "en": "analiza"
+     },
+     {
+      "tipo": "ok",
+      "texto": "CLAUDE.md creado",
+      "en": "armarlo"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Ahí van los comandos para compilar y testear, las convenciones de código, y cómo está organizado el proyecto.",
+   "escena": {
+    "tipo": "lista",
+    "items": [
+     {
+      "texto": "Comandos de build y tests",
+      "en": "comandos"
+     },
+     {
+      "texto": "Convenciones de código",
+      "en": "convenciones"
+     },
+     {
+      "texto": "Estructura del proyecto",
+      "en": "organizado"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Un consejo: que no pase de *{200|doscientas} líneas*. Cuanto más corto y concreto, mejor lo cumple.",
+   "escena": {
+    "tipo": "numero",
+    "valor": 200,
+    "separador": false,
+    "etiqueta": "líneas como *máximo*",
+    "en": "200"
+   }
+  },
+  {
+   "texto": "Y lo que querés en todos tus proyectos va en tu {CLAUDE.md|clod punto em de} *personal*, adentro de la carpeta {.claude|punto clod}.",
+   "escena": {
+    "tipo": "comparacion",
+    "antes": {
+     "titulo": "Proyecto",
+     "items": [
+      "./CLAUDE.md",
+      "Lo comparte tu equipo"
+     ],
+     "en": "proyectos",
+     "icono": "archivo"
+    },
+    "despues": {
+     "titulo": "Personal",
+     "items": [
+      "~/.claude/CLAUDE.md",
+      "Vale para todo"
+     ],
+     "en": "personal",
+     "icono": "usuario"
+    }
+   }
+  },
+  {
+   "texto": "*Guardalo* para tu próxima sesión.",
+   "escena": {
+    "tipo": "frase"
+   }
+  },
+  {
+   "texto": "Seguí a {@tobdev.ia|tob dev punto i a} para más tips de {Claude|clod}.",
+   "escena": {
+    "tipo": "cierre"
+   }
+  }
+ ]
+}
