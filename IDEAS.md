@@ -34,7 +34,7 @@ Ideas para los días sin noticia y para cada pilar. **Antes de usar cualquiera, 
 
 ## negocio (viernes) — plata y casos con IA
 
-- [ ] Detrás de escena: este reel lo hace un agente de IA solo, todos los días (busca el tema, escribe el guion, pone la voz, edita y publica). Real: es este mismo sistema.
+- [x] Detrás de escena: este reel lo hace un agente de IA solo, todos los días (busca el tema, escribe el guion, pone la voz, edita y publica). Real: es este mismo sistema. (2026-10-20)
 - [ ] Detrás de escena: cómo tobdev arma la landing de un comercio con agentes de IA (real: pipeline de tobdev; sin nombrar clientes)
 - [ ] 5 servicios con IA que le podés vender a un comercio de tu barrio (landing, turnos por WhatsApp, reels, presupuestos, respuestas a reseñas)
 - [ ] Cobrar por mes en vez de una sola vez: por qué conviene cobrar una cuota por un servicio con IA

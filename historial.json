@@ -66,6 +66,29 @@
     "frase",
     "cierre"
    ]
+  },
+  {
+   "fecha": "2026-10-20",
+   "pilar": "negocio",
+   "serie": "IA Y PLATA #1",
+   "titulo": "Detrás de escena: este reel lo arma un agente de IA solo",
+   "url_fuente": "https://github.com/tobiaszarlenga/tobdev-media",
+   "video": "videos/2026-10-20.mp4",
+   "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=6168061360843277538",
+   "acento": "#B48CFF",
+   "escenas": [
+    "prompt",
+    "navegador",
+    "alerta",
+    "capas",
+    "flujo",
+    "reloj",
+    "chips",
+    "frase",
+    "lista",
+    "comparacion",
+    "cierre"
+   ]
   }
  ]
 }
