@@ -19,7 +19,7 @@ Ideas para los días sin noticia y para cada pilar. **Antes de usar cualquiera, 
 
 ## historia (miércoles)
 
-- [ ] 1969: el primer mensaje de ARPANET iba a ser "LOGIN" y el sistema se colgó después de "LO" (verificar)
+- [x] 1969: el primer mensaje de ARPANET iba a ser "LOGIN" y el sistema se colgó después de "LO" (2026-10-21)
 - [ ] 1947: el "primer bug" fue una polilla real pegada en el cuaderno del Harvard Mark II (verificar quién la encontró y qué dice la anotación)
 - [ ] 1966: ELIZA, el primer chatbot, y la gente que se encariñó con un programa de pocas reglas (verificar)
 - [ ] 1950: Turing propone el "juego de la imitación" (verificar)
