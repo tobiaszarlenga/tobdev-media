@@ -1,0 +1,177 @@
+{
+ "etiqueta": "HISTORIA #1",
+ "fuente": "UCLA · Wikipedia",
+ "acento": "#F59E0B",
+ "voz": "em_alex",
+ "beats": [
+  {
+   "texto": "El primer mensaje entre dos computadoras *se colgó* en la segunda letra.",
+   "escena": {
+    "tipo": "terminal",
+    "titulo": "UCLA — SDS Sigma 7",
+    "lineas": [
+     {
+      "tipo": "cmd",
+      "texto": "LO",
+      "en": "segunda"
+     },
+     {
+      "tipo": "out",
+      "texto": "ERROR: sistema caído",
+      "en": "letra"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Fue el {29|veintinueve} de octubre de {1969|mil novecientos sesenta y nueve}, a las *diez y media* de la noche.",
+   "escena": {
+    "tipo": "numero",
+    "valor": 1969,
+    "desde": 0,
+    "separador": false,
+    "etiqueta": "29 de octubre, *22:30*",
+    "en": "octubre"
+   }
+  },
+  {
+   "texto": "Charley Kline, un estudiante de {UCLA|u ce ele a}, quería conectarse a una computadora del *{Stanford Research Institute|Stanford Research Institute}*.",
+   "escena": {
+    "tipo": "flujo",
+    "entradas": [
+     {
+      "texto": "UCLA · SDS Sigma 7",
+      "icono": "chip",
+      "en": "UCLA"
+     }
+    ],
+    "salida": "SRI · SDS 940",
+    "en": "computadora"
+   }
+  },
+  {
+   "texto": "La red se llamaba {ARPANET|árpanet}, y ese año llegó a tener solo *cuatro nodos*.",
+   "escena": {
+    "tipo": "chips",
+    "estilo": "etiqueta",
+    "items": [
+     {
+      "texto": "UCLA",
+      "icono": "globo",
+      "en": "red"
+     },
+     {
+      "texto": "SRI",
+      "icono": "globo",
+      "en": "ARPANET"
+     },
+     {
+      "texto": "UC Santa Barbara",
+      "icono": "globo",
+      "en": "tener"
+     },
+     {
+      "texto": "Universidad de Utah",
+      "icono": "globo",
+      "en": "cuatro"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "La palabra que tenía que mandar era *{LOGIN|lóguin}*.",
+   "escena": {
+    "tipo": "prompt",
+    "texto": "LOGIN",
+    "etiqueta": "Mensaje a SRI",
+    "estado": "Enviando…"
+   }
+  },
+  {
+   "texto": "Escribió la ele, y llegó. Escribió la o, y *también llegó*.",
+   "escena": {
+    "tipo": "lista",
+    "titulo": "Del otro lado",
+    "items": [
+     {
+      "texto": "L: llegó",
+      "en": "ele"
+     },
+     {
+      "texto": "O: llegó",
+      "en": "también"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y ahí, *el sistema se colgó*. Lo único que llegó fue {LO|ele o}.",
+   "escena": {
+    "tipo": "alerta",
+    "titulo": "Mensaje recibido",
+    "filas": [
+     [
+      "Enviado",
+      "LOGIN"
+     ],
+     [
+      "Recibido",
+      "LO"
+     ],
+     [
+      "Estado",
+      "Sistema caído"
+     ]
+    ],
+    "marcar": 1,
+    "en": "colgó"
+   }
+  },
+  {
+   "texto": "Lo arreglaron, y *una hora después* la conexión completa funcionó.",
+   "escena": {
+    "tipo": "reloj",
+    "antes": "22:30",
+    "despues": "Una hora después",
+    "en": "hora"
+   }
+  },
+  {
+   "texto": "Internet arrancó con *un error*.",
+   "escena": {
+    "tipo": "frase"
+   }
+  },
+  {
+   "texto": "¿Lo sabías? *Contámelo* en los comentarios.",
+   "escena": {
+    "tipo": "celular",
+    "app": "Comentarios",
+    "icono": "chat",
+    "mensajes": [
+     {
+      "de": "yo",
+      "texto": "No tenía idea de esto",
+      "en": "sabías"
+     },
+     {
+      "de": "ia",
+      "texto": "Yo tampoco, y uso internet todos los días",
+      "en": "comentarios"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Seguí a {@tobdev.ia|tob dev punto i a} para más historias de tecnología.",
+   "escena": {
+    "tipo": "cierre"
+   }
+  }
+ ],
+ "elevenlabs": {
+  "voice_id": "73bgA51zDDQKg9HmPZ8f",
+  "model_id": "eleven_v4",
+  "stability": 0.5
+ }
+}

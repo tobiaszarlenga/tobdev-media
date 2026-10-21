@@ -208,6 +208,96 @@ def synth_external(guion, beats, path):
     return track, total
 
 
+EL_API = "https://api.elevenlabs.io/v1/text-to-speech/"
+EL_CACHE = os.environ.get("REEL_VOZ_CACHE", os.path.expanduser("~/.cache/reel-voz"))
+VOICE_RMS = 0.09  # nivel de la voz Kokoro, para que la mezcla funcione igual con cualquier voz
+
+
+def el_text(beats):
+    """Texto hablado (pronunciaciones) y la posición de cada palabra dentro de él."""
+    parts, spans, pos = [], [], 0
+    for b in beats:
+        for wi, w in enumerate(b["words"]):
+            if parts:
+                parts.append("\n" if wi == 0 else " "); pos += 1
+            spans.append((w, pos, pos + len(w["pron"])))
+            parts.append(w["pron"]); pos += len(w["pron"])
+    return "".join(parts), spans
+
+
+def el_post(path, body, out):
+    """POST a la API de ElevenLabs con curl (la clave la agrega el secreto de red del entorno, o ELEVENLABS_API_KEY)."""
+    cmd = ["curl", "-sS", "--max-time", "240", "-o", out, "-w", "%{http_code}", "-X", "POST", EL_API + path,
+           "-H", "Content-Type: application/json", "--data-binary", "@-"]
+    if os.environ.get("ELEVENLABS_API_KEY"):
+        cmd += ["-H", "xi-api-key: " + os.environ["ELEVENLABS_API_KEY"]]
+    r = subprocess.run(cmd, input=json.dumps(body).encode(), capture_output=True)
+    code = r.stdout.decode().strip()
+    detail = r.stderr.decode().strip()[-200:]
+    if code != "200" and os.path.exists(out):
+        try:
+            detail = open(out, errors="replace").read()[:300]
+        except OSError:
+            pass
+    return code, detail
+
+
+def synth_elevenlabs(guion, beats):
+    """Voz de ElevenLabs generada desde el guion. Usa los tiempos por carácter que devuelve la API
+    (with-timestamps); si no vienen, alinea contra Kokoro como con voz_archivo. Cachea por texto+voz,
+    así cambiar solo una escena no vuelve a gastar créditos."""
+    import numpy as np, base64, hashlib, librosa
+    cfg = guion["elevenlabs"]
+    vid = cfg["voice_id"]
+    model = cfg.get("model_id", "eleven_v4")
+    vs = {"stability": float(cfg.get("stability", 0.5)), "similarity_boost": float(cfg.get("similarity_boost", 0.75))}
+    if cfg.get("velocidad"):
+        vs["speed"] = float(cfg["velocidad"])
+    text, spans = el_text(beats)
+    h = hashlib.sha256(json.dumps([text, vid, model, vs], sort_keys=True).encode()).hexdigest()[:16]
+    os.makedirs(EL_CACHE, exist_ok=True)
+    mp3, al_p = os.path.join(EL_CACHE, h + ".mp3"), os.path.join(EL_CACHE, h + ".json")
+    if not (os.path.exists(mp3) and os.path.exists(al_p)):
+        body = {"text": text, "model_id": model, "voice_settings": vs}
+        resp_p = os.path.join(EL_CACHE, h + ".resp")
+        code, detail = el_post(f"{vid}/with-timestamps?output_format=mp3_44100_128", body, resp_p)
+        if code == "200":
+            resp = json.load(open(resp_p))
+            open(mp3, "wb").write(base64.b64decode(resp["audio_base64"]))
+            json.dump(resp.get("alignment") or resp.get("normalized_alignment"), open(al_p, "w"))
+            os.remove(resp_p)
+        elif code in ("400", "422"):  # el modelo puede no dar tiempos: pedir solo el audio y alinear
+            print(f"AVISO ElevenLabs sin tiempos ({code}): {detail}")
+            code2, detail2 = el_post(f"{vid}?output_format=mp3_44100_128", body, mp3 + ".part")
+            if code2 != "200":
+                raise RuntimeError(f"ElevenLabs respondió {code2}: {detail2}")
+            os.replace(mp3 + ".part", mp3)
+            json.dump(None, open(al_p, "w"))
+        else:
+            raise RuntimeError(f"ElevenLabs respondió {code or 'sin conexión'}: {detail}")
+    al = json.load(open(al_p))
+    if not al or len(al.get("character_start_times_seconds", [])) != len(text):
+        return synth_external(guion, beats, mp3)
+    st, en = al["character_start_times_seconds"], al["character_end_times_seconds"]
+    lead = 0.12
+    for w, a, b_ in spans:
+        w["t0"], w["t1"] = lead + st[a], lead + en[b_ - 1]
+    for b in beats:
+        b["t_speech"], b["t_end"] = b["words"][0]["t0"], b["words"][-1]["t1"]
+    y, _ = librosa.load(mp3, sr=SR, mono=True)
+    v = y[np.abs(y) > 0.01]
+    if len(v):
+        y = y * (VOICE_RMS / float(np.sqrt(np.mean(v ** 2))))
+    peak = float(np.max(np.abs(y))) if len(y) else 0
+    if peak > 0.98:
+        y = y * (0.98 / peak)
+    total = lead + len(y) / SR + 0.1
+    track = np.zeros(int((total + 3) * SR), dtype=np.float32)
+    i = int(lead * SR)
+    track[i:i + len(y)] = y
+    return track, total
+
+
 # ---------------------------------------------------------------- tiempos de escenas y subtítulos
 def layout_beats(guion):
     beats = []
@@ -1208,7 +1298,21 @@ def main():
         print("REUSO", work, "DUR", D)
     else:
         beats = layout_beats(guion)
-        voice, D = synth_external(guion, beats, voz_path) if voz_path else synth(guion, beats)
+        if voz_path:
+            voice, D = synth_external(guion, beats, voz_path)
+            print("VOZ archivo", os.path.basename(voz_path))
+        elif guion.get("elevenlabs"):
+            try:
+                voice, D = synth_elevenlabs(guion, beats)
+                print("VOZ elevenlabs", guion["elevenlabs"].get("voice_id"))
+            except Exception as e:  # el reel sale igual: Kokoro de respaldo
+                print("AVISO voz ElevenLabs falló, uso Kokoro:", str(e)[:300])
+                beats = layout_beats(guion)
+                voice, D = synth(guion, beats)
+                print("VOZ kokoro (respaldo)")
+        else:
+            voice, D = synth(guion, beats)
+            print("VOZ kokoro")
         if beats[-1]["escena"]["tipo"] == "cierre":
             D = max(D, beats[-1]["t_speech"] + 3.4)
         D = round(D + 0.5, 3)

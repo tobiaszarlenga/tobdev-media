@@ -1,6 +1,6 @@
 # Guion del reel v2 (`make_reel2.py`)
 
-El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una frase que dice la voz y la escena que se ve mientras la dice. La voz (Kokoro, acento rioplatense), los subtítulos palabra por palabra, la música, los efectos y los tiempos salen solos del texto.
+El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una frase que dice la voz y la escena que se ve mientras la dice. La voz (ElevenLabs si el guion trae `elevenlabs`; si no, Kokoro con acento rioplatense), los subtítulos palabra por palabra, la música, los efectos y los tiempos salen solos del texto.
 
 ```json
 {
@@ -25,6 +25,7 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 | `voz` | `em_alex` (por defecto, masculina) o `ef_dora` (femenina). |
 | `acento_voz` | `rio` (por defecto: "y" y "ll" como "sh") o `latam` (neutro). |
 | `velocidad` | 1.1 por defecto. Entre 1.0 y 1.2. |
+| `elevenlabs` | Opcional. `{"voice_id": "...", "model_id": "eleven_v4", "stability": 0.5}`: la voz se genera con la API de ElevenLabs y los subtítulos usan los tiempos por carácter que devuelve. Necesita acceso a `api.elevenlabs.io` (secreto de red del entorno o `ELEVENLABS_API_KEY`). Si falla, usa Kokoro con `voz` y avisa. El audio queda en caché (`~/.cache/reel-voz`) por texto + voz. |
 | `voz_archivo` | Opcional. Ruta (relativa al guion) a una voz grabada aparte, por ejemplo de ElevenLabs. Se usa ese audio tal cual y los subtítulos y escenas se acomodan a sus tiempos (alineación automática contra una referencia Kokoro). El audio tiene que decir exactamente el texto del guion, con la pronunciación de `{Texto\|pronunciación}`. Necesita `librosa` (`pip install --break-system-packages librosa`). |
 
 ## Marcado dentro de `texto`

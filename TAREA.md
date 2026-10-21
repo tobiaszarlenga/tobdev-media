@@ -14,6 +14,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
 | Red | solo Instagram, tipo `REEL` |
 | Hora de publicación | 19:00 hora Argentina del mismo día |
 | MODO | `automatico` → `autoPublish: true`. Se programa a la mañana y se publica solo a las 19:00; Tob puede vetarlo borrándolo en Metricool antes. Si Tob pide `aprobacion`, usar `autoPublish: false`. |
+| Voz | ElevenLabs, voz `tobias` (clon de Tob, acento argentino): `"elevenlabs": {"voice_id": "73bgA51zDDQKg9HmPZ8f", "model_id": "eleven_v4", "stability": 0.5}` en el guion. Si ElevenLabs falla, el motor usa Kokoro solo y el reel sale igual. |
 | Tope mensual | 18 reels publicados por mes calendario (el plan gratis de Metricool permite 20; dejamos margen) |
 
 ## Pasos
@@ -24,7 +25,8 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    - **Días de noticia** (martes y jueves, o cualquier día si hay una noticia muy grande): buscá noticias de las últimas 48 h sobre IA, agentes, automatización o software. Preferí fuentes primarias (blogs oficiales de Anthropic, OpenAI, Google, Microsoft, Meta, etc.) o medios serios. Tiene que: no estar en `historial.json` (compará tema y URL), servirle a un negocio o a alguien que trabaja con IA (no papers ultra técnicos, no política, no rumores) y poder verificarse leyendo la fuente con WebFetch. Si no hay ninguna que cumpla, **no se saltea el día**: usá el pilar `uso`.
    - **Otros pilares**: tomá la idea siguiente de ese pilar en `IDEAS.md` y verificá todos los datos como dice `CONTENIDO.md` (doc oficial para tips; 2 fuentes serias para historia; nada de ingresos prometidos ni cifras sin fuente para negocio).
    - Si una idea no se puede verificar, pasá a la siguiente de la lista. Mejor otro tema que un dato falso.
-4. **Guion.** Leé `plantilla/ESCENAS.md` completo y escribí `guion.json` en la raíz del repo de trabajo (no lo commitees). Resumen de lo que exige:
+4. **Guion.** Leé `plantilla/ESCENAS.md` completo y escribí el guion en `guiones/AAAA-MM-DD.json` (se commitea junto con el video: sirve para rehacer el reel si hace falta). Resumen de lo que exige:
+   - Siempre con el bloque `elevenlabs` de la tabla de Configuración (copialo tal cual).
    - 8 a 12 beats, 40 a 55 s. El beat 1 es el gancho (fórmulas en `CONTENIDO.md`): tiene que frenar el scroll en el primer segundo, nunca "hoy les traigo".
    - `etiqueta`: la fecha (`20 OCT`) para noticias; serie y número para el resto (`TIP #2`, `HISTORIA #1`, `IA Y PLATA #1`, `IA EN TU NEGOCIO #1`).
    - El beat anterior al cierre o el cierre lleva el llamado a la acción del pilar (guardar, comentar o compartir), con voz.
@@ -35,16 +37,16 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    - Voz de marca TobDev: español rioplatense con voseo, directo, técnico, **sin hype**. Nada de "revolucionario", "increíble", "cambia todo".
    - Último beat: `cierre`.
    El diseño base (fondo, fuentes, logo, cierre) está fijo en la plantilla según el sistema de diseño de TobDev: no lo toques. Hay un guion de ejemplo en `plantilla/ejemplo-guion.json`.
-5. **Revisar y renderizar.** Instalá lo que falte: `pip install --break-system-packages numpy scipy soundfile kokoro-onnx`. Después, en dos pasos:
+5. **Revisar y renderizar.** Instalá lo que falte: `pip install --break-system-packages numpy scipy soundfile kokoro-onnx librosa`. Después, en dos pasos:
    ```bash
-   python3 plantilla/make_reel2.py guion.json videos/AAAA-MM-DD.mp4 --revisar
+   python3 plantilla/make_reel2.py guiones/AAAA-MM-DD.json videos/AAAA-MM-DD.mp4 --revisar
    ```
-   Valida el guion (`ERROR` frena: corregí y repetí; `AVISO`: corregilo si tiene sentido), arma la voz y el HTML (menos de 1 minuto) e imprime `REVISAR <ruta>`: una hoja de contacto con un fotograma por escena. Mirala con Read (es una sola imagen): texto cortado, superposiciones, algo fuera de pantalla o una escena vacía. Si hay que corregir, cambiá el guion y repetí `--revisar` (máximo 2 veces).
+   Valida el guion (`ERROR` frena: corregí y repetí; `AVISO`: corregilo si tiene sentido), arma la voz y el HTML (menos de 1 minuto) e imprime `REVISAR <ruta>`: una hoja de contacto con un fotograma por escena. También imprime `VOZ elevenlabs` o, si ElevenLabs falló, `VOZ kokoro (respaldo)` con el motivo en un `AVISO`: seguí igual con Kokoro (no reintentes) y anotalo en el informe final. La voz de ElevenLabs gasta créditos de Tob: se genera una sola vez por texto y queda en caché, así que corregir escenas no la vuelve a generar, pero cambiar el texto de un beat sí. Mirala con Read (es una sola imagen): texto cortado, superposiciones, algo fuera de pantalla o una escena vacía. Si hay que corregir, cambiá el guion y repetí `--revisar` (máximo 2 veces).
    ```bash
-   python3 plantilla/make_reel2.py guion.json videos/AAAA-MM-DD.mp4
+   python3 plantilla/make_reel2.py guiones/AAAA-MM-DD.json videos/AAAA-MM-DD.mp4
    ```
    Reusa lo que armó `--revisar`, renderiza (4 a 6 minutos; correlo en primer plano con timeout de 10 minutos) y verifica duración y tamaño solo. Si imprime `OK`, listo: no hace falta mirar fotogramas del video final. Si falla dos veces, no publiques e informá el error.
-6. **Subir.** `git add videos/AAAA-MM-DD.mp4 && git commit && git push`. No hace falta esperar a GitHub Pages.
+6. **Subir.** `git add videos/AAAA-MM-DD.mp4 guiones/AAAA-MM-DD.json && git commit && git push`. No hace falta esperar a GitHub Pages.
 7. **Programar en Metricool** con `createScheduledPost`:
    - `blogId`: `7428605`; `date`: hoy 19:00 `-03:00`.
    - `info`:
@@ -65,11 +67,11 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    - La URL de `raw.githubusercontent.com` funciona apenas hacés push (GitHub Pages a veces tarda o no se actualiza). Si Metricool la rechaza, esperá 2 minutos y probá una vez con `https://tobiaszarlenga.github.io/tobdev-media/videos/AAAA-MM-DD.mp4`. Si también falla, informá el error textual.
 8. **Historial.** Agregá a `historial.json` → `publicados`:
    ```json
-   {"fecha": "AAAA-MM-DD", "pilar": "tip", "serie": "TIP #2", "titulo": "...", "url_fuente": "...", "video": "videos/AAAA-MM-DD.mp4", "metricool": "<plannerUrl o id>", "acento": "#hex", "escenas": ["prompt", "capas", "..."]}
+   {"fecha": "AAAA-MM-DD", "pilar": "tip", "serie": "TIP #2", "titulo": "...", "url_fuente": "...", "video": "videos/AAAA-MM-DD.mp4", "metricool": "<plannerUrl o id>", "acento": "#hex", "escenas": ["prompt", "capas", "..."], "voz": "elevenlabs"}
    ```
-   Si el tema salió de `IDEAS.md`, marcalo como usado (`[x]` y fecha). Commit + push.
-9. **Limpieza.** Metricool descarga el video y guarda su propia copia (la respuesta trae `media` en `static.metricool.com`), así que el MP4 ya no hace falta en el repo. Borrá con `git rm` los MP4 de `videos/` con más de 3 días para que el repo no crezca. Nunca toques `plantilla/` ni `CONTENIDO.md`; en `historial.json` e `IDEAS.md` solo agregás entradas o marcás ideas usadas.
-10. **Informe final** (2–4 líneas): pilar y serie, título, fuente, hora programada y link de Metricool. Si no se publicó, el motivo (solo puede ser un error técnico o el tope mensual).
+   En `voz` va `elevenlabs` o `kokoro` según lo que imprimió el motor. Si el tema salió de `IDEAS.md`, marcalo como usado (`[x]` y fecha). Commit + push.
+9. **Limpieza.** Metricool descarga el video y guarda su propia copia (la respuesta trae `media` en `static.metricool.com`), así que el MP4 ya no hace falta en el repo. Borrá con `git rm` los MP4 de `videos/` con más de 3 días para que el repo no crezca. Nunca borres `guiones/` ni toques `plantilla/` ni `CONTENIDO.md`; en `historial.json` e `IDEAS.md` solo agregás entradas o marcás ideas usadas.
+10. **Informe final** (2–4 líneas): pilar y serie, título, fuente, voz usada (si fue Kokoro de respaldo, el motivo), hora programada y link de Metricool. Si no se publicó, el motivo (solo puede ser un error técnico o el tope mensual).
 
 ## Para gastar menos y tardar menos
 
