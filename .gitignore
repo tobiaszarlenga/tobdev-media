@@ -2,3 +2,5 @@ __pycache__/
 noticia.json
 *.wav
 guion.json
+# Local secrets written by `elevenlabs onboard`
+/.env.local
