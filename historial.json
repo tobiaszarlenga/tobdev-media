@@ -96,7 +96,7 @@
    "serie": "HISTORIA #1",
    "titulo": "1969: el primer mensaje de ARPANET se colgó en \"LO\"",
    "url_fuente": "https://samueli.ucla.edu/internet50-press/",
-   "video": "videos/2026-10-21.mp4",
+   "video": "videos/2026-10-21-v2.mp4",
    "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-4714397592177392238",
    "acento": "#F59E0B",
    "escenas": [
@@ -111,7 +111,8 @@
     "frase",
     "celular",
     "cierre"
-   ]
+   ],
+   "voz": "ElevenLabs (tobias), reeditado a mano"
   }
  ]
 }
