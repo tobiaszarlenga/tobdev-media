@@ -14,7 +14,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
 | Red | solo Instagram, tipo `REEL` |
 | Hora de publicación | 19:00 hora Argentina del mismo día |
 | MODO | `automatico` → `autoPublish: true`. Se programa a la mañana y se publica solo a las 19:00; Tob puede vetarlo borrándolo en Metricool antes. Si Tob pide `aprobacion`, usar `autoPublish: false`. |
-| Voz | ElevenLabs, voz `tobias` (clon de Tob, acento argentino): `"elevenlabs": {"voice_id": "73bgA51zDDQKg9HmPZ8f", "model_id": "eleven_v4", "stability": 0.5}` en el guion. Si ElevenLabs falla, el motor usa Kokoro solo y el reel sale igual. |
+| Voz | ElevenLabs, voz `tobias` (clon de Tob, acento argentino, voice_id `73bgA51zDDQKg9HmPZ8f`, modelo `eleven_v4`), generada con el conector de ElevenLabs en el paso 5. Si algo falla, el reel sale igual con Kokoro. |
 | Tope mensual | 18 reels publicados por mes calendario (el plan gratis de Metricool permite 20; dejamos margen) |
 
 ## Pasos
@@ -26,7 +26,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    - **Otros pilares**: tomá la idea siguiente de ese pilar en `IDEAS.md` y verificá todos los datos como dice `CONTENIDO.md` (doc oficial para tips; 2 fuentes serias para historia; nada de ingresos prometidos ni cifras sin fuente para negocio).
    - Si una idea no se puede verificar, pasá a la siguiente de la lista. Mejor otro tema que un dato falso.
 4. **Guion.** Leé `plantilla/ESCENAS.md` completo y escribí el guion en `guiones/AAAA-MM-DD.json` (se commitea junto con el video: sirve para rehacer el reel si hace falta). Resumen de lo que exige:
-   - Siempre con el bloque `elevenlabs` de la tabla de Configuración (copialo tal cual).
+   - No pongas `elevenlabs` ni `voz_archivo`: la voz se agrega en el paso 5.
    - 8 a 12 beats, 40 a 55 s. El beat 1 es el gancho (fórmulas en `CONTENIDO.md`): tiene que frenar el scroll en el primer segundo, nunca "hoy les traigo".
    - `etiqueta`: la fecha (`20 OCT`) para noticias; serie y número para el resto (`TIP #2`, `HISTORIA #1`, `IA Y PLATA #1`, `IA EN TU NEGOCIO #1`).
    - El beat anterior al cierre o el cierre lleva el llamado a la acción del pilar (guardar, comentar o compartir), con voz.
@@ -37,11 +37,21 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    - Voz de marca TobDev: español rioplatense con voseo, directo, técnico, **sin hype**. Nada de "revolucionario", "increíble", "cambia todo".
    - Último beat: `cierre`.
    El diseño base (fondo, fuentes, logo, cierre) está fijo en la plantilla según el sistema de diseño de TobDev: no lo toques. Hay un guion de ejemplo en `plantilla/ejemplo-guion.json`.
-5. **Revisar y renderizar.** Instalá lo que falte: `pip install --break-system-packages numpy scipy soundfile kokoro-onnx librosa`. Después, en dos pasos:
+5. **Voz, revisar y renderizar.** Instalá lo que falte: `pip install --break-system-packages numpy scipy soundfile kokoro-onnx librosa`.
+   **Voz (ElevenLabs).** Dejá el texto de los beats cerrado antes de este paso: si después lo cambiás, la voz hay que generarla de nuevo y gasta créditos otra vez (cambiar escenas no afecta).
+   ```bash
+   python3 plantilla/make_reel2.py guiones/AAAA-MM-DD.json videos/AAAA-MM-DD.mp4 --texto-voz
+   ```
+   Valida el guion e imprime el texto hablado entre `TEXTO_VOZ_INICIO` y `TEXTO_VOZ_FIN`. Cargá con ToolSearch `mcp__ElevenLabs__creative_generate_speech` y `mcp__ElevenLabs__creative_get_flow_run_status`, y generá la voz con: `prompt` = ese texto exacto (con sus saltos de línea), `voice_id` = `73bgA51zDDQKg9HmPZ8f`, `model_id` = `eleven_v4`, `generations_count` = 1. Consultá `creative_get_flow_run_status` esperando `poll_after_seconds` entre llamadas hasta `all_completed`, y bajá el `content_url` de la generación:
+   ```bash
+   curl -sS --max-time 120 -o /tmp/voz-AAAA-MM-DD.mp3 "<content_url>"
+   ```
+   Agregá al guion `"voz_archivo": "/tmp/voz-AAAA-MM-DD.mp3"`. Si falla cualquier cosa (conector, generación o descarga), **no reintentes** (cada intento gasta créditos): seguí sin `voz_archivo`, sale con Kokoro, y anotalo en el informe final.
+   **Revisar y renderizar**, en dos pasos:
    ```bash
    python3 plantilla/make_reel2.py guiones/AAAA-MM-DD.json videos/AAAA-MM-DD.mp4 --revisar
    ```
-   Valida el guion (`ERROR` frena: corregí y repetí; `AVISO`: corregilo si tiene sentido), arma la voz y el HTML (menos de 1 minuto) e imprime `REVISAR <ruta>`: una hoja de contacto con un fotograma por escena. También imprime `VOZ elevenlabs` o, si ElevenLabs falló, `VOZ kokoro (respaldo)` con el motivo en un `AVISO`: seguí igual con Kokoro (no reintentes) y anotalo en el informe final. La voz de ElevenLabs gasta créditos de Tob: se genera una sola vez por texto y queda en caché, así que corregir escenas no la vuelve a generar, pero cambiar el texto de un beat sí. Mirala con Read (es una sola imagen): texto cortado, superposiciones, algo fuera de pantalla o una escena vacía. Si hay que corregir, cambiá el guion y repetí `--revisar` (máximo 2 veces).
+   Valida el guion (`ERROR` frena: corregí y repetí; `AVISO`: corregilo si tiene sentido), arma la voz y el HTML (menos de 1 minuto) e imprime `REVISAR <ruta>`: una hoja de contacto con un fotograma por escena. También imprime `VOZ archivo` (voz de ElevenLabs alineada) o `VOZ kokoro`. Mirala con Read (es una sola imagen): texto cortado, superposiciones, algo fuera de pantalla o una escena vacía. Si hay que corregir, cambiá el guion y repetí `--revisar` (máximo 2 veces).
    ```bash
    python3 plantilla/make_reel2.py guiones/AAAA-MM-DD.json videos/AAAA-MM-DD.mp4
    ```
@@ -69,7 +79,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    ```json
    {"fecha": "AAAA-MM-DD", "pilar": "tip", "serie": "TIP #2", "titulo": "...", "url_fuente": "...", "video": "videos/AAAA-MM-DD.mp4", "metricool": "<plannerUrl o id>", "acento": "#hex", "escenas": ["prompt", "capas", "..."], "voz": "elevenlabs"}
    ```
-   En `voz` va `elevenlabs` o `kokoro` según lo que imprimió el motor. Si el tema salió de `IDEAS.md`, marcalo como usado (`[x]` y fecha). Commit + push.
+   En `voz` va `elevenlabs` si usaste `voz_archivo` o `kokoro` si no. Si el tema salió de `IDEAS.md`, marcalo como usado (`[x]` y fecha). Commit + push.
 9. **Limpieza.** Metricool descarga el video y guarda su propia copia (la respuesta trae `media` en `static.metricool.com`), así que el MP4 ya no hace falta en el repo. Borrá con `git rm` los MP4 de `videos/` con más de 3 días para que el repo no crezca. Nunca borres `guiones/` ni toques `plantilla/` ni `CONTENIDO.md`; en `historial.json` e `IDEAS.md` solo agregás entradas o marcás ideas usadas.
 10. **Informe final** (2–4 líneas): pilar y serie, título, fuente, voz usada (si fue Kokoro de respaldo, el motivo), hora programada y link de Metricool. Si no se publicó, el motivo (solo puede ser un error técnico o el tope mensual).
 

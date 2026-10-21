@@ -1282,6 +1282,11 @@ def main():
         for e in err:
             print("ERROR", e)
         sys.exit(2)
+    if "--texto-voz" in sys.argv:  # texto hablado (pronunciaciones) para generar la voz afuera, p. ej. ElevenLabs
+        print("TEXTO_VOZ_INICIO")
+        print(el_text(layout_beats(guion))[0])
+        print("TEXTO_VOZ_FIN")
+        return
     voz_path = None
     if guion.get("voz_archivo"):
         voz_path = os.path.join(os.path.dirname(os.path.abspath(args[0])), guion["voz_archivo"])
