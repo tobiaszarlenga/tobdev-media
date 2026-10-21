@@ -163,6 +163,51 @@ def synth(guion, beats):
     return track, total
 
 
+def synth_external(guion, beats, path):
+    """Voz grabada aparte (ElevenLabs u otra): usa el audio tal cual y saca los tiempos por palabra
+    alineando (DTW sobre MFCC) contra una referencia Kokoro del mismo texto, que sí tiene tiempos.
+    El audio tiene que decir el texto del guion (la pronunciación de {Texto|pronunciación})."""
+    import numpy as np, librosa
+    ref, ref_total = synth(guion, beats)  # deja t0/t1/t_speech/t_end en la línea de tiempo de la referencia
+    ref = ref[: int(ref_total * SR)]
+    y, _ = librosa.load(path, sr=SR, mono=True)
+    y, _ = librosa.effects.trim(y, top_db=40)
+    lead = 0.12
+    ext = np.concatenate([np.zeros(int(lead * SR), dtype=np.float32), y.astype(np.float32)])
+    # mismo nivel que la voz Kokoro para que la cadena de mezcla (volumen, compresor) funcione igual
+    def rms(a):
+        v = a[np.abs(a) > 0.01]
+        return float(np.sqrt(np.mean(v ** 2))) if len(v) else 1.0
+    ext *= rms(ref) / max(rms(ext), 1e-6)
+    peak = float(np.max(np.abs(ext)))
+    if peak > 0.98:
+        ext *= 0.98 / peak
+    hop = 480  # 20 ms
+
+    def feat(a):
+        m = librosa.feature.mfcc(y=a, sr=SR, n_mfcc=20, hop_length=hop, n_fft=1024)
+        return (m - m.mean(axis=1, keepdims=True)) / (m.std(axis=1, keepdims=True) + 1e-6)
+
+    _, wp = librosa.sequence.dtw(X=feat(ref), Y=feat(ext), metric="euclidean")
+    wp = wp[::-1]
+    ri = np.arange(wp[:, 0].max() + 1)
+    ej = np.array([wp[wp[:, 0] == i, 1].mean() for i in ri])
+    ej = np.maximum.accumulate(ej)  # monótona
+
+    def m(t):
+        return float(np.interp(t * SR / hop, ri, ej) * hop / SR)
+
+    for b in beats:
+        b["t_speech"] = m(b["t_speech"])
+        b["t_end"] = m(b["t_end"])
+        for w in b["words"]:
+            w["t0"], w["t1"] = m(w["t0"]), m(w["t1"])
+    total = len(ext) / SR + 0.1
+    track = np.zeros(int((total + 3) * SR), dtype=np.float32)
+    track[: len(ext)] = ext
+    return track, total
+
+
 # ---------------------------------------------------------------- tiempos de escenas y subtítulos
 def layout_beats(guion):
     beats = []
@@ -1147,6 +1192,13 @@ def main():
         for e in err:
             print("ERROR", e)
         sys.exit(2)
+    voz_path = None
+    if guion.get("voz_archivo"):
+        voz_path = os.path.join(os.path.dirname(os.path.abspath(args[0])), guion["voz_archivo"])
+        if not os.path.exists(voz_path):
+            print("ERROR no existe el audio de voz_archivo:", voz_path)
+            sys.exit(2)
+        raw = raw + open(voz_path, "rb").read()
     key = hashlib.sha256(raw + open(os.path.abspath(__file__), "rb").read()).hexdigest()[:12]
     work = os.environ.get("REEL_WORK") or os.path.join(tempfile.gettempdir(), "reel2-" + key)
     ready = all(os.path.exists(os.path.join(work, f)) for f in ("index.html", "assets/audio.mp3", "tiempos.json")) \
@@ -1156,7 +1208,7 @@ def main():
         print("REUSO", work, "DUR", D)
     else:
         beats = layout_beats(guion)
-        voice, D = synth(guion, beats)
+        voice, D = synth_external(guion, beats, voz_path) if voz_path else synth(guion, beats)
         if beats[-1]["escena"]["tipo"] == "cierre":
             D = max(D, beats[-1]["t_speech"] + 3.4)
         D = round(D + 0.5, 3)

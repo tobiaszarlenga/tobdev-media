@@ -25,6 +25,7 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 | `voz` | `em_alex` (por defecto, masculina) o `ef_dora` (femenina). |
 | `acento_voz` | `rio` (por defecto: "y" y "ll" como "sh") o `latam` (neutro). |
 | `velocidad` | 1.1 por defecto. Entre 1.0 y 1.2. |
+| `voz_archivo` | Opcional. Ruta (relativa al guion) a una voz grabada aparte, por ejemplo de ElevenLabs. Se usa ese audio tal cual y los subtítulos y escenas se acomodan a sus tiempos (alineación automática contra una referencia Kokoro). El audio tiene que decir exactamente el texto del guion, con la pronunciación de `{Texto\|pronunciación}`. Necesita `librosa` (`pip install --break-system-packages librosa`). |
 
 ## Marcado dentro de `texto`
 
