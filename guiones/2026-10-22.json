@@ -1,0 +1,183 @@
+{
+  "etiqueta": "22 OCT",
+  "fuente": "Anthropic · claude.com",
+  "acento": "#D97757",
+  "beats": [
+    {
+      "texto": "Una {app|ap} que te escribe *a la mañana* con lo que no podés dejar pasar.",
+      "escena": {
+        "tipo": "celular",
+        "app": "Claude Duet",
+        "icono": "chat",
+        "mensajes": [
+          {
+            "de": "ia",
+            "texto": "Buen día. Tenés 3 facturas vencidas y un cliente esperando respuesta.",
+            "en": "escribe"
+          },
+          {
+            "de": "yo",
+            "texto": "Prepará los recordatorios",
+            "en": "podés"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Se llama {Claude Duet|clod diuét}, es de {Anthropic|ántropic}, y se conecta con *más de seis mil* {apps|aps} y {plugins|plaguins}.",
+      "escena": {
+        "tipo": "numero",
+        "valor": 6000,
+        "prefijo": "+",
+        "etiqueta": "*conectores* y plugins",
+        "en": "seis"
+      }
+    },
+    {
+      "texto": "Mira tus {apps|aps} conectadas, y te avisa *solo cuando* algo necesita tu atención.",
+      "escena": {
+        "tipo": "flujo",
+        "entradas": [
+          {
+            "texto": "Gmail",
+            "icono": "chat",
+            "en": "Mira"
+          },
+          {
+            "texto": "Slack",
+            "icono": "chat",
+            "en": "conectadas"
+          },
+          {
+            "texto": "Stripe",
+            "icono": "dinero",
+            "en": "avisa"
+          }
+        ],
+        "salida": "Resumen de la mañana",
+        "en": "atención"
+      }
+    },
+    {
+      "texto": "Le pedís una tarea en un mensaje, y la hace en segundo plano, con *su propio navegador*.",
+      "escena": {
+        "tipo": "navegador",
+        "url": "panel.ferreteria-demo.com",
+        "pestanas": [
+          "Facturas",
+          "Clientes"
+        ],
+        "titulo": "Trabajando en segundo plano",
+        "en": "navegador"
+      }
+    },
+    {
+      "texto": "Antes de mandar un mensaje, pagar, firmar o borrar algo, *te pide permiso*.",
+      "escena": {
+        "tipo": "alerta",
+        "titulo": "Necesita tu aprobación",
+        "filas": [
+          [
+            "Acción",
+            "Enviar recordatorio"
+          ],
+          [
+            "Para",
+            "Ferretería Demo"
+          ],
+          [
+            "Monto",
+            "$ 48.000"
+          ],
+          [
+            "Estado",
+            "Esperando tu OK"
+          ]
+        ],
+        "marcar": 3,
+        "en": "permiso"
+      }
+    },
+    {
+      "texto": "Y hay cosas que no hace *ni con tu permiso*: operar acciones o mover plata entre cuentas.",
+      "escena": {
+        "tipo": "lista",
+        "titulo": "Prohibido aunque lo apruebes",
+        "items": [
+          {
+            "texto": "Operar acciones",
+            "en": "acciones"
+          },
+          {
+            "texto": "Mover plata entre cuentas",
+            "en": "plata"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "¿Y para tu negocio?",
+      "escena": {
+        "tipo": "frase"
+      }
+    },
+    {
+      "texto": "Facturas impagas en {QuickBooks|cuic bucs} o {Stripe|straip}, sueldos en {Gusto|gusto}, o *seguimientos* de clientes.",
+      "escena": {
+        "tipo": "capas",
+        "items": [
+          "Facturas impagas",
+          "Sueldos del mes",
+          "Seguimiento de clientes",
+          "Recordatorios"
+        ],
+        "en": "seguimientos"
+      }
+    },
+    {
+      "texto": "Por ahora es una vista previa, solo en Estados Unidos, para {Pro|pro} y {Max|max}, con *lista de espera*.",
+      "escena": {
+        "tipo": "chips",
+        "estilo": "etiqueta",
+        "items": [
+          {
+            "texto": "Vista previa",
+            "icono": "lupa",
+            "en": "previa"
+          },
+          {
+            "texto": "Solo EE. UU.",
+            "icono": "globo",
+            "en": "Unidos"
+          },
+          {
+            "texto": "Pro y Max",
+            "icono": "usuario",
+            "en": "Pro"
+          },
+          {
+            "texto": "Lista de espera",
+            "icono": "reloj",
+            "en": "espera"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Revisa cada pocas horas, y todavía puede *equivocarse* con lo urgente.",
+      "escena": {
+        "tipo": "reloj",
+        "antes": "Cada pocas horas",
+        "despues": "Puede equivocarse",
+        "en": "equivocarse"
+      }
+    },
+    {
+      "texto": "¿Le darías ese acceso a tu negocio? *Contámelo* en los comentarios, y seguí a {@tobdev.ia|tob dev punto i a}.",
+      "escena": {
+        "tipo": "cierre"
+      }
+    }
+  ],
+  "voz_archivo": "/tmp/voz-2026-10-22.mp3"
+}
