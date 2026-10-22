@@ -30,13 +30,17 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    - 8 a 12 beats, 40 a 55 s. El beat 1 es el gancho (fórmulas en `CONTENIDO.md`): tiene que frenar el scroll en el primer segundo, nunca "hoy les traigo".
    - `etiqueta`: la fecha (`20 OCT`) para noticias; serie y número para el resto (`TIP #2`, `HISTORIA #1`, `IA Y PLATA #1`, `IA EN TU NEGOCIO #1`).
    - El beat anterior al cierre o el cierre lleva el llamado a la acción del pilar (guardar, comentar o compartir), con voz.
-   - Cada beat con una escena distinta a la anterior, al menos 5 tipos distintos por reel, y no arrancar con el mismo tipo que el reel anterior (mirá `escenas` en `historial.json`).
+   - **Que no se parezca al anterior.** Cada beat con una escena distinta a la anterior, al menos 5 tipos distintos por reel, al menos 2 tipos que no hayan aparecido en los últimos 3 reels (mirá `escenas` en `historial.json`; hay 27 tipos, incluidos `imagen`, `codigo`, `pasos`, `anillo`, `titular`, `cita`, `tabla`, `calendario` y `planes`), y no arrancar con el mismo tipo que el reel anterior.
+   - `tema` (look): `noche`, `claro`, `grilla`, `neon` o `editorial`, distinto al de los últimos 2 reels (mirá `tema` en `historial.json`). Sugerencia por pilar: tips → `grilla` o `claro`; noticias → `noche` o `neon`; historia → `editorial`; negocio → `claro`. No es obligatorio: lo que importa es alternar.
+   - `musica`: `tech`, `suave`, `urgente` o `retro`, distinta a la del reel anterior.
    - `acento`: color de la marca de la que se habla o uno de la lista de ESCENAS.md, distinto al del reel anterior.
+   - Si el tema tiene una imagen real que lo cuenta mejor que un mockup (historia: una foto del ENIAC o de la polilla del Mark II; una noticia sobre un producto físico), usá la escena `imagen` con una foto de Wikimedia Commons, Unsplash o Pexels **con licencia libre y crédito**, o una ilustración generada con el conector de ElevenLabs (`creative_generate_image`). Nunca Google Imágenes ni fotos de prensa. Si la descarga falla (dominio no permitido), cambiá la escena: no vale la pena trabarse.
+   - Si ninguna escena ilustra bien una frase, podés crear una nueva en `plantilla/make_reel2.py` (máximo una por reel: HTML en `scene_html`, cues en `scene_params`, animación en el objeto `SC` del JS, CSS, `SCENE_TYPES`/`REQUIRED` y una fila en `ESCENAS.md`). Tiene que pasar `--revisar` y verse bien en la hoja de contacto; se commitea con el reel para que quede disponible.
    - Pronunciación con `{Texto|pron}` para siglas, marcas y palabras en inglés. Máximo 1–2 `*palabras clave*` por beat.
    - Solo datos verificados en las fuentes; nada de cifras inventadas. Los datos de los mockups (nombres, montos, empresas) son ficticios. Sin logos, sin emojis.
    - Voz de marca TobDev: español rioplatense con voseo, directo, técnico, **sin hype**. Nada de "revolucionario", "increíble", "cambia todo".
    - Último beat: `cierre`.
-   El diseño base (fondo, fuentes, logo, cierre) está fijo en la plantilla según el sistema de diseño de TobDev: no lo toques. Hay un guion de ejemplo en `plantilla/ejemplo-guion.json`.
+   La cabecera, el logo y el cierre son de TobDev y están fijos en la plantilla: no los toques. Fondo, superficies, tipografía y subtítulos cambian con `tema`. Hay guiones de ejemplo en `plantilla/ejemplo-guion.json` (noticia), `plantilla/ejemplo-tip.json` (tip) y `plantilla/ejemplo-claro.json` (tema claro con las escenas nuevas).
 5. **Voz, revisar y renderizar.** Instalá lo que falte: `pip install --break-system-packages numpy scipy soundfile kokoro-onnx librosa`.
    **Voz (ElevenLabs).** Dejá el texto de los beats cerrado antes de este paso: si después lo cambiás, la voz hay que generarla de nuevo y gasta créditos otra vez (cambiar escenas no afecta).
    ```bash
@@ -51,7 +55,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    ```bash
    python3 plantilla/make_reel2.py guiones/AAAA-MM-DD.json videos/AAAA-MM-DD.mp4 --revisar
    ```
-   Valida el guion (`ERROR` frena: corregí y repetí; `AVISO`: corregilo si tiene sentido), arma la voz y el HTML (menos de 1 minuto) e imprime `REVISAR <ruta>`: una hoja de contacto con un fotograma por escena. También imprime `VOZ archivo` (voz de ElevenLabs alineada) o `VOZ kokoro`. Mirala con Read (es una sola imagen): texto cortado, superposiciones, algo fuera de pantalla o una escena vacía. Si hay que corregir, cambiá el guion y repetí `--revisar` (máximo 2 veces).
+   Valida el guion (`ERROR` frena: corregí y repetí; `AVISO`: corregilo si tiene sentido, en especial los de variedad: mismo tema, misma música, escenas repetidas), arma la voz y el HTML (menos de 2 minutos) e imprime `REVISAR <ruta>` (una o dos hojas de contacto con un fotograma por escena). También imprime `VOZ archivo` (voz de ElevenLabs alineada) o `VOZ kokoro`. Miralas con Read: texto cortado, superposiciones, algo fuera de pantalla, una escena vacía o una imagen que no es la que esperabas. Si hay que corregir, cambiá el guion (no el texto de los beats, que ya tiene voz) y repetí `--revisar` (máximo 2 veces).
    ```bash
    python3 plantilla/make_reel2.py guiones/AAAA-MM-DD.json videos/AAAA-MM-DD.mp4
    ```
@@ -77,7 +81,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    - La URL de `raw.githubusercontent.com` funciona apenas hacés push (GitHub Pages a veces tarda o no se actualiza). Si Metricool la rechaza, esperá 2 minutos y probá una vez con `https://tobiaszarlenga.github.io/tobdev-media/videos/AAAA-MM-DD.mp4`. Si también falla, informá el error textual.
 8. **Historial.** Agregá a `historial.json` → `publicados`:
    ```json
-   {"fecha": "AAAA-MM-DD", "pilar": "tip", "serie": "TIP #2", "titulo": "...", "url_fuente": "...", "video": "videos/AAAA-MM-DD.mp4", "metricool": "<plannerUrl o id>", "acento": "#hex", "escenas": ["prompt", "capas", "..."], "voz": "elevenlabs"}
+   {"fecha": "AAAA-MM-DD", "pilar": "tip", "serie": "TIP #2", "titulo": "...", "url_fuente": "...", "video": "videos/AAAA-MM-DD.mp4", "metricool": "<plannerUrl o id>", "acento": "#hex", "tema": "claro", "musica": "suave", "escenas": ["titular", "codigo", "..."], "voz": "elevenlabs"}
    ```
    En `voz` va `elevenlabs` si usaste `voz_archivo` o `kokoro` si no. Si el tema salió de `IDEAS.md`, marcalo como usado (`[x]` y fecha). Commit + push.
 9. **Limpieza.** Metricool descarga el video y guarda su propia copia (la respuesta trae `media` en `static.metricool.com`), así que el MP4 ya no hace falta en el repo. Borrá con `git rm` los MP4 de `videos/` con más de 3 días para que el repo no crezca. Nunca borres `guiones/` ni toques `plantilla/` ni `CONTENIDO.md`; en `historial.json` e `IDEAS.md` solo agregás entradas o marcás ideas usadas.
@@ -86,7 +90,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
 ## Para gastar menos y tardar menos
 
 - **Sin subagentes.** Hacé todo en esta sesión: cada subagente arranca de cero y multiplica el consumo.
-- Leé solo `TAREA.md`, `CONTENIDO.md`, `IDEAS.md`, `plantilla/ESCENAS.md` y `historial.json`, una vez cada uno. No abras `make_reel2.py` ni el resto de `plantilla/` salvo que el script dé un error que no se entienda.
+- Leé solo `TAREA.md`, `CONTENIDO.md`, `IDEAS.md`, `plantilla/ESCENAS.md` y `historial.json`, una vez cada uno. No abras `make_reel2.py` ni el resto de `plantilla/` salvo que el script dé un error que no se entienda o que vayas a crear una escena nueva (paso 4).
 - Para elegir y verificar el tema: 2 a 5 búsquedas y WebFetch con un pedido concreto ("devolvé solo la fecha y el nombre de…"), no páginas enteras.
 - Para revisar el video alcanza la hoja de contacto de `--revisar`. No extraigas fotogramas del video final.
 - No esperes con `sleep` ni consultes el render en bucle: corré el comando en primer plano.

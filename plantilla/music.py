@@ -151,32 +151,62 @@ def riser(t0, dur, gain=0.08):
     place(y, t0, gain, 0.0, send=0.5)
 
 
-# ---------- composición (reel de noticias) ----------
-BAR = 2.4; BEAT = 0.6
+# ---------- composición ----------
+# Estilos: cambian tempo, progresión, arpegio, batería y transposición. La semilla elige entre dos progresiones por estilo.
+STYLES = {
+    "tech":    dict(bar=2.4, kick=(0, 2), hats=True, pad=0.10, pluck=0.105, decay=0.28, cutoff=3400, tr=0,
+                    prog=[[([48, 55, 62, 64], 36, [60, 64, 67, 74]), ([50, 55, 59, 62], 43, [59, 62, 67, 71]),
+                           ([52, 55, 60, 64], 45, [60, 64, 69, 72]), ([48, 52, 57, 64], 41, [57, 60, 64, 69])],
+                          [([45, 52, 60, 64], 33, [57, 60, 64, 69]), ([48, 55, 59, 64], 36, [59, 64, 67, 71]),
+                           ([50, 57, 62, 65], 38, [62, 65, 69, 74]), ([43, 50, 59, 62], 31, [55, 59, 62, 67])]],
+                    arp=[0, 1, 2, 3, 2, 1, 2, 3]),
+    "suave":   dict(bar=3.0, kick=(), hats=False, pad=0.13, pluck=0.08, decay=0.42, cutoff=2600, tr=0,
+                    prog=[[([48, 52, 55, 62], 36, [64, 67, 71, 74]), ([45, 52, 57, 60], 33, [60, 64, 67, 72]),
+                           ([41, 48, 53, 57], 29, [57, 60, 65, 69]), ([43, 50, 55, 59], 31, [59, 62, 67, 71])],
+                          [([50, 57, 62, 65], 38, [62, 65, 69, 74]), ([46, 53, 58, 62], 34, [58, 62, 65, 70]),
+                           ([48, 55, 60, 64], 36, [60, 64, 67, 72]), ([43, 50, 55, 59], 31, [59, 62, 67, 71])]],
+                    arp=[0, 2, 1, 3, 0, 2, 3, 1]),
+    "urgente": dict(bar=2.0, kick=(0, 1, 2, 3), hats=True, pad=0.09, pluck=0.12, decay=0.2, cutoff=4200, tr=2,
+                    prog=[[([45, 52, 57, 60], 33, [57, 60, 64, 69]), ([44, 51, 56, 60], 32, [56, 60, 63, 68]),
+                           ([41, 48, 53, 57], 29, [53, 57, 60, 65]), ([43, 50, 55, 59], 31, [55, 59, 62, 67])],
+                          [([47, 54, 59, 62], 35, [59, 62, 66, 71]), ([45, 52, 57, 60], 33, [57, 60, 64, 69]),
+                           ([43, 50, 55, 59], 31, [55, 59, 62, 67]), ([42, 49, 54, 57], 30, [54, 57, 61, 66])]],
+                    arp=[0, 0, 1, 2, 3, 3, 2, 1]),
+    "retro":   dict(bar=2.4, kick=(0, 2), hats=True, pad=0.08, pluck=0.13, decay=0.16, cutoff=5200, tr=-2,
+                    prog=[[([48, 55, 60, 64], 36, [60, 64, 67, 72]), ([53, 60, 65, 69], 41, [65, 69, 72, 77]),
+                           ([50, 57, 62, 65], 38, [62, 65, 69, 74]), ([55, 62, 67, 71], 43, [67, 71, 74, 79])],
+                          [([45, 52, 57, 60], 33, [57, 60, 64, 69]), ([50, 57, 62, 65], 38, [62, 65, 69, 74]),
+                           ([48, 55, 60, 64], 36, [60, 64, 67, 72]), ([43, 50, 55, 59], 31, [55, 59, 62, 67])]],
+                    arp=[0, 1, 0, 2, 0, 3, 0, 2]),
+}
+ST = STYLES.get(CUES.get("estilo", "tech"), STYLES["tech"])
+SEED = int(CUES.get("semilla", 7))
+rng = np.random.default_rng(SEED)
+BAR = ST["bar"]; BEAT = BAR / 4
 scenes = CUES.get("scenes", [0.0])
-PROG = [([48, 55, 62, 64], 36, [60, 64, 67, 74]), ([50, 55, 59, 62], 43, [59, 62, 67, 71]),
-        ([52, 55, 60, 64], 45, [60, 64, 69, 72]), ([48, 52, 57, 64], 41, [57, 60, 64, 69])]
-ARP = [0, 1, 2, 3, 2, 1, 2, 3]
+PROG = ST["prog"][SEED % len(ST["prog"])]
+ARP = ST["arp"]; TR = ST["tr"]
 END = DUR - 3.0
 t = 0.0; bar = 0
 while t < END - 1e-6:
     pad_notes, root, arp = PROG[bar % 4]
-    pad_chord(pad_notes, t, min(BAR, END - t), gain=0.10)
+    pad_chord([m + TR for m in pad_notes], t, min(BAR, END - t), gain=ST["pad"], cutoff=ST["cutoff"])
     for k in range(8):
-        tk = t + k * 0.3
+        tk = t + k * BAR / 8
         if tk >= END: break
-        pluck(arp[ARP[k]], tk, gain=0.105, pan=-0.35 if k % 2 else 0.35)
+        pluck(arp[ARP[k]] + TR, tk, gain=ST["pluck"], pan=-0.35 if k % 2 else 0.35, decay=ST["decay"])
     for b in range(4):
         tb = t + b * BEAT
         if tb >= END: break
-        bass(root, tb, 0.5, gain=0.11)
+        bass(root + TR, tb, BEAT * 0.85, gain=0.11)
         if tb >= 4.5:
-            if b in (0, 2): kick(tb, gain=0.18)
-            for h in (0.0, 0.3):
-                if tb + h < END: hat(tb + h, gain=0.055 if h == 0 else 0.08)
+            if b in ST["kick"]: kick(tb, gain=0.18)
+            if ST["hats"]:
+                for h in (0.0, BEAT / 2):
+                    if tb + h < END: hat(tb + h, gain=0.055 if h == 0 else 0.08)
     t += BAR; bar += 1
-pad_chord([48, 55, 59, 62, 64], END, 3.0, gain=0.12, cutoff=2000)
-bass(36, END, 2.5, gain=0.14)
+pad_chord([m + TR for m in (48, 55, 59, 62, 64)], END, 3.0, gain=0.12, cutoff=2000)
+bass(36 + TR, END, 2.5, gain=0.14)
 for s in scenes[1:]: whoosh(s - 0.15, 0.45, gain=0.07)
 chime([79, 84], 0.3, gain=0.07)
 for c in CUES.get("cards", []): pop(c, f=880, gain=0.08)

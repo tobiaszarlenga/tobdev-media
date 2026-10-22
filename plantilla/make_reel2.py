@@ -24,10 +24,33 @@ MODEL_URLS = {
     "voices-v1.0.bin": "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin",
 }
 SCENE_TYPES = {"terminal", "linea_tiempo", "prompt", "capas", "flujo", "cursores", "chips", "frase", "lista", "reloj", "alerta", "numero",
-               "navegador", "celular", "grafico", "comparacion", "particulas", "cierre"}
+               "navegador", "celular", "grafico", "comparacion", "particulas", "cierre",
+               # v2.1
+               "imagen", "codigo", "pasos", "anillo", "titular", "cita", "tabla", "calendario", "planes"}
 NOCAPS = {"frase", "cierre"}          # escenas que ya muestran el texto: sin subtítulos arriba
 PUNCT_PAUSE = {",": 0.10, ";": 0.16, ":": 0.18, ".": 0.24, "?": 0.26, "!": 0.24, "…": 0.26}
 BEAT_GAP = 0.14
+# Temas visuales: cambian fondo, superficies, tipografía y subtítulos. El cierre y la cabecera son siempre de TobDev.
+THEMES = {
+    "noche": dict(bg="#0A0E1A", surface="rgba(14,20,36,.93)", surface2="#141C31", surface3="#18213A", ink="#0A0E1A", text="#FFFFFF",
+                  soft="#C6CFE0", muted="#8A97B0", border="rgba(255,255,255,.11)", line="rgba(255,255,255,.12)", capdone="#C6CFE0",
+                  display='"FreeSans","Helvetica Neue",Arial,sans-serif', radius="28px", mark="none", glow=".28"),
+    "claro": dict(bg="#F3EFE6", surface="#FFFFFF", surface2="#ECE7DB", surface3="#E4DED0", ink="#0A0E1A", text="#0F1424",
+                  soft="#3C4660", muted="#7A849A", border="rgba(10,14,26,.12)", line="rgba(10,14,26,.14)", capdone="#4A5470",
+                  display='"Poppins","FreeSans",Arial,sans-serif', radius="24px", mark="brightness(0)", glow=".16"),
+    "grilla": dict(bg="#060A12", surface="rgba(9,14,26,.96)", surface2="#0E1626", surface3="#121C30", ink="#060A12", text="#EAF2FF",
+                   soft="#B8C6E0", muted="#7C8AA6", border="rgba(120,160,255,.22)", line="rgba(120,160,255,.18)", capdone="#B8C6E0",
+                   display='"FreeSans","Helvetica Neue",Arial,sans-serif', radius="10px", mark="none", glow=".22"),
+    "neon": dict(bg="#04050B", surface="rgba(8,9,20,.96)", surface2="#0D0F22", surface3="#12152C", ink="#04050B", text="#FFFFFF",
+                 soft="#D5D9F2", muted="#8E95B8", border="rgba(var(--acc-rgb),.45)", line="rgba(var(--acc-rgb),.3)", capdone="#D5D9F2",
+                 display='"FreeSans","Helvetica Neue",Arial,sans-serif', radius="20px", mark="none", glow=".4"),
+    "editorial": dict(bg="#15120E", surface="#1F1A14", surface2="#2A2319", surface3="#332B1F", ink="#15120E", text="#F4ECDC",
+                      soft="#D9CDB4", muted="#9A8E78", border="rgba(244,236,220,.14)", line="rgba(244,236,220,.16)", capdone="#D9CDB4",
+                      display='"Lora","Georgia",serif', radius="6px", mark="none", glow=".2"),
+}
+TRANSITIONS = ["zoom", "rise", "wipe", "slide", "iris", "flip", "push", "swing", "corte"]
+MUSIC_STYLES = ["tech", "suave", "urgente", "retro"]
+IMG_MAGIC = {b"\xff\xd8\xff": "jpg", b"\x89PNG": "png", b"RIFF": "webp", b"GIF8": "gif"}
 
 
 def esc(s):
@@ -422,7 +445,7 @@ def scene_html(sid, b, D):
         return (f'<div class="pr-wrap"><div class="glass pr-box" id="{p}-box"><div class="eyebrow">{esc(e.get("etiqueta", "Tu mensaje"))}</div>'
                 f'<div class="pr-text" style="font-size:{fs}px">{chars}</div>'
                 f'<div class="pr-foot"><div class="pr-tools"><span>+</span><span class="mono">Adjuntar</span></div>'
-                f'<div class="pr-send" id="{p}-send">{icon("enviar", 44, "#0A0E1A")}</div></div></div>'
+                f'<div class="pr-send" id="{p}-send">{icon("enviar", 44, "var(--ink)")}</div></div></div>'
                 f'<div class="pr-status mono" id="{p}-st"><span class="pr-spin"></span>{esc(e.get("estado", "Generando…"))}</div></div>')
     if t == "capas":
         items = (e.get("items") or ["", "", "", ""])[:5]
@@ -432,7 +455,7 @@ def scene_html(sid, b, D):
         ins = e.get("entradas", [])[:3]
         n = len(ins)
         xs = [540] if n == 1 else ([300, 780] if n == 2 else [180, 540, 900])
-        chips = "".join(f'<div class="fl-in glass" id="{p}-i{i}" style="left:{x - 160}px">{icon(it.get("icono", "archivo"), 54, "var(--acc)")}'
+        chips = "".join(f'<div class="fl-in glass{" solo" if n == 1 else ""}" id="{p}-i{i}" style="left:{x - (230 if n == 1 else 160)}px">{icon(it.get("icono", "archivo"), 54, "var(--acc)")}'
                         f'<div class="fl-lab">{esc(it.get("texto", ""))}</div></div>' for i, (it, x) in enumerate(zip(ins, xs)))
         paths = "".join(f'<path d="M{x} 250 C {x} 400, 540 380, 540 520" class="fl-p" id="{p}-p{i}" pathLength="1000"/>'
                         f'<path d="M{x} 250 C {x} 400, 540 380, 540 520" class="fl-d" id="{p}-d{i}" pathLength="1000"/>'
@@ -444,7 +467,7 @@ def scene_html(sid, b, D):
         ppl = (e.get("personas") or ["Sofi", "Martín"])[:2]
         av = "".join(f'<div class="cu-av c{i}">{esc(n[0])}</div>' for i, n in enumerate(ppl))
         curs = "".join(f'<div class="cu-cur c{i}" id="{p}-c{i}"><svg width="46" height="46" viewBox="0 0 24 24"><path d="M4 2l15 9-7 1.5L8.5 20z" '
-                       f'fill="currentColor" stroke="#0A0E1A" stroke-width="1.2"/></svg><span>{esc(n)}</span></div>' for i, n in enumerate(ppl))
+                       f'fill="currentColor" stroke="var(--bg)" stroke-width="1.2"/></svg><span>{esc(n)}</span></div>' for i, n in enumerate(ppl))
         ant = e.get("antes", ""); dsp = e.get("despues", "")
         return (f'<div class="cu-doc glass" id="{p}-doc"><div class="cu-bar"><div class="cu-dots"><i></i><i></i><i></i></div>'
                 f'<div class="mono cu-ed">Editando · {len(ppl) + 1}</div><div class="cu-avs">{av}<div class="cu-av me">Vos</div></div></div>'
@@ -456,7 +479,7 @@ def scene_html(sid, b, D):
     if t == "chips":
         it = e.get("items", [])[:4]
         if e.get("estilo") == "archivo":
-            rows = "".join(f'<div class="ch-file glass" id="{p}-k{i}"><div class="ch-doc"><svg width="96" height="118" viewBox="0 0 96 118"><path d="M8 2h56l30 30v78a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6V8a6 6 0 0 1 6-6z" fill="#141C31" stroke="rgba(255,255,255,.22)" stroke-width="3"/><path d="M64 2v30h30" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="3"/></svg>'
+            rows = "".join(f'<div class="ch-file glass" id="{p}-k{i}"><div class="ch-doc"><svg width="96" height="118" viewBox="0 0 96 118"><path d="M8 2h56l30 30v78a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6V8a6 6 0 0 1 6-6z" fill="var(--surface2)" stroke="var(--line)" stroke-width="3"/><path d="M64 2v30h30" fill="none" stroke="var(--line)" stroke-width="3"/></svg>'
                            f'<span class="ch-ext">{esc(x.get("sub", ""))}</span></div><div class="ch-name">{esc(x.get("texto", ""))}</div>'
                            f'<div class="ch-dl" id="{p}-dl{i}">{icon("bajar", 44, "var(--acc)")}</div></div>' for i, x in enumerate(it))
             return f'<div class="ch-col">{rows}</div>'
@@ -476,19 +499,22 @@ def scene_html(sid, b, D):
         return f'<div class="fr-ring" id="{p}-ring"></div><div class="fr-box" style="font-size:{fs}px">{" ".join(words)}</div>'
     if t == "lista":
         it = e.get("items", [])[:4]
-        rows = "".join(f'<div class="li-row glass" id="{p}-k{i}"><div class="li-ck"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#0A0E1A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7" pathLength="100" class="li-path" id="{p}-ck{i}"/></svg></div>'
+        rows = "".join(f'<div class="li-row glass" id="{p}-k{i}"><div class="li-ck"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7" pathLength="100" class="li-path" id="{p}-ck{i}"/></svg></div>'
                        f'<div class="li-t">{esc(x.get("texto", ""))}</div></div>' for i, x in enumerate(it))
         tit = f'<div class="eyebrow li-h">{esc(e["titulo"])}</div>' if e.get("titulo") else ""
         return f'<div class="li-col">{tit}{rows}</div>'
     if t == "reloj":
         ticks = "".join(f'<i style="transform:rotate({a}deg) translateY(-226px)" class="{"big" if a % 90 == 0 else ""}"></i>' for a in range(0, 360, 30))
+        ant, dsp = e.get("antes", ""), e.get("despues", "")
+        fa = fit(ant, [(12, 100), (18, 80), (26, 64), (999, 52)])
+        fb = fit(dsp, [(10, 150), (16, 112), (22, 88), (999, 70)])
         return (f'<div class="rl-face" id="{p}-face">{ticks}<div class="rl-arc" id="{p}-arc"></div><div class="rl-h" id="{p}-h"></div><div class="rl-m" id="{p}-m"></div><div class="rl-c"></div></div>'
-                f'<div class="rl-txt"><span class="rl-a" id="{p}-a">{esc(e.get("antes", ""))}</span><span class="rl-b" id="{p}-b">{esc(e.get("despues", ""))}</span></div>')
+                f'<div class="rl-txt"><span class="rl-a" id="{p}-a" style="font-size:{fa}px">{esc(ant)}</span><span class="rl-b" id="{p}-b" style="font-size:{fb}px">{esc(dsp)}</span></div>')
     if t == "alerta":
         filas = e.get("filas", [])[:5]
         rows = "".join(f'<div class="al-row{" mk" if i == e.get("marcar") else ""}" id="{p}-r{i}"><span>{esc(a)}</span><span class="al-dots"></span><span class="mono">{esc(v)}</span></div>'
                        for i, (a, v) in enumerate(filas))
-        return (f'<div class="al-card glass" id="{p}-card"><div class="al-head"><div class="al-ic" id="{p}-ic">{icon("alerta", 54, "#0A0E1A")}</div>'
+        return (f'<div class="al-card glass" id="{p}-card"><div class="al-head"><div class="al-ic" id="{p}-ic">{icon("alerta", 54, "var(--ink)")}</div>'
                 f'<div class="al-tt">{esc(e.get("titulo", "Atención"))}</div></div><div class="al-rows">{rows}</div></div>'
                 f'<div class="al-lens" id="{p}-lens">{icon("lupa", 150, "#FFFFFF")}</div>')
     if t == "numero":
@@ -502,11 +528,11 @@ def scene_html(sid, b, D):
         return (f'<div class="nv-win glass" id="{p}-win"><div class="nv-top"><div class="cu-dots"><i></i><i></i><i></i></div>{th}</div>'
                 f'<div class="nv-url mono">{icon("candado", 26, "var(--text-muted)")}<span id="{p}-url">{esc(e.get("url", ""))}</span></div>'
                 f'<div class="nv-body"><div class="nv-h">{kw_text(e.get("titulo", ""))}</div><div class="nv-grid">{cards}</div></div></div>'
-                f'<div class="nv-cursor" id="{p}-cur"><svg width="54" height="54" viewBox="0 0 24 24"><path d="M4 2l15 9-7 1.5L8.5 20z" fill="#fff" stroke="#0A0E1A" stroke-width="1.2"/></svg></div>')
+                f'<div class="nv-cursor" id="{p}-cur"><svg width="54" height="54" viewBox="0 0 24 24"><path d="M4 2l15 9-7 1.5L8.5 20z" fill="var(--text)" stroke="var(--bg)" stroke-width="1.2"/></svg></div>')
     if t == "celular":
         msgs = e.get("mensajes", [])[:4]
         bub = "".join(f'<div class="ph-m {"me" if m.get("de") == "yo" else "ia"}" id="{p}-m{i}">{esc(m.get("texto", ""))}</div>' for i, m in enumerate(msgs))
-        return (f'<div class="ph" id="{p}-ph"><div class="ph-notch"></div><div class="ph-top"><div class="ph-av">{icon(e.get("icono", "chip"), 34, "#0A0E1A")}</div>'
+        return (f'<div class="ph" id="{p}-ph"><div class="ph-notch"></div><div class="ph-top"><div class="ph-av">{icon(e.get("icono", "chip"), 34, "var(--ink)")}</div>'
                 f'<div><div class="ph-n">{esc(e.get("app", "Asistente"))}</div><div class="ph-s mono">en línea</div></div></div><div class="ph-body">{bub}'
                 f'<div class="ph-typing" id="{p}-ty"><i></i><i></i><i></i></div></div></div>')
     if t == "grafico":
@@ -547,6 +573,72 @@ def scene_html(sid, b, D):
                         f'<div class="lt-y">{esc(h.get("anio", ""))}</div><div class="lt-t">{kw_text(h.get("texto", ""))}</div></div>'
                         for i, h in enumerate(hs))
         return f'<div class="lt-rail"></div><div class="lt-fill" id="{p}-fill"></div>{items}'
+    if t == "imagen":
+        src = e.get("_src", "")
+        tit = f'<div class="im-tit" id="{p}-tit" style="font-size:{fit(re.sub(r"[*]", "", e.get("titulo", "")), [(18, 84), (30, 68), (999, 54)])}px">{kw_text(e.get("titulo", ""))}</div>' if e.get("titulo") else ""
+        cred = f'<div class="im-cred mono" id="{p}-cred">{esc(e["credito"])}</div>' if e.get("credito") else ""
+        if e.get("encuadre") == "tarjeta":
+            return (f'<div class="im-card" id="{p}-card"><div class="im-cf"><img src="{src}" id="{p}-img" alt=""/></div>'
+                    f'<div class="im-cap">{kw_text(e.get("titulo", ""))}</div>{cred}</div>')
+        return (f'<div class="im-full" id="{p}-f"><img src="{src}" id="{p}-img" alt=""/><div class="im-shade"></div></div>{tit}{cred}')
+    if t == "codigo":
+        lns = e.get("lineas", [])[:9]
+        rows = "".join(f'<div class="cd-l" id="{p}-ln{i}"><span class="cd-n">{i + 1}</span>'
+                       f'<span class="cd-t">{code_html(ln.get("texto", ""))}</span></div>' for i, ln in enumerate(lns))
+        return (f'<div class="cd-win" id="{p}-win"><div class="cd-top"><div class="cu-dots"><i></i><i></i><i></i></div>'
+                f'<div class="cd-tab mono">{esc(e.get("archivo", "main.py"))}</div></div><div class="cd-body mono">{rows}</div></div>')
+    if t == "pasos":
+        ps = e.get("pasos", [])[:4]
+        items = "".join(f'<div class="ps-it" id="{p}-k{i}"><div class="ps-n" id="{p}-n{i}">{i + 1}</div><div class="ps-tx"><div class="ps-t">{kw_text(x.get("titulo", ""))}</div>'
+                        f'{"<div class=ps-s>" + esc(x["sub"]) + "</div>" if x.get("sub") else ""}</div></div>' for i, x in enumerate(ps))
+        return f'<div class="ps-col"><div class="ps-rail"></div><div class="ps-fill" id="{p}-fill"></div>{items}</div>'
+    if t == "anillo":
+        return (f'<div class="an-box"><svg class="an-svg" viewBox="0 0 400 400"><circle cx="200" cy="200" r="170" class="an-bg"/>'
+                f'<circle cx="200" cy="200" r="170" class="an-fg" id="{p}-ring" pathLength="100"/></svg>'
+                f'<div class="an-v"><span id="{p}-n">0</span><span class="an-suf">{esc(e.get("sufijo", "%"))}</span></div></div>'
+                f'<div class="an-l" id="{p}-l">{kw_text(e.get("etiqueta", ""))}</div>')
+    if t == "titular":
+        words = parse_words(e.get("titulo", ""))
+        ws = " ".join(f'<span class="ti-w{" acc" if w["kw"] is not None else ""}" id="{p}-w{i}">{esc(w["cap"])}</span>' for i, w in enumerate(words))
+        fs = fit(re.sub(r"[*]", "", e.get("titulo", "")), [(24, 104), (40, 86), (60, 70), (999, 58)])
+        baj = f'<div class="ti-baj" id="{p}-baj">{esc(e["bajada"])}</div>' if e.get("bajada") else ""
+        return (f'<div class="ti-card" id="{p}-card"><div class="ti-top mono"><span class="ti-tag" id="{p}-tag">{esc(e.get("etiqueta", "ÚLTIMO"))}</span>'
+                f'<span>{esc(e.get("medio", ""))}</span><span class="ti-fe">{esc(e.get("fecha", ""))}</span></div>'
+                f'<div class="ti-h" style="font-size:{fs}px">{ws}</div>{baj}<div class="ti-rule" id="{p}-rule"></div></div>')
+    if t == "cita":
+        own = not e.get("texto")
+        src_words = [w["cap"] for w in b["words"]] if own else re.findall(r"\S+", e["texto"])
+        ws = " ".join(f'<span class="ci-w" id="{p}-w{i}">{esc(w)}</span>' for i, w in enumerate(src_words))
+        fs = fit(" ".join(src_words), [(30, 72), (60, 60), (100, 50), (999, 42)])
+        return (f'<div class="ci-card" id="{p}-card"><div class="ci-q">“</div><div class="ci-t" style="font-size:{fs}px">{ws}</div>'
+                f'<div class="ci-a" id="{p}-a"><div class="ci-av">{esc((e.get("autor") or "?")[0])}</div><div><div class="ci-n">{esc(e.get("autor", ""))}</div>'
+                f'<div class="ci-c mono">{esc(e.get("cargo", ""))}</div></div></div></div>')
+    if t == "tabla":
+        cols = (e.get("columnas") or [])[:3]
+        filas = e.get("filas", [])[:5]
+        head = "".join(f'<span>{esc(c)}</span>' for c in cols)
+        rows = "".join(f'<div class="tb-r{" mk" if i == e.get("marcar") else ""}" id="{p}-r{i}">' + "".join(f'<span>{esc(v)}</span>' for v in f[:3]) + '</div>'
+                       for i, f in enumerate(filas))
+        return (f'<div class="tb-card" id="{p}-card" style="--cols:{max(1, len(cols) or len(filas[0]) if filas else 2)}">'
+                f'{"<div class=eyebrow>" + esc(e["titulo"]) + "</div>" if e.get("titulo") else ""}'
+                f'<div class="tb-h mono">{head}</div>{rows}</div>')
+    if t == "calendario":
+        n = int(e.get("cantidad", 30)); start = int(e.get("inicio", 0)) % 7
+        marks = {int(m.get("dia", 0)): m for m in e.get("marcas", [])[:4]}
+        cells = "".join('<div class="ca-c off"></div>' for _ in range(start))
+        for d in range(1, n + 1):
+            m = marks.get(d)
+            cells += (f'<div class="ca-c{" mk" if m else ""}" id="{p}-d{d}"><span>{d}</span>' +
+                      (f'<b id="{p}-b{d}">{esc(m.get("texto", ""))}</b>' if m else "") + '</div>')
+        dow = "".join(f'<span>{d}</span>' for d in ("L", "M", "M", "J", "V", "S", "D"))
+        return (f'<div class="ca-card" id="{p}-card"><div class="ca-top"><span class="ca-mes">{esc(e.get("mes", ""))}</span>'
+                f'<span class="mono ca-y">{esc(e.get("anio", ""))}</span></div><div class="ca-dow mono">{dow}</div><div class="ca-grid">{cells}</div></div>')
+    if t == "planes":
+        pl = e.get("planes", [])[:3]
+        cards = "".join(f'<div class="pl-c{" hi" if x.get("destacado") else ""}" id="{p}-c{i}"><div class="pl-n mono">{esc(x.get("nombre", ""))}</div>'
+                        f'<div class="pl-p">{esc(x.get("precio", ""))}</div><div class="pl-d">{esc(x.get("detalle", ""))}</div>'
+                        f'{"<div class=pl-tag>" + esc(x.get("tag", "Recomendado")) + "</div>" if x.get("destacado") else ""}</div>' for i, x in enumerate(pl))
+        return f'<div class="pl-row n{len(pl)}">{cards}</div>'
     if t == "cierre":
         return (f'<div class="end"><img id="{p}-mark" src="assets/mark-white.svg" alt="TobDev"/>'
                 f'<div class="wm" id="{p}-wm">Tob<span class="grad">Dev</span></div>'
@@ -558,6 +650,32 @@ def scene_html(sid, b, D):
 
 def _mention(s):
     return re.sub(r"(@\w+)", lambda m: f'<b class="acc">{m.group(1)}</b>', esc(s))
+
+
+CODE_KW = {"def", "return", "import", "from", "if", "else", "elif", "for", "while", "const", "let", "var", "function", "async", "await",
+           "export", "class", "new", "true", "false", "null", "None", "True", "False", "with", "as", "in", "not", "and", "or", "print",
+           "SELECT", "FROM", "WHERE", "INSERT", "UPDATE", "fetch", "yield", "try", "except", "catch", "lambda", "npm", "npx", "pip", "git", "claude"}
+
+
+def code_html(s):
+    """Coloreado simple para la escena `codigo`: comentarios, strings, números, palabras clave y símbolos."""
+    out = []
+    for m in re.finditer(r'(#.*$|//.*$)|("[^"]*"|\'[^\']*\'|`[^`]*`)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_@][\w.-]*)|(\s+)|(.)', s):
+        com, st, num, ident, sp, other = m.groups()
+        if com is not None:
+            out.append(f'<span class="c-c">{esc(com)}</span>')
+        elif st is not None:
+            out.append(f'<span class="c-s">{esc(st)}</span>')
+        elif num is not None:
+            out.append(f'<span class="c-n">{esc(num)}</span>')
+        elif ident is not None:
+            cls = "c-k" if ident in CODE_KW else ("c-f" if ident.startswith(("/", "@")) else "")
+            out.append(f'<span class="{cls}">{esc(ident)}</span>' if cls else esc(ident))
+        elif sp is not None:
+            out.append(sp.replace(" ", "&nbsp;"))
+        else:
+            out.append(f'<span class="c-o">{esc(other)}</span>')
+    return "".join(out)
 
 
 def scene_params(b, t0, t1):
@@ -617,6 +735,51 @@ def scene_params(b, t0, t1):
     elif t == "capas":
         p["n"] = len((e.get("items") or ["", "", "", ""])[:5])
         p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+    elif t == "imagen":
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+        p["modo"] = "tarjeta" if e.get("encuadre") == "tarjeta" else "cover"
+        p["mov"] = e.get("movimiento", "")
+    elif t == "codigo":
+        lns = e.get("lineas", [])[:9]
+        p["cues"] = scene_cues(b, [x.get("en", "") for x in lns], t0, t1)
+        for i in range(1, len(p["cues"])):
+            if p["cues"][i] <= p["cues"][i - 1] + 0.18:
+                p["cues"][i] = round(p["cues"][i - 1] + 0.3, 3)
+        p["n"] = len(lns)
+        p["mk"] = [i for i, x in enumerate(lns) if x.get("marcar") or i == e.get("marcar")]
+    elif t == "pasos":
+        ps = e.get("pasos", [])[:4]
+        p["cues"] = scene_cues(b, [x.get("en", x.get("titulo", "")) for x in ps], t0, t1)
+        p["n"] = len(ps)
+    elif t == "anillo":
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+        p.update(val=float(e.get("valor", 50)), desde=float(e.get("desde", 0)), dec=int(e.get("decimales", 0)))
+    elif t == "titular":
+        p["n"] = len(parse_words(e.get("titulo", "")))
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+    elif t == "cita":
+        if e.get("texto"):
+            n = len(re.findall(r"\S+", e["texto"]))
+            st = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+            st = min(st, t0 + (t1 - t0) * 0.2)
+            p["cues"] = [round(st + i * max(0.05, min(0.16, (t1 - st - 1.0) / max(1, n))), 3) for i in range(n)]
+        else:
+            p["cues"] = [round(w["t0"], 3) for w in b["words"]]
+        p["autor"] = scene_cues(b, [e.get("en_autor", "")], t0, t1)[0] if e.get("en_autor") else p["cues"][-1] + 0.5
+    elif t == "tabla":
+        p["n"] = len(e.get("filas", [])[:5])
+        p["mk"] = e.get("marcar", -1)
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+    elif t == "calendario":
+        ms = e.get("marcas", [])[:4]
+        p["dias"] = [int(m.get("dia", 0)) for m in ms]
+        p["cues"] = scene_cues(b, [m.get("en", m.get("texto", "")) for m in ms], t0, t1)
+        p["n"] = int(e.get("cantidad", 30))
+    elif t == "planes":
+        pl = e.get("planes", [])[:3]
+        p["cues"] = scene_cues(b, [x.get("en", x.get("nombre", "")) for x in pl], t0, t1)
+        p["n"] = len(pl)
+        p["hi"] = [i for i, x in enumerate(pl) if x.get("destacado")]
     return p
 
 
@@ -625,21 +788,78 @@ def hex_rgb(h):
     return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 
 
+def seed_of(guion):
+    """Semilla estable del reel (para transiciones, deriva de cámara y música): `semilla` del guion o un hash de etiqueta+fuente+texto."""
+    import hashlib
+    if guion.get("semilla") is not None:
+        return int(guion["semilla"])
+    base = json.dumps([guion.get("etiqueta", ""), guion.get("fuente", ""), [b.get("texto", "") for b in guion.get("beats", [])]], ensure_ascii=False)
+    return int(hashlib.sha256(base.encode()).hexdigest()[:8], 16)
+
+
+def pick_transitions(guion, n, seed):
+    """Una transición por cambio de escena. `transiciones` del guion (lista o un nombre) o un orden barajado con la semilla,
+    sin repetir dos seguidas ni usar la misma más de dos veces por reel."""
+    import random
+    tr = guion.get("transiciones")
+    if isinstance(tr, str):
+        tr = [tr]
+    if tr:
+        tr = [t if t in TRANSITIONS else "zoom" for t in tr]
+        return [tr[i % len(tr)] for i in range(n)]
+    rnd = random.Random(seed)
+    pool = [t for t in TRANSITIONS if t != "corte"]
+    out, uses = [], {}
+    for i in range(n):
+        cands = [t for t in pool if (not out or t != out[-1]) and uses.get(t, 0) < 2]
+        if not cands:
+            cands = pool
+        t = rnd.choice(cands)
+        out.append(t); uses[t] = uses.get(t, 0) + 1
+    return out
+
+
+def theme_css(tema, acc):
+    th = THEMES.get(tema, THEMES["noche"])
+    return (f":root{{--bg:{th['bg']};--surface:{th['surface']};--surface2:{th['surface2']};--surface3:{th['surface3']};--ink:{th['ink']};"
+            f"--text:{th['text']};--text-soft:{th['soft']};--text-muted:{th['muted']};--border:{th['border']};--line:{th['line']};"
+            f"--cap-done:{th['capdone']};--display:{th['display']};--radius:{th['radius']};--mark-filter:{th['mark']};--glow:{th['glow']}}}\n")
+
+
+def bg_html(tema):
+    if tema == "claro":
+        return ('<div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div>'
+                '<div id="lines"></div><div id="vig"></div><div id="grain"></div>')
+    if tema == "grilla":
+        return ('<div id="grid"></div><div class="blob" id="b3"></div><div id="scan"></div><div id="vig"></div><div id="grain"></div>')
+    if tema == "neon":
+        return ('<div class="blob" id="b3"></div><div class="blob" id="b4"></div><div id="stripes"></div><div id="floor"></div><div id="vig"></div><div id="grain"></div>')
+    if tema == "editorial":
+        return ('<div class="blob" id="b3"></div><div id="rules"></div><div id="vig"></div><div id="grain"></div>')
+    return ('<div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div><div class="blob" id="b4"></div>'
+            '<div id="floor"></div><div id="vig"></div><div id="grain"></div>')
+
+
 def build_html(guion, beats, groups, D):
     acc = guion.get("acento", "#11BFD6")
     r, g, bl = hex_rgb(acc)
+    tema = guion.get("tema") if guion.get("tema") in THEMES else "noche"
+    seed = seed_of(guion)
     fonts = "".join(
         f'@font-face{{font-family:"{fam}";font-weight:{w};font-style:normal;font-display:block;src:url("assets/fonts/{fn}-{w}.{ext}") format("{fmt}");}}\n'
         for fam, fn, ws, ext, fmt in (("FreeSans", "FreeSans", (400, 700), "ttf", "truetype"),
-                                      ("JetBrains Mono", "JetBrainsMono", (400, 500, 700), "woff2", "woff2"))
+                                      ("JetBrains Mono", "JetBrainsMono", (400, 500, 700), "woff2", "woff2"),
+                                      ("Poppins", "Poppins", (400, 700), "ttf", "truetype"))
         for w in ws)
-    css = (CSS.replace("__ACC__", acc).replace("__ACCRGB__", f"{r},{g},{bl}"))
-    # escenas
+    fonts += '@font-face{font-family:"Lora";font-weight:400 700;font-style:normal;font-display:block;src:url("assets/fonts/Lora-Variable.ttf") format("truetype");}\n'
+    css = theme_css(tema, acc) + (CSS.replace("__ACC__", acc).replace("__ACCRGB__", f"{r},{g},{bl}"))
+    # escenas: la saliente termina antes de que la entrante empiece (sin solapes), ambas alrededor del arranque de la voz
     sc_html, calls = [], []
     n = len(beats)
+    trans = pick_transitions(guion, n, seed)
     for i, b in enumerate(beats):
-        t0 = 0.0 if i == 0 else round(b["t_speech"] - 0.32, 3)
-        t1 = round(D, 3) if i == n - 1 else round(beats[i + 1]["t_speech"] + 0.08, 3)
+        t0 = 0.0 if i == 0 else round(b["t_speech"] - 0.22, 3)
+        t1 = round(D, 3) if i == n - 1 else round(beats[i + 1]["t_speech"] - 0.18, 3)
         b["t0"], b["t1"] = t0, t1
         sid = f"s{i}"
         if b["escena"]["tipo"] == "cierre":
@@ -647,7 +867,8 @@ def build_html(guion, beats, groups, D):
         sc_html.append(f'<div id="{sid}" class="clip scene t-{b["escena"]["tipo"]}" data-start="{t0}" data-duration="{round(t1 - t0, 3)}" data-track-index="{1 + i % 2}">'
                        f'<div class="stage"><div class="cam"><div class="drift">{scene_html(sid, b, D)}</div></div></div></div>')
         prm = scene_params(b, t0, t1)
-        calls.append({"id": sid, "t0": t0, "t1": t1, "k": i, "first": i == 0, "last": i == n - 1, "p": prm})
+        calls.append({"id": sid, "t0": t0, "t1": t1, "k": i, "first": i == 0, "last": i == n - 1, "p": prm,
+                      "tin": trans[i], "tout": trans[i + 1] if i + 1 < n else "zoom"})
     # subtítulos
     cap_html, cap_js = [], []
     for gi, g in enumerate(groups):
@@ -676,15 +897,14 @@ def build_html(guion, beats, groups, D):
            f'<img src="assets/mark-white.svg" alt=""/><span class="h">tobdev.ia</span><span class="d">{esc(guion.get("etiqueta", guion.get("fecha", "")))}</span></div>')
     js = (JS.replace("__ACC__", acc).replace("__D__", str(round(D, 3)))
           .replace("__CALLS__", json.dumps(calls)).replace("__CAPS__", json.dumps(cap_js))
-          .replace("__ENDT__", str(round(end_t, 3))))
+          .replace("__ENDT__", str(round(end_t, 3))).replace("__SEED__", str(seed % 100000)).replace("__TEMA__", tema))
     return f"""<!doctype html>
-<html lang="es"><head><meta charset="UTF-8"/><meta name="viewport" content="width=1080, height=1920"/>
+<html lang="es" data-tema="{tema}"><head><meta charset="UTF-8"/><meta name="viewport" content="width=1080, height=1920"/>
 <script src="assets/gsap.min.js"></script><style>{fonts}{css}</style></head>
-<body>
+<body class="tema-{tema}">
 <div id="root" data-composition-id="main" data-start="0" data-duration="{round(D, 3)}" data-width="1080" data-height="1920">
 <div id="bg" class="clip" data-start="0" data-duration="{round(D, 3)}" data-track-index="0">
-  <div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div><div class="blob" id="b4"></div>
-  <div id="floor"></div><div id="vig"></div><div id="grain"></div>
+  {bg_html(tema)}
 </div>
 {"".join(sc_html)}
 <div id="caps" class="clip" data-start="0" data-duration="{round(D, 3)}" data-track-index="3">{"".join(cap_html)}</div>
@@ -697,9 +917,9 @@ def build_html(guion, beats, groups, D):
 
 
 CSS = r"""
-:root{--bg:#0A0E1A;--text:#FFFFFF;--text-soft:#C6CFE0;--text-muted:#8A97B0;--cyan:#11BFD6;--violet:#5B6FE4;
---acc:__ACC__;--acc-rgb:__ACCRGB__;--grad:linear-gradient(135deg,#5B6FE4 0%,#11BFD6 100%);
---display:"FreeSans","Helvetica Neue",Arial,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;--warn:#FFB020}
+:root{--cyan:#11BFD6;--violet:#5B6FE4;--acc:__ACC__;--acc-rgb:__ACCRGB__;--grad:linear-gradient(135deg,#5B6FE4 0%,#11BFD6 100%);
+--mono:"JetBrains Mono",ui-monospace,monospace;--warn:#FFB020;--shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.tema-claro{--shadow:0 30px 70px -30px rgba(20,24,40,.35);--warn:#D98E00}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 #root{position:absolute;inset:0;font-family:var(--display);color:var(--text)}
@@ -708,31 +928,55 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
 .blob{position:absolute;border-radius:50%}
 #b1{width:1400px;height:1400px;left:150px;top:-640px;background:radial-gradient(circle,rgba(91,111,228,.30) 0%,rgba(91,111,228,0) 62%)}
 #b2{width:1300px;height:1300px;left:-560px;top:1100px;background:radial-gradient(circle,rgba(17,191,214,.22) 0%,rgba(17,191,214,0) 62%)}
-#b3{width:1100px;height:1100px;left:300px;top:520px;background:radial-gradient(circle,rgba(var(--acc-rgb),.16) 0%,rgba(var(--acc-rgb),0) 62%)}
+#b3{width:1100px;height:1100px;left:300px;top:520px;background:radial-gradient(circle,rgba(var(--acc-rgb),var(--glow)) 0%,rgba(var(--acc-rgb),0) 62%)}
 #b4{width:800px;height:800px;left:-300px;top:200px;background:radial-gradient(circle,rgba(91,111,228,.12) 0%,rgba(91,111,228,0) 62%)}
 #floor{position:absolute;left:-540px;right:-540px;top:1180px;height:1200px;transform:perspective(900px) rotateX(64deg);transform-origin:50% 0;
 background-image:radial-gradient(circle,rgba(255,255,255,.16) 1.6px,transparent 2px);background-size:56px 56px;
 -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 75%);mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 75%)}
 #vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 50%,rgba(0,0,0,.55) 100%)}
 #grain{position:absolute;inset:0;opacity:.05;background:url("assets/grain.png") repeat}
+/* tema claro: papel cálido, líneas finas, manchas suaves */
+.tema-claro #b1{background:radial-gradient(circle,rgba(91,111,228,.14) 0%,rgba(91,111,228,0) 62%)}
+.tema-claro #b2{background:radial-gradient(circle,rgba(17,191,214,.12) 0%,rgba(17,191,214,0) 62%)}
+.tema-claro #vig{background:radial-gradient(ellipse at 50% 45%,transparent 62%,rgba(60,50,30,.12) 100%)}
+.tema-claro #grain{opacity:.09;mix-blend-mode:multiply}
+#lines{position:absolute;inset:0;background-image:repeating-linear-gradient(-32deg,rgba(10,14,26,.045) 0 2px,transparent 2px 46px)}
+/* tema grilla: plano técnico */
+#grid{position:absolute;inset:-200px;background-image:linear-gradient(rgba(120,160,255,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(120,160,255,.10) 1px,transparent 1px),
+linear-gradient(rgba(120,160,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(120,160,255,.05) 1px,transparent 1px);background-size:120px 120px,120px 120px,24px 24px,24px 24px;
+-webkit-mask-image:radial-gradient(ellipse at 50% 50%,#000 30%,transparent 80%);mask-image:radial-gradient(ellipse at 50% 50%,#000 30%,transparent 80%)}
+#scan{position:absolute;left:0;right:0;top:-120px;height:120px;background:linear-gradient(to bottom,transparent,rgba(var(--acc-rgb),.14) 70%,rgba(var(--acc-rgb),.3));opacity:.9}
+.tema-grilla .hdr .d,.tema-grilla .eyebrow{letter-spacing:.26em}
+/* tema neon: negro, brillo fuerte, franjas en diagonal */
+#stripes{position:absolute;inset:-300px;background-image:repeating-linear-gradient(-55deg,transparent 0 160px,rgba(var(--acc-rgb),.055) 160px 220px)}
+.tema-neon #floor{background-image:linear-gradient(rgba(var(--acc-rgb),.22) 2px,transparent 2px),linear-gradient(90deg,rgba(var(--acc-rgb),.22) 2px,transparent 2px);background-size:90px 90px}
+.tema-neon .glass,.tema-neon .cd-win,.tema-neon .tm-win,.tema-neon .ph{box-shadow:0 0 0 1px rgba(var(--acc-rgb),.35),0 0 60px rgba(var(--acc-rgb),.22),var(--shadow)}
+.tema-neon .cap{text-shadow:0 0 30px rgba(var(--acc-rgb),.55),0 4px 24px rgba(0,0,0,.6)}
+/* tema editorial: serif, reglas finas, papel oscuro */
+#rules{position:absolute;inset:0;background-image:linear-gradient(90deg,rgba(244,236,220,.07) 1px,transparent 1px);background-size:270px 100%;
+-webkit-mask-image:linear-gradient(to bottom,transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 30%,#000 70%,transparent)}
+.tema-editorial #grain{opacity:.09}
+.tema-editorial .cap{font-weight:600;letter-spacing:-.01em;line-height:1.14}
+.tema-editorial .eyebrow{letter-spacing:.24em}
 .hdr{position:absolute;left:70px;right:70px;top:150px;height:44px;display:flex;align-items:center;gap:14px;opacity:.85}
-.hdr img{width:40px;height:40px}.hdr .h{font-family:var(--mono);font-weight:500;font-size:24px;color:var(--text-soft)}
+.hdr img{width:40px;height:40px;filter:var(--mark-filter)}.hdr .h{font-family:var(--mono);font-weight:500;font-size:24px;color:var(--text-soft)}
 .hdr .d{margin-left:auto;font-family:var(--mono);font-weight:500;font-size:22px;letter-spacing:.18em;color:var(--text-muted)}
 .cap{position:absolute;left:60px;right:60px;top:236px;text-align:center;font-weight:700;font-size:72px;line-height:1.16;letter-spacing:-.02em;opacity:0;
 text-shadow:0 4px 24px rgba(0,0,0,.6)}
+.tema-claro .cap{text-shadow:none}
 .cap .w{display:inline-block;opacity:0}
 .kw{position:relative;display:inline-block;white-space:nowrap;padding:0 .1em;margin:0 .02em}
 .kb{position:absolute;left:-8px;right:-8px;top:2px;bottom:-4px;border:3px solid var(--acc);border-radius:6px;background:rgba(var(--acc-rgb),.16);opacity:0}
-.kb i{position:absolute;width:14px;height:14px;background:#fff;border:3px solid var(--acc);border-radius:3px}
+.kb i{position:absolute;width:14px;height:14px;background:var(--text);border:3px solid var(--acc);border-radius:3px}
 .kb i:nth-child(1){left:-9px;top:-9px}.kb i:nth-child(2){right:-9px;top:-9px}.kb i:nth-child(3){left:-9px;bottom:-9px}.kb i:nth-child(4){right:-9px;bottom:-9px}
 .scene{position:absolute;inset:0}
-.stage{position:absolute;left:0;top:470px;width:1080px;height:1010px;perspective:1600px}
+.stage{position:absolute;left:0;top:470px;width:1080px;height:1010px;perspective:1600px;clip-path:inset(-24px 0px -40px 0px)}
 .cam,.drift{position:absolute;inset:0;transform-style:preserve-3d}
-.glass{background:rgba(14,20,36,.93);border:1px solid rgba(255,255,255,.11);border-radius:28px;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.glass{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
 .eyebrow{font-family:var(--mono);font-weight:500;font-size:26px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
 .acc{color:var(--acc)}
 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.sk{height:22px;border-radius:11px;background:rgba(255,255,255,.12);margin-top:18px}
+.sk{height:22px;border-radius:11px;background:var(--line);margin-top:18px}
 .w90{width:90%}.w80{width:80%}.w70{width:70%}.w60{width:60%}.w50{width:50%}
 .skc{display:flex;align-items:flex-end;gap:14px;height:150px;margin-top:22px}.skc i{flex:1;border-radius:8px 8px 0 0;background:rgba(var(--acc-rgb),.75)}
 .skc.sm{height:120px;width:60%}
@@ -741,7 +985,7 @@ text-shadow:0 4px 24px rgba(0,0,0,.6)}
 /* prompt */
 .pr-wrap{position:absolute;left:70px;right:70px;top:200px}
 .pr-box{padding:44px 48px 36px;border:2px solid rgba(var(--acc-rgb),.45);box-shadow:0 0 0 10px rgba(var(--acc-rgb),.06),0 40px 90px -30px rgba(0,0,0,.95)}
-.pr-text{margin-top:26px;min-height:260px;line-height:1.3;color:#fff}
+.pr-text{margin-top:26px;min-height:260px;line-height:1.3;color:var(--text)}
 .ch{opacity:0}
 .pr-foot{margin-top:30px;display:flex;align-items:center;justify-content:space-between}
 .pr-tools{display:flex;align-items:center;gap:16px;color:var(--text-muted);font-size:26px}.pr-tools span:first-child{font-size:44px;line-height:1}
@@ -749,36 +993,37 @@ text-shadow:0 4px 24px rgba(0,0,0,.6)}
 .pr-status{margin-top:40px;display:flex;align-items:center;gap:18px;font-size:30px;color:var(--text-soft);opacity:0;padding-left:8px}
 .pr-spin{width:30px;height:30px;border-radius:50%;border:4px solid rgba(var(--acc-rgb),.25);border-top-color:var(--acc)}
 /* capas */
-.cp-scene{position:absolute;left:210px;top:310px;width:660px;height:380px;transform-style:preserve-3d;transform:rotateX(56deg) rotateZ(-30deg)}
-.cp-slide{position:absolute;inset:0;padding:40px 44px;border:2px solid rgba(255,255,255,.14);opacity:0}
-.cp-t{font-weight:700;font-size:44px;letter-spacing:-.02em}
+.cp-scene{position:absolute;left:190px;top:300px;width:700px;height:400px;transform-style:preserve-3d;transform:rotateX(48deg) rotateZ(-22deg)}
+.cp-slide{position:absolute;inset:0;padding:40px 44px;border:2px solid var(--line);opacity:0;background:var(--surface2)}
+.cp-t{font-weight:700;font-size:50px;letter-spacing:-.02em;line-height:1.05}
 /* flujo */
 .fl-svg{position:absolute;inset:0;width:1080px;height:1010px;overflow:visible}
-.fl-p{fill:none;stroke:rgba(255,255,255,.16);stroke-width:4;stroke-dasharray:1000;stroke-dashoffset:1000}
+.fl-p{fill:none;stroke:var(--line);stroke-width:4;stroke-dasharray:1000;stroke-dashoffset:1000}
 .fl-d{fill:none;stroke:var(--acc);stroke-width:7;stroke-linecap:round;stroke-dasharray:60 1000;stroke-dashoffset:60;opacity:0}
-.fl-in{position:absolute;top:50px;width:320px;height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;opacity:0}
-.fl-lab{font-size:30px;font-weight:700;letter-spacing:-.01em;text-align:center;padding:0 16px}
+.fl-in{position:absolute;top:40px;width:320px;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;opacity:0}
+.fl-in.solo{width:460px;height:240px}
+.fl-lab{font-size:34px;font-weight:700;letter-spacing:-.01em;text-align:center;padding:0 16px;line-height:1.1}
 .fl-out{position:absolute;left:150px;top:520px;width:780px;height:440px;padding:36px 40px;opacity:0;border:2px solid rgba(var(--acc-rgb),.45)}
 .fl-grid{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
-.fl-th{height:140px;border-radius:16px;background:#141C31;border:1px solid rgba(255,255,255,.1);padding:18px;opacity:0}
+.fl-th{height:140px;border-radius:16px;background:var(--surface2);border:1px solid var(--line);padding:18px;opacity:0}
 .fl-th i{display:block;width:50%;height:18px;border-radius:9px;background:rgba(var(--acc-rgb),.85)}
-.fl-th b{display:block;width:85%;height:12px;border-radius:6px;background:rgba(255,255,255,.14);margin-top:16px}.fl-th b.s{width:60%}
+.fl-th b{display:block;width:85%;height:12px;border-radius:6px;background:var(--line);margin-top:16px}.fl-th b.s{width:60%}
 /* cursores */
 .cu-doc{position:absolute;left:60px;right:60px;top:80px;height:700px;overflow:hidden}
-.cu-bar{height:96px;display:flex;align-items:center;gap:24px;padding:0 30px;border-bottom:1px solid rgba(255,255,255,.08)}
-.cu-dots{display:flex;gap:10px}.cu-dots i{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.18)}
+.cu-bar{height:96px;display:flex;align-items:center;gap:24px;padding:0 30px;border-bottom:1px solid var(--line)}
+.cu-dots{display:flex;gap:10px}.cu-dots i{width:16px;height:16px;border-radius:50%;background:var(--line)}
 .cu-ed{font-size:24px;color:var(--text-muted)}
 .cu-avs{margin-left:auto;display:flex}
-.cu-av{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px;color:#0A0E1A;border:3px solid #0E1424;margin-left:-12px;flex:none}
-.cu-av.c0,.cu-cur.c0{background:#FF8A5B;color:#0A0E1A}.cu-av.c1,.cu-cur.c1{background:#B48CFF;color:#0A0E1A}
+.cu-av{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px;color:var(--ink);border:3px solid var(--surface);margin-left:-12px;flex:none}
+.cu-av.c0,.cu-cur.c0{background:#FF8A5B;color:var(--ink)}.cu-av.c1,.cu-cur.c1{background:#B48CFF;color:var(--ink)}
 .cu-cur.c0{color:#FF8A5B;background:none}.cu-cur.c1{color:#B48CFF;background:none}
 .cu-av.me{background:var(--acc);font-size:18px}
 .cu-canvas{padding:50px 50px}
 .cu-title{position:relative;min-height:150px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
-.cu-new{position:absolute;left:0;top:0;font-size:84px;opacity:0;color:#fff}
+.cu-new{position:absolute;left:0;top:0;font-size:84px;opacity:0;color:var(--text)}
 .cu-sel{position:absolute;left:-14px;top:-10px;width:640px;height:118px;border:3px solid var(--acc);border-radius:8px;opacity:0;background:rgba(var(--acc-rgb),.08)}
 .cu-cur{position:absolute;left:0;top:0;display:flex;align-items:flex-start;gap:4px}
-.cu-cur span{margin-top:34px;padding:6px 14px;border-radius:10px;font-weight:700;font-size:24px;color:#0A0E1A}
+.cu-cur span{margin-top:34px;padding:6px 14px;border-radius:10px;font-weight:700;font-size:24px;color:var(--ink)}
 .cu-cur.c0 span{background:#FF8A5B}.cu-cur.c1 span{background:#B48CFF}
 .cu-com{position:absolute;left:220px;right:40px;top:730px;padding:26px 30px;display:flex;gap:22px;align-items:center;font-size:36px;opacity:0;border:2px solid rgba(var(--acc-rgb),.35)}
 .cu-com .cu-av{margin-left:0}
@@ -787,14 +1032,14 @@ text-shadow:0 4px 24px rgba(0,0,0,.6)}
 .ch-col{position:absolute;left:90px;right:90px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;gap:34px}
 .ch-file{height:200px;display:flex;align-items:center;gap:36px;padding:0 44px;opacity:0}
 .ch-doc{position:relative;width:96px;height:118px;flex:none}
-.ch-ext{position:absolute;left:-14px;bottom:12px;padding:5px 10px;border-radius:8px;background:var(--acc);color:#0A0E1A;font-family:var(--mono);font-weight:700;font-size:20px}
+.ch-ext{position:absolute;left:-14px;bottom:12px;padding:5px 10px;border-radius:8px;background:var(--acc);color:var(--ink);font-family:var(--mono);font-weight:700;font-size:20px}
 .ch-name{font-weight:700;font-size:56px;letter-spacing:-.02em}
 .ch-dl{margin-left:auto;width:84px;height:84px;border-radius:50%;border:2px solid rgba(var(--acc-rgb),.5);display:flex;align-items:center;justify-content:center}
 .ch-col.tags{align-items:center}
 .ch-tag{display:flex;align-items:center;gap:26px;height:150px;padding:0 60px;font-weight:700;font-size:66px;letter-spacing:-.02em;opacity:0;border:2px solid rgba(var(--acc-rgb),.4)}
 .ch-bar{width:100%;margin-top:30px;opacity:0}
 .ch-bl{display:flex;justify-content:space-between;font-size:28px;color:var(--text-soft);letter-spacing:.08em;text-transform:uppercase}
-.ch-track{margin-top:16px;height:22px;border-radius:11px;background:rgba(255,255,255,.1);overflow:hidden}
+.ch-track{margin-top:16px;height:22px;border-radius:11px;background:var(--line);overflow:hidden}
 .ch-fill{height:100%;width:100%;border-radius:11px;background:var(--acc);transform-origin:0 50%;transform:scaleX(0)}
 /* frase */
 .fr-box{position:absolute;left:70px;right:70px;top:0;bottom:0;display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:0 .26em;
@@ -810,13 +1055,13 @@ box-shadow:0 0 120px rgba(var(--acc-rgb),.25),inset 0 0 80px rgba(var(--acc-rgb)
 .li-path{stroke-dasharray:100;stroke-dashoffset:100}
 .li-t{font-weight:700;font-size:58px;letter-spacing:-.02em;line-height:1.1}
 /* reloj */
-.rl-face{position:absolute;left:290px;top:60px;width:500px;height:500px;border-radius:50%;background:rgba(14,20,36,.93);border:3px solid rgba(255,255,255,.14);
+.rl-face{position:absolute;left:290px;top:60px;width:500px;height:500px;border-radius:50%;background:var(--surface);border:3px solid var(--line);
 box-shadow:0 0 0 14px rgba(255,255,255,.03),0 40px 90px -30px rgba(0,0,0,.95)}
-.rl-face i{position:absolute;left:246px;top:242px;width:8px;height:16px;border-radius:4px;background:rgba(255,255,255,.3)}.rl-face i.big{height:26px;background:#fff}
+.rl-face i{position:absolute;left:246px;top:242px;width:8px;height:16px;border-radius:4px;background:var(--text-muted)}.rl-face i.big{height:26px;background:var(--text)}
 .rl-arc{position:absolute;inset:26px;border-radius:50%;background:conic-gradient(rgba(var(--acc-rgb),.35) 0deg,rgba(var(--acc-rgb),.35) var(--arc,0deg),transparent var(--arc,0deg))}
 .rl-h,.rl-m{position:absolute;left:244px;bottom:250px;width:12px;border-radius:6px;transform-origin:50% 100%}
-.rl-h{height:120px;background:#fff}.rl-m{height:190px;width:8px;left:246px;background:var(--acc)}
-.rl-c{position:absolute;left:232px;top:232px;width:36px;height:36px;border-radius:50%;background:#fff;border:6px solid var(--acc)}
+.rl-h{height:120px;background:var(--text)}.rl-m{height:190px;width:8px;left:246px;background:var(--acc)}
+.rl-c{position:absolute;left:232px;top:232px;width:36px;height:36px;border-radius:50%;background:var(--text);border:6px solid var(--acc)}
 .rl-txt{position:absolute;left:0;right:0;top:640px;height:200px;text-align:center}
 .rl-a,.rl-b{position:absolute;left:0;right:0;font-weight:700;letter-spacing:-.03em}
 .rl-a{font-size:100px;color:var(--text-muted)}.rl-b{font-size:150px;color:var(--acc);opacity:0}
@@ -827,9 +1072,9 @@ box-shadow:0 0 0 14px rgba(255,255,255,.03),0 40px 90px -30px rgba(0,0,0,.95)}
 .al-ic{width:92px;height:92px;border-radius:24px;background:var(--warn);display:flex;align-items:center;justify-content:center;flex:none}
 .al-tt{font-weight:700;font-size:54px;letter-spacing:-.02em;line-height:1.05}
 .al-rows{margin-top:38px}
-.al-row{display:flex;align-items:baseline;gap:18px;font-size:40px;padding:26px 18px;border-top:1px solid rgba(255,255,255,.08);border-radius:14px}
+.al-row{display:flex;align-items:baseline;gap:18px;font-size:40px;padding:26px 18px;border-top:1px solid var(--line);border-radius:14px}
 .al-row .mono{font-size:38px;font-weight:700}
-.al-dots{flex:1;border-bottom:3px dotted rgba(255,255,255,.18)}
+.al-dots{flex:1;border-bottom:3px dotted var(--line)}
 .al-lens{position:absolute;left:700px;top:610px;opacity:0;filter:drop-shadow(0 10px 30px rgba(0,0,0,.6))}
 /* numero */
 .nu-glow{position:absolute;left:140px;top:110px;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(var(--acc-rgb),.28),transparent 65%)}
@@ -839,34 +1084,34 @@ box-shadow:0 0 0 14px rgba(255,255,255,.03),0 40px 90px -30px rgba(0,0,0,.95)}
 .nu-l{margin-top:30px;font-size:52px;font-weight:700;color:var(--text-soft);text-align:center;letter-spacing:-.01em;line-height:1.15;max-width:900px}
 /* navegador */
 .nv-win{position:absolute;left:50px;right:50px;top:40px;height:880px;overflow:hidden}
-.nv-top{height:84px;display:flex;align-items:flex-end;gap:12px;padding:0 26px;background:rgba(255,255,255,.03)}
+.nv-top{height:84px;display:flex;align-items:flex-end;gap:12px;padding:0 26px;background:rgba(128,128,128,.06)}
 .nv-top .cu-dots{align-self:center;margin-right:14px}
-.nv-tab{height:62px;padding:0 26px;display:flex;align-items:center;border-radius:14px 14px 0 0;font-size:26px;color:var(--text-muted);background:rgba(255,255,255,.04)}
-.nv-tab.on{background:#141C31;color:#fff}
-.nv-url{margin:22px 26px 0;height:64px;border-radius:32px;background:#141C31;display:flex;align-items:center;gap:14px;padding:0 26px;font-size:26px;color:var(--text-soft)}
+.nv-tab{height:62px;padding:0 26px;display:flex;align-items:center;border-radius:14px 14px 0 0;font-size:26px;color:var(--text-muted);background:rgba(128,128,128,.08)}
+.nv-tab.on{background:var(--surface2);color:var(--text)}
+.nv-url{margin:22px 26px 0;height:64px;border-radius:32px;background:var(--surface2);display:flex;align-items:center;gap:14px;padding:0 26px;font-size:26px;color:var(--text-soft)}
 .nv-body{padding:40px 40px}
 .nv-h{font-weight:700;font-size:60px;letter-spacing:-.02em;line-height:1.08}
 .nv-grid{margin-top:36px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.nv-card{height:220px;border-radius:20px;background:#141C31;border:1px solid rgba(255,255,255,.08);padding:22px;opacity:0}
+.nv-card{height:220px;border-radius:20px;background:var(--surface2);border:1px solid var(--line);padding:22px;opacity:0}
 .nv-card i{display:block;height:90px;border-radius:12px;background:rgba(var(--acc-rgb),.35)}
 .nv-cursor{position:absolute;left:600px;top:700px}
 /* celular */
-.ph{position:absolute;left:250px;top:-10px;width:580px;height:1030px;border-radius:70px;background:#0B1020;border:10px solid #1C2540;box-shadow:0 50px 100px -30px rgba(0,0,0,.95),0 0 0 2px rgba(255,255,255,.08);overflow:hidden}
+.ph{position:absolute;left:250px;top:-10px;width:580px;height:1030px;border-radius:70px;background:var(--surface2);border:10px solid var(--surface3);box-shadow:var(--shadow),0 0 0 2px var(--line);overflow:hidden}
 .ph-notch{position:absolute;left:200px;top:18px;width:160px;height:40px;border-radius:20px;background:#000}
-.ph-top{margin-top:84px;display:flex;align-items:center;gap:18px;padding:0 30px 24px;border-bottom:1px solid rgba(255,255,255,.08)}
+.ph-top{margin-top:84px;display:flex;align-items:center;gap:18px;padding:0 30px 24px;border-bottom:1px solid var(--line)}
 .ph-av{width:66px;height:66px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center}
 .ph-n{font-weight:700;font-size:32px}.ph-s{font-size:20px;color:var(--acc)}
 .ph-body{padding:30px 26px;display:flex;flex-direction:column;gap:20px}
 .ph-m{max-width:86%;padding:20px 24px;border-radius:26px;font-size:30px;line-height:1.3;opacity:0}
-.ph-m.me{align-self:flex-end;background:var(--acc);color:#0A0E1A;border-bottom-right-radius:8px}
-.ph-m.ia{align-self:flex-start;background:#18213A;border-bottom-left-radius:8px}
-.ph-typing{align-self:flex-start;display:flex;gap:10px;padding:22px 26px;border-radius:26px;background:#18213A;opacity:0}
+.ph-m.me{align-self:flex-end;background:var(--acc);color:var(--ink);border-bottom-right-radius:8px}
+.ph-m.ia{align-self:flex-start;background:var(--surface3);border-bottom-left-radius:8px}
+.ph-typing{align-self:flex-start;display:flex;gap:10px;padding:22px 26px;border-radius:26px;background:var(--surface3);opacity:0}
 .ph-typing i{width:14px;height:14px;border-radius:50%;background:var(--text-muted)}
 /* grafico */
 .gr-wrap{position:absolute;left:60px;right:60px;top:40px;bottom:40px;padding:44px}
 .gr-cols{position:absolute;left:44px;right:44px;bottom:44px;top:120px;display:flex;align-items:flex-end;gap:28px}
 .gr-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
-.gr-b{width:100%;border-radius:16px 16px 6px 6px;background:rgba(255,255,255,.16);transform-origin:50% 100%;transform:scaleY(0)}
+.gr-b{width:100%;border-radius:16px 16px 6px 6px;background:var(--line);transform-origin:50% 100%;transform:scaleY(0)}
 .gr-b.hi{background:var(--acc);box-shadow:0 0 50px rgba(var(--acc-rgb),.4)}
 .gr-v{font-size:34px;font-weight:700;margin-bottom:14px;opacity:0}
 .gr-l{margin-top:18px;font-size:28px;color:var(--text-soft);text-align:center}
@@ -877,43 +1122,130 @@ box-shadow:0 0 0 14px rgba(255,255,255,.03),0 40px 90px -30px rgba(0,0,0,.95)}
 .cm-col.de{bottom:0;border:2px solid rgba(var(--acc-rgb),.5)}
 .cm-it{display:flex;align-items:center;gap:20px;font-size:42px;font-weight:700;margin-top:24px;letter-spacing:-.01em}
 .cm-col.de .cm-it svg{color:var(--acc)}
-.cm-vs{position:absolute;left:470px;top:440px;width:100px;height:100px;border-radius:50%;background:#141C31;border:2px solid rgba(255,255,255,.18);
+.cm-vs{position:absolute;left:470px;top:440px;width:100px;height:100px;border-radius:50%;background:var(--surface2);border:2px solid var(--line);
 display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;opacity:0}
 /* particulas */
 .pa-cv{position:absolute;left:0;top:0;width:1080px;height:1010px}
 .pa-box{position:absolute;left:60px;right:60px;top:300px;padding:40px;text-align:center;background:radial-gradient(ellipse,rgba(10,14,26,.92) 30%,transparent 72%)}
 /* terminal */
-.tm-win{position:absolute;left:50px;right:50px;top:150px;height:640px;border-radius:28px;background:#0B0F1C;border:1px solid rgba(255,255,255,.12);
-box-shadow:0 40px 90px -30px rgba(0,0,0,.95),0 0 0 8px rgba(var(--acc-rgb),.05);overflow:hidden}
-.tm-top{height:76px;display:flex;align-items:center;gap:24px;padding:0 28px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.07)}
+.tm-win{position:absolute;left:50px;right:50px;top:150px;height:640px;border-radius:var(--radius);background:var(--surface2);border:1px solid var(--line);
+box-shadow:var(--shadow),0 0 0 8px rgba(var(--acc-rgb),.05);overflow:hidden}
+.tm-top{height:76px;display:flex;align-items:center;gap:24px;padding:0 28px;background:rgba(128,128,128,.08);border-bottom:1px solid var(--line)}
 .tm-t{font-size:24px;color:var(--text-muted)}
 .tm-body{padding:44px 44px;font-size:40px;line-height:1.38}
 .tm-l{display:flex;gap:18px;align-items:flex-start;margin-bottom:26px;opacity:0}
-.tm-l.cmd{color:#fff;font-weight:700}.tm-pr{color:var(--acc)}
+.tm-l.cmd{color:var(--text);font-weight:700}.tm-pr{color:var(--acc)}
 .tm-l.out{color:var(--text-soft)}.tm-dot{color:var(--acc);font-size:26px;margin-top:6px}
 .tm-l.ok{color:var(--acc);font-weight:700}.tm-l.ok svg{flex:none;margin-top:6px}
 .tm-cur{width:20px;height:40px;background:var(--acc);opacity:0}
 /* linea de tiempo */
-.lt-rail,.lt-fill{position:absolute;left:170px;top:80px;width:6px;height:860px;border-radius:3px;background:rgba(255,255,255,.12)}
+.lt-rail,.lt-fill{position:absolute;left:170px;top:80px;width:6px;height:860px;border-radius:3px;background:var(--line)}
 .lt-fill{background:var(--acc);transform-origin:50% 0;transform:scaleY(0);box-shadow:0 0 30px rgba(var(--acc-rgb),.5)}
 .lt-h{position:absolute;left:0;right:60px;height:200px;opacity:0}
-.lt-dot{position:absolute;left:153px;top:22px;width:40px;height:40px;border-radius:50%;background:#0A0E1A;border:6px solid var(--acc)}
+.lt-dot{position:absolute;left:153px;top:22px;width:40px;height:40px;border-radius:50%;background:var(--bg);border:6px solid var(--acc)}
 .lt-y{position:absolute;left:230px;top:-6px;font-weight:700;font-size:92px;letter-spacing:-.04em;line-height:1;color:var(--acc)}
 .lt-t{position:absolute;left:232px;right:0;top:100px;font-size:40px;font-weight:700;line-height:1.15;color:var(--text-soft);letter-spacing:-.01em}
 /* cierre */
 .end{position:absolute;left:84px;right:84px;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.end img{width:260px;height:260px}
+.end img{width:260px;height:260px;filter:var(--mark-filter)}
 .wm{margin-top:10px;font-weight:700;font-size:150px;letter-spacing:-.03em;line-height:1}
 .sub{margin-top:30px;font-size:46px;color:var(--text-soft)}
-.cta{margin-top:60px;display:flex;align-items:center;gap:18px;padding:30px 54px;border-radius:24px;background:var(--grad);font-weight:700;font-size:46px;color:#fff;box-shadow:0 10px 30px -8px rgba(91,111,228,.55)}
+.cta{margin-top:60px;display:flex;align-items:center;gap:18px;padding:30px 54px;border-radius:24px;background:var(--grad);font-weight:700;font-size:46px;color:var(--text);box-shadow:0 10px 30px -8px rgba(91,111,228,.55)}
 .src{margin-top:50px;font-size:26px;color:var(--text-muted)}
+
+/* imagen */
+.im-full{position:absolute;left:40px;right:40px;top:0;bottom:0;border-radius:var(--radius);overflow:hidden;background:var(--surface2);box-shadow:var(--shadow)}
+.im-full img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 50%}
+.im-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.05) 40%,rgba(0,0,0,.72) 100%)}
+.im-tit{position:absolute;left:90px;right:90px;bottom:80px;font-weight:700;color:#fff;line-height:1.08;letter-spacing:-.02em;text-shadow:0 4px 24px rgba(0,0,0,.6);opacity:0}
+.im-cred{position:absolute;right:70px;bottom:28px;font-size:20px;color:rgba(255,255,255,.75);letter-spacing:.06em;opacity:0}
+.im-card{position:absolute;left:130px;top:40px;width:820px;padding:30px 30px 44px;background:#FBF8F1;border-radius:14px;box-shadow:0 60px 100px -30px rgba(0,0,0,.8);opacity:0}
+.im-cf{height:700px;border-radius:8px;overflow:hidden;background:#111}
+.im-cf img{width:100%;height:100%;object-fit:cover;transform-origin:50% 50%}
+.im-cap{margin-top:30px;font-weight:700;font-size:44px;color:#1A1712;letter-spacing:-.02em;line-height:1.1}
+.im-card .im-cred{position:static;margin-top:10px;color:#7A7262}
+/* codigo */
+.cd-win{position:absolute;left:50px;right:50px;top:90px;height:800px;border-radius:var(--radius);background:var(--surface2);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}
+.cd-top{height:76px;display:flex;align-items:center;gap:24px;padding:0 28px;background:rgba(128,128,128,.08);border-bottom:1px solid var(--line)}
+.cd-tab{font-size:24px;color:var(--text-soft);padding:12px 20px;border-radius:10px 10px 0 0;background:var(--surface3);align-self:flex-end;margin-bottom:-1px}
+.cd-body{padding:34px 30px;font-size:34px;line-height:1.5}
+.cd-l{display:flex;gap:22px;align-items:flex-start;padding:4px 14px;border-radius:10px;opacity:0;white-space:nowrap}
+.cd-n{width:46px;flex:none;text-align:right;color:var(--text-muted);font-size:26px;padding-top:6px}
+.cd-t{color:var(--text-soft)}
+.cd-l.mk{background:rgba(var(--acc-rgb),.14);box-shadow:inset 4px 0 0 var(--acc)}
+.c-k{color:var(--acc);font-weight:700}.c-s{color:#7FD28A}.c-n{color:#F2B76B}.c-c{color:var(--text-muted);font-style:italic}.c-f{color:#9DB7FF}.c-o{color:var(--text)}
+.tema-claro .c-s{color:#2E8B46}.tema-claro .c-n{color:#B86A00}.tema-claro .c-f{color:#3B5BD6}
+/* pasos */
+.ps-col{position:absolute;left:110px;right:80px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;gap:54px}
+.ps-rail,.ps-fill{position:absolute;left:52px;top:120px;bottom:120px;width:6px;border-radius:3px;background:var(--line)}
+.ps-fill{background:var(--acc);transform-origin:50% 0;transform:scaleY(0);box-shadow:0 0 24px rgba(var(--acc-rgb),.5)}
+.ps-it{display:flex;align-items:center;gap:40px;opacity:0}
+.ps-n{width:110px;height:110px;flex:none;border-radius:50%;background:var(--surface2);border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:54px;color:var(--text-muted)}
+.ps-n.on{background:var(--acc);color:var(--ink);border-color:var(--acc);box-shadow:0 0 40px rgba(var(--acc-rgb),.45)}
+.ps-t{font-weight:700;font-size:54px;letter-spacing:-.02em;line-height:1.08}
+.ps-s{margin-top:8px;font-size:30px;color:var(--text-muted)}
+/* anillo */
+.an-box{position:absolute;left:190px;top:60px;width:700px;height:700px}
+.an-svg{position:absolute;inset:0;width:700px;height:700px;transform:rotate(-90deg)}
+.an-bg{fill:none;stroke:var(--line);stroke-width:34}
+.an-fg{fill:none;stroke:var(--acc);stroke-width:34;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;filter:drop-shadow(0 0 24px rgba(var(--acc-rgb),.6))}
+.an-v{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:200px;letter-spacing:-.05em;line-height:1}
+.an-suf{font-size:100px;color:var(--acc);margin-left:8px;margin-top:40px}
+.an-l{position:absolute;left:60px;right:60px;top:790px;text-align:center;font-weight:700;font-size:52px;color:var(--text-soft);line-height:1.15;opacity:0}
+/* titular */
+.ti-card{position:absolute;left:50px;right:50px;top:110px;padding:40px 50px 50px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);opacity:0}
+.ti-top{display:flex;align-items:center;gap:22px;font-size:24px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted)}
+.ti-tag{padding:8px 16px;border-radius:8px;background:var(--acc);color:var(--ink);font-weight:700;opacity:0}
+.ti-fe{margin-left:auto}
+.ti-h{margin-top:36px;font-weight:700;line-height:1.06;letter-spacing:-.03em}
+.ti-w{display:inline-block;opacity:0;margin-right:.24em}
+.ti-baj{margin-top:30px;font-size:36px;line-height:1.3;color:var(--text-soft)}
+.ti-rule{margin-top:40px;height:4px;background:var(--acc);transform-origin:0 50%;transform:scaleX(0)}
+.tema-editorial .ti-h{font-weight:600}
+/* cita */
+.ci-card{position:absolute;left:60px;right:60px;top:90px;padding:60px 60px 50px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);opacity:0}
+.ci-q{position:absolute;left:44px;top:-50px;font-size:240px;line-height:1;color:var(--acc);font-family:"Lora",Georgia,serif;font-weight:700}
+.ci-t{margin-top:40px;font-weight:700;line-height:1.22;letter-spacing:-.01em}
+.tema-editorial .ci-t{font-weight:500;font-style:italic}
+.ci-w{display:inline-block;opacity:0;margin-right:.26em}
+.ci-a{margin-top:44px;display:flex;align-items:center;gap:22px;opacity:0}
+.ci-av{width:76px;height:76px;border-radius:50%;background:var(--acc);color:var(--ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:34px;flex:none}
+.ci-n{font-weight:700;font-size:34px}.ci-c{margin-top:4px;font-size:22px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase}
+/* tabla */
+.tb-card{position:absolute;left:50px;right:50px;top:60px;padding:40px 44px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.tb-h,.tb-r{display:grid;grid-template-columns:1.4fr repeat(calc(var(--cols) - 1),1fr);gap:20px;padding:22px 20px;align-items:center}
+.tb-h{font-size:22px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);border-bottom:2px solid var(--line);margin-top:20px}
+.tb-r{font-size:36px;font-weight:700;border-bottom:1px solid var(--line);opacity:0;border-radius:12px}
+.tb-r span:not(:first-child){font-family:var(--mono);font-weight:500;font-size:32px;color:var(--text-soft)}
+.tb-r.mk.on{background:rgba(var(--acc-rgb),.16);box-shadow:inset 4px 0 0 var(--acc)}
+.tb-r.mk.on span{color:var(--text)}
+/* calendario */
+.ca-card{position:absolute;left:50px;right:50px;top:60px;padding:40px 40px 44px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.ca-top{display:flex;align-items:baseline;gap:20px}.ca-mes{font-weight:700;font-size:60px;letter-spacing:-.02em}.ca-y{font-size:28px;color:var(--text-muted)}
+.ca-dow{margin-top:30px;display:grid;grid-template-columns:repeat(7,1fr);gap:10px;font-size:22px;color:var(--text-muted);text-align:center;letter-spacing:.1em}
+.ca-grid{margin-top:14px;display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+.ca-c{height:118px;border-radius:14px;background:var(--surface2);position:relative;padding:12px 14px;font-size:30px;font-weight:700;color:var(--text-soft);border:1px solid transparent}
+.ca-c.off{background:transparent}
+.ca-c b{position:absolute;left:8px;right:8px;bottom:10px;font-size:19px;line-height:1.1;font-weight:700;color:var(--ink);background:var(--acc);border-radius:8px;padding:6px 8px;opacity:0;text-align:center}
+.ca-c.mk.on{border-color:var(--acc);background:rgba(var(--acc-rgb),.14);color:var(--text)}
+/* planes */
+.pl-row{position:absolute;left:50px;right:50px;top:120px;display:flex;gap:24px;align-items:stretch}
+.pl-c{flex:1;padding:40px 30px 44px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);opacity:0;position:relative;min-height:560px}
+.pl-row.n2 .pl-c{padding:48px 40px}
+.pl-n{font-size:24px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted)}
+.pl-p{margin-top:30px;font-weight:700;font-size:72px;letter-spacing:-.04em;line-height:1}
+.pl-row.n3 .pl-p{font-size:56px}
+.pl-d{margin-top:24px;font-size:30px;line-height:1.3;color:var(--text-soft)}
+.pl-c.hi{border:2px solid var(--acc);box-shadow:0 0 0 10px rgba(var(--acc-rgb),.08),var(--shadow)}
+.pl-c.hi .pl-p{color:var(--acc)}
+.pl-tag{position:absolute;left:30px;top:-22px;padding:8px 18px;border-radius:999px;background:var(--acc);color:var(--ink);font-weight:700;font-size:22px}
 #prog{position:absolute;left:0;bottom:0;width:100%;height:6px;background:var(--grad);transform-origin:0 50%}
 """
 
 JS = r"""
 (function(){
 const tl = gsap.timeline({paused:true});
-const ACC = "__ACC__", D = __D__, MUT = "#7D8AA5";
+const ACC = "__ACC__", D = __D__;
 const E = "power3.out";
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => Array.from(document.querySelectorAll(s));
@@ -933,22 +1265,51 @@ tl.fromTo("#prog",{scaleX:0},{scaleX:1,duration:D,ease:"none"},0);
 tl.fromTo("#hdr",{opacity:0},{opacity:.85,duration:.4},0.05);
 tl.fromTo("#hdr",{opacity:.85},{opacity:0,duration:.3,immediateRender:false},__ENDT__);
 
-// cámara: entrada, deriva y salida de cada escena
-const ENTERS = [
-  [{opacity:0, scale:.86, filter:"blur(16px)"}, {opacity:1, scale:1, filter:"blur(0px)"}],
-  [{opacity:0, y:160, filter:"blur(10px)"}, {opacity:1, y:0, filter:"blur(0px)"}],
-  [{opacity:0, x:220, rotationY:-22, filter:"blur(10px)"}, {opacity:1, x:0, rotationY:0, filter:"blur(0px)"}],
-  [{opacity:0, scale:1.18, filter:"blur(18px)"}, {opacity:1, scale:1, filter:"blur(0px)"}],
-  [{opacity:0, rotationX:28, y:120, filter:"blur(10px)"}, {opacity:1, rotationX:0, y:0, filter:"blur(0px)"}],
+// cámara: transiciones (una por cambio de escena, elegidas por semilla), deriva y salida de cada escena
+const FULL = "inset(0% 0% 0% 0%)";
+const TR = {
+  zoom:  {in:[{opacity:0, scale:.86, filter:"blur(16px)"}, {opacity:1, scale:1, filter:"blur(0px)"}],
+          out:[{opacity:1, scale:1, filter:"blur(0px)"}, {opacity:0, scale:1.08, filter:"blur(14px)"}]},
+  rise:  {in:[{opacity:0, y:160, filter:"blur(10px)"}, {opacity:1, y:0, filter:"blur(0px)"}],
+          out:[{opacity:1, y:0}, {opacity:0, y:-120}]},
+  wipe:  {in:[{clipPath:"inset(0% 100% 0% 0%)"}, {clipPath:FULL}],
+          out:[{clipPath:FULL}, {clipPath:"inset(0% 0% 0% 100%)"}]},
+  slide: {in:[{x:1080, opacity:1}, {x:0, opacity:1}],
+          out:[{x:0}, {x:-1080}]},
+  iris:  {in:[{clipPath:"circle(0% at 50% 50%)"}, {clipPath:"circle(80% at 50% 50%)"}],
+          out:[{opacity:1, scale:1}, {opacity:0, scale:.92}]},
+  flip:  {in:[{opacity:0, rotationY:70, transformOrigin:"50% 50% -300px"}, {opacity:1, rotationY:0}],
+          out:[{opacity:1, rotationY:0, transformOrigin:"50% 50% -300px"}, {opacity:0, rotationY:-70}]},
+  push:  {in:[{y:1010, opacity:1}, {y:0, opacity:1}],
+          out:[{y:0}, {y:-1010}]},
+  swing: {in:[{opacity:0, rotationX:28, y:120, filter:"blur(10px)"}, {opacity:1, rotationX:0, y:0, filter:"blur(0px)"}],
+          out:[{opacity:1, rotationX:0, y:0}, {opacity:0, rotationX:-22, y:-90}]},
+  corte: {in:[{opacity:0}, {opacity:1}], out:[{opacity:1}, {opacity:0}]},
+};
+const DRIFTS = [
+  [{scale:1, y:0, x:0, rotation:0}, {scale:1.05, y:-22, x:14, rotation:.5}],
+  [{scale:1, y:0, x:0, rotation:0}, {scale:1.05, y:-22, x:-14, rotation:-.5}],
+  [{scale:1.04, y:10, x:-10}, {scale:1, y:-10, x:10}],
+  [{scale:1, y:0, x:0}, {scale:1.06, y:14, x:0}],
+  [{scale:1.03, y:-8, x:12, rotation:-.4}, {scale:1.03, y:8, x:-12, rotation:.4}],
 ];
+const SEED = __SEED__;
 function CAM(c){
   const cam = "#"+c.id+" .cam", dr = "#"+c.id+" .drift", Dd = c.t1 - c.t0;
-  if (!c.first){ const [a,b] = ENTERS[c.k % ENTERS.length]; F(cam, a, Object.assign({duration:.6, ease:E}, b), c.t0); tl.set(cam, {filter:"none"}, c.t0+.62); }
+  const tin = TR[c.tin] || TR.zoom, tout = TR[c.tout] || TR.zoom;
+  const din = c.tin === "corte" ? .08 : (c.tin === "wipe" || c.tin === "slide" || c.tin === "push" ? .5 : .6);
+  if (!c.first){ F(cam, tin.in[0], Object.assign({duration:din, ease:(c.tin === "slide" || c.tin === "push") ? "power3.out" : E}, tin.in[1]), c.t0); tl.set(cam, {filter:"none", clipPath:"none"}, c.t0+din+.02); }
   else F(cam, {scale:1.06}, {scale:1, duration:.8, ease:E}, 0);
-  const dir = c.k % 2 ? 1 : -1;
-  F(dr, {scale:1, y:0, x:0, rotation:0}, {scale:1.05, y:-22, x:dir*14, rotation:dir*.5, duration:Dd, ease:"none"}, c.t0);
-  if (!c.last) F(cam, {opacity:1, filter:"blur(0px)", scale:1}, {opacity:0, filter:"blur(14px)", scale:1.08, duration:.42, ease:"power2.in"}, c.t1-.42);
+  const d = DRIFTS[(c.k + SEED) % DRIFTS.length];
+  F(dr, d[0], Object.assign({duration:Dd, ease:"none"}, d[1]), c.t0);
+  if (!c.last){
+    const dout = c.tout === "corte" ? .06 : .4;
+    F(cam, tout.out[0], Object.assign({duration:dout, ease:(c.tout === "slide" || c.tout === "push") ? "power3.in" : "power2.in"}, tout.out[1]), c.t1-dout);
+  }
 }
+// elementos que dependen de la voz: nunca dejar la escena vacía (lo primero aparece como muy tarde `max` s después de arrancar)
+const early = (c, t, max) => Math.min(t, c.t0 + (max === undefined ? .55 : max));
+function stagger(c, cues, gap, first){ const out = []; let prev = c.t0; cues.forEach((t, i) => { let v = i ? Math.max(t, prev + (gap||.22)) : early(c, t, first); out.push(v); prev = v; }); return out; }
 
 const SC = {
 prompt(c, p){
@@ -971,20 +1332,21 @@ capas(c, p){
     F(id+"-l"+i, {opacity:0, z:-60, y:40}, {opacity:1, z:0, y:0, duration:.45, ease:E}, c.t0+.15+i*.07);
     F(id+"-l"+i, {z:0}, {z:(n-1-i)*-120+ (n-1)*60, duration:.9, ease:"power3.inOut"}, c.t0+.95);
   }
-  F(id+"-sc", {rotationZ:-30, rotationX:56, transformPerspective:1800}, {rotationZ:-18, rotationX:50, transformPerspective:1800, duration:c.t1-c.t0, ease:"sine.inOut"}, c.t0);
+  F(id+"-sc", {rotationZ:-22, rotationX:48, transformPerspective:1800}, {rotationZ:-12, rotationX:42, transformPerspective:1800, duration:c.t1-c.t0, ease:"sine.inOut"}, c.t0);
   const top = id+"-l"+(n-1);
-  F(top, {borderColor:"rgba(255,255,255,.14)", boxShadow:"0 0 0 0 rgba(0,0,0,0)"}, {borderColor:ACC, boxShadow:"0 0 60px "+ACC+"66", duration:.4}, p.cue);
+  F(top, {boxShadow:"0 0 0 0 rgba(0,0,0,0)"}, {borderColor:ACC, boxShadow:"0 0 60px "+ACC+"66", duration:.4}, early(c, p.cue, 1.4));
 },
 flujo(c, p){
-  const id = "#"+c.id;
+  const id = "#"+c.id, cues = stagger(c, p.cues, .3, .25);
   for (let i=0;i<p.n;i++){
-    const t = p.cues[i];
+    const t = cues[i];
     pop(id+"-i"+i, t-.05);
     F(id+"-p"+i, {strokeDashoffset:1000}, {strokeDashoffset:0, duration:.6, ease:"power2.inOut"}, t+.1);
     F(id+"-d"+i, {strokeDashoffset:60, opacity:1}, {strokeDashoffset:-1000, duration:.9, ease:"power1.in", repeat:1, repeatDelay:.15}, t+.2);
   }
-  F(id+"-o", {opacity:0, y:60, scale:.94}, {opacity:1, y:0, scale:1, duration:.55, ease:E}, p.out-.1);
-  for (let i=0;i<4;i++) pop(id+"-t"+i, p.out+.2+i*.12);
+  const out = Math.max(cues[cues.length-1]+.5, Math.min(p.out, c.t0 + (c.t1-c.t0)*.6));
+  F(id+"-o", {opacity:0, y:60, scale:.94}, {opacity:1, y:0, scale:1, duration:.55, ease:E}, out-.1);
+  for (let i=0;i<4;i++) pop(id+"-t"+i, out+.2+i*.12);
 },
 cursores(c, p){
   const id = "#"+c.id, Dd = c.t1-c.t0;
@@ -995,23 +1357,29 @@ cursores(c, p){
     show(id+"-c"+i, c.t0+.2+i*.2, .3, {scale:.5});
     for (let j=1;j<pts.length;j++) F(id+"-c"+i, {x:pts[j-1][0], y:pts[j-1][1]}, {x:pts[j][0], y:pts[j][1], duration:seg*.8, ease:"power2.inOut"}, c.t0+.3+j*seg);
   }
-  F(id+"-com", {opacity:0, y:40, scale:.9}, {opacity:1, y:0, scale:1, duration:.45, ease:"back.out(1.6)"}, p.com-.05);
-  F(id+"-sel", {opacity:0, scale:1.08}, {opacity:1, scale:1, duration:.3, ease:E}, p.chg-.25);
-  F(id+"-old", {opacity:1, filter:"blur(0px)"}, {opacity:0, filter:"blur(8px)", duration:.3}, p.chg);
-  F(id+"-new", {opacity:0, y:20}, {opacity:1, y:0, duration:.4, ease:E}, p.chg+.15);
-  show(id+"-ok", p.chg+.35, .4, {y:16});
+  const com = early(c, p.com, 1.2), chg = Math.max(p.chg, com+.8);
+  F(id+"-com", {opacity:0, y:40, scale:.9}, {opacity:1, y:0, scale:1, duration:.45, ease:"back.out(1.6)"}, com-.05);
+  F(id+"-sel", {opacity:0, scale:1.08}, {opacity:1, scale:1, duration:.3, ease:E}, chg-.25);
+  F(id+"-old", {opacity:1, filter:"blur(0px)"}, {opacity:0, filter:"blur(8px)", duration:.3}, chg);
+  F(id+"-new", {opacity:0, y:20}, {opacity:1, y:0, duration:.4, ease:E}, chg+.15);
+  show(id+"-ok", chg+.35, .4, {y:16});
 },
 chips(c, p){
+  // aparecen apagadas enseguida y se encienden cuando la voz las nombra
   const id = "#"+c.id;
   for (let i=0;i<p.n;i++){
-    F(id+"-k"+i, {opacity:0, x:i%2?-80:80, scale:.9, rotation:i%2?-3:3}, {opacity:1, x:0, scale:1, rotation:0, duration:.5, ease:"back.out(1.4)"}, p.cues[i]-.08);
-    if ($(id+"-dl"+i)) F(id+"-dl"+i, {y:-14}, {y:6, duration:.35, yoyo:true, repeat:3, ease:"sine.inOut"}, p.cues[i]+.35);
+    const k = id+"-k"+i, t = Math.max(p.cues[i], c.t0+.3+i*.14);
+    F(k, {opacity:0, x:i%2?-80:80, scale:.9, rotation:i%2?-3:3}, {opacity:.42, x:0, scale:1, rotation:0, duration:.45, ease:"back.out(1.4)"}, c.t0+.25+i*.12);
+    F(k, {opacity:.42, scale:1}, {opacity:1, scale:1.04, duration:.22, ease:"power2.out"}, t);
+    F(k, {scale:1.04}, {scale:1, duration:.3, ease:"power2.out"}, t+.22);
+    if ($(id+"-dl"+i)) F(id+"-dl"+i, {y:-14}, {y:6, duration:.35, yoyo:true, repeat:3, ease:"sine.inOut"}, t+.35);
   }
   if (p.bar !== undefined){
-    show(id+"-bar", p.bar-.3, .4, {y:20});
-    F(id+"-fill", {scaleX:0}, {scaleX:p.val, duration:.9, ease:"power2.out"}, p.bar);
+    const tb = early(c, p.bar, 1.6);
+    show(id+"-bar", tb-.3, .4, {y:20});
+    F(id+"-fill", {scaleX:0}, {scaleX:p.val, duration:.9, ease:"power2.out"}, tb);
     const o = {v:0};
-    F(o, {v:0}, {v:p.val*100, duration:.9, ease:"power2.out", onUpdate:()=>{ $(id+"-pct").textContent = Math.round(o.v)+"%"; }}, p.bar);
+    F(o, {v:0}, {v:p.val*100, duration:.9, ease:"power2.out", onUpdate:()=>{ $(id+"-pct").textContent = Math.round(o.v)+"%"; }}, tb);
   }
 },
 frase(c, p){
@@ -1023,62 +1391,66 @@ frase(c, p){
 lista(c, p){
   const id = "#"+c.id;
   for (let i=0;i<p.n;i++){
-    show(id+"-k"+i, p.cues[i]-.1, .45, {x:-90});
-    F(id+"-ck"+i, {strokeDashoffset:100}, {strokeDashoffset:0, duration:.35, ease:"power2.out"}, p.cues[i]+.15);
+    const t = Math.max(p.cues[i], c.t0+.35+i*.14);
+    F(id+"-k"+i, {opacity:0, x:-90}, {opacity:.45, x:0, duration:.45, ease:E}, c.t0+.2+i*.12);
+    F(id+"-k"+i, {opacity:.45}, {opacity:1, duration:.25}, t-.05);
+    F(id+"-ck"+i, {strokeDashoffset:100}, {strokeDashoffset:0, duration:.35, ease:"power2.out"}, t+.1);
   }
 },
 reloj(c, p){
-  const id = "#"+c.id, Dd = c.t1-c.t0;
+  const id = "#"+c.id, Dd = c.t1-c.t0, cue = Math.max(c.t0+.9, Math.min(p.cue, c.t1-.9));
   F(id+"-m", {rotation:0}, {rotation:360*5, duration:Dd, ease:"power2.out"}, c.t0);
   F(id+"-h", {rotation:20}, {rotation:20+360*5/12, duration:Dd, ease:"power2.out"}, c.t0);
-  F(id+"-arc", {"--arc":"0deg"}, {"--arc":"300deg", duration:Math.max(.4,p.cue-c.t0), ease:"power1.inOut"}, c.t0);
-  F(id+"-arc", {"--arc":"300deg"}, {"--arc":"24deg", duration:.5, ease:"power3.out"}, p.cue);
-  F(id+"-a", {"--st":0}, {"--st":1, duration:.35, ease:"power2.out"}, p.cue-.15);
-  F(id+"-a", {opacity:1, y:0}, {opacity:0, y:-60, duration:.35, ease:"power2.in"}, p.cue+.15);
-  F(id+"-b", {opacity:0, y:70, scale:.8}, {opacity:1, y:0, scale:1, duration:.5, ease:"back.out(1.6)"}, p.cue+.25);
+  F(id+"-arc", {"--arc":"0deg"}, {"--arc":"300deg", duration:Math.max(.4,cue-c.t0), ease:"power1.inOut"}, c.t0);
+  F(id+"-arc", {"--arc":"300deg"}, {"--arc":"24deg", duration:.5, ease:"power3.out"}, cue);
+  F(id+"-a", {"--st":0}, {"--st":1, duration:.35, ease:"power2.out"}, cue-.15);
+  F(id+"-a", {opacity:1, y:0}, {opacity:0, y:-60, duration:.35, ease:"power2.in"}, cue+.15);
+  F(id+"-b", {opacity:0, y:70, scale:.8}, {opacity:1, y:0, scale:1, duration:.5, ease:"back.out(1.6)"}, cue+.25);
 },
 alerta(c, p){
   const id = "#"+c.id;
   F(id+"-ic", {rotation:0}, {rotation:8, duration:.08, yoyo:true, repeat:5, ease:"sine.inOut"}, c.t0+.5);
   for (let i=0;i<p.n;i++) show(id+"-r"+i, c.t0+.35+i*.12, .35, {x:-40});
   if (p.mk >= 0){
-    const r = id+"-r"+p.mk;
-    show(id+"-lens", p.cue-.5, .4, {scale:.6});
-    F(id+"-lens", {x:0, y:0}, {x:-430, y:-40, duration:1.1, ease:"power2.inOut"}, p.cue-.3);
-    F(r, {backgroundColor:"rgba(255,176,32,0)", color:"#FFFFFF"}, {backgroundColor:"rgba(255,176,32,.16)", color:"#FFB020", duration:.3}, p.cue+.35);
-    F(r, {scale:1}, {scale:1.04, duration:.15, yoyo:true, repeat:3}, p.cue+.4);
+    const r = id+"-r"+p.mk, cue = Math.max(c.t0+1.2, Math.min(p.cue, c.t1-.8));
+    show(id+"-lens", cue-.5, .4, {scale:.6});
+    F(id+"-lens", {x:0, y:0}, {x:-430, y:-40, duration:1.1, ease:"power2.inOut"}, cue-.3);
+    F(r, {backgroundColor:"rgba(255,176,32,0)"}, {backgroundColor:"rgba(255,176,32,.16)", color:"#FFB020", duration:.3}, cue+.35);
+    F(r, {scale:1}, {scale:1.04, duration:.15, yoyo:true, repeat:3}, cue+.4);
   }
 },
 numero(c, p){
-  const id = "#"+c.id, o = {v:p.desde};
-  F(o, {v:p.desde}, {v:p.val, duration:1.3, ease:"power3.out", onUpdate:()=>{ $(id+"-n").textContent = fmt(o.v, p.dec, p.sep); }}, p.cue-.1);
-  show(id+"-l", p.cue+.4, .5, {y:30});
+  // cuenta desde que arranca la escena y aterriza en el valor justo cuando la voz lo dice
+  const id = "#"+c.id, o = {v:p.desde}, land = Math.max(c.t0+1.0, Math.min(p.cue+.15, c.t1-.6));
+  F(o, {v:p.desde}, {v:p.val, duration:land-c.t0-.1, ease:"power3.out", onUpdate:()=>{ $(id+"-n").textContent = fmt(o.v, p.dec, p.sep); }}, c.t0+.1);
+  F(id+"-n", {scale:1}, {scale:1.06, duration:.18, yoyo:true, repeat:1, ease:"power2.inOut"}, land-.1);
+  show(id+"-l", c.t0+.5, .5, {y:30});
 },
 particulas(c, p){
-  const id = "#"+c.id, cv = $(id+"-cv"), ctx = cv.getContext("2d"), rnd = seeded(7), N = 700, pts = [];
+  const id = "#"+c.id, cv = $(id+"-cv"), ctx = cv.getContext("2d"), rnd = seeded(7+SEED), N = 700, pts = [];
+  const bright = document.body.classList.contains("tema-claro") ? "#1A2238" : "#E6ECF7";
   for (let i=0;i<N;i++) pts.push([rnd()*1080, rnd()*1010, .6+rnd()*2.2, rnd()]);
-  const o = {k:0, v:p.desde};
+  const o = {k:0, v:p.desde}, land = Math.max(c.t0+1.2, Math.min(p.cue+.15, c.t1-.6));
   F(o, {k:0}, {k:1, duration:Math.max(1,c.t1-c.t0-.2), ease:"power1.out", onUpdate:()=>{
     ctx.clearRect(0,0,1080,1010);
-    for (const [x,y,r,a] of pts){ if (a > o.k) continue; ctx.globalAlpha = .35+.65*(1-a); ctx.fillStyle = a < .08 ? ACC : "#E6ECF7"; ctx.beginPath(); ctx.arc(x, y, r*1.6, 0, 6.283); ctx.fill(); }
+    for (const [x,y,r,a] of pts){ if (a > o.k) continue; ctx.globalAlpha = .35+.65*(1-a); ctx.fillStyle = a < .08 ? ACC : bright; ctx.beginPath(); ctx.arc(x, y, r*1.6, 0, 6.283); ctx.fill(); }
   }}, c.t0);
-  F(o, {v:p.desde}, {v:p.val, duration:1.6, ease:"power3.out", onUpdate:()=>{ $(id+"-n").textContent = fmt(o.v, p.dec); }}, p.cue-.1);
+  F(o, {v:p.desde}, {v:p.val, duration:land-c.t0-.1, ease:"power3.out", onUpdate:()=>{ $(id+"-n").textContent = fmt(o.v, p.dec); }}, c.t0+.1);
 },
 navegador(c, p){
-  const id = "#"+c.id;
-  for (let i=0;i<4;i++) pop(id+"-cd"+i, c.t0+.5+i*.12);
-  F(id+"-cur", {x:0, y:0}, {x:-230, y:-560, duration:.9, ease:"power2.inOut"}, p.cue-.9);
-  F(id+"-cur", {scale:1}, {scale:.8, duration:.1, yoyo:true, repeat:1}, p.cue);
+  const id = "#"+c.id, cue = Math.max(c.t0+1.3, Math.min(p.cue, c.t1-.5));
+  for (let i=0;i<4;i++) pop(id+"-cd"+i, c.t0+.35+i*.12);
+  F(id+"-cur", {x:0, y:0}, {x:-230, y:-560, duration:.9, ease:"power2.inOut"}, cue-.9);
+  F(id+"-cur", {scale:1}, {scale:.8, duration:.1, yoyo:true, repeat:1}, cue);
   if (p.n > 1){
-    F(id+"-tb0", {backgroundColor:"#141C31", color:"#FFFFFF"}, {backgroundColor:"rgba(255,255,255,.04)", color:"#8A97B0", duration:.15}, p.cue+.1);
-    F(id+"-tb1", {backgroundColor:"rgba(255,255,255,.04)", color:"#8A97B0"}, {backgroundColor:"#141C31", color:"#FFFFFF", duration:.15}, p.cue+.1);
+    tl.set(id+"-tb0", {className:"nv-tab"}, cue+.1); tl.set(id+"-tb1", {className:"nv-tab on"}, cue+.1);
   }
 },
 celular(c, p){
-  const id = "#"+c.id;
+  const id = "#"+c.id, cues = stagger(c, p.cues, .9);
   F(id+"-ph", {rotationY:-18, rotationX:8}, {rotationY:10, rotationX:0, duration:c.t1-c.t0, ease:"sine.inOut"}, c.t0);
-  p.cues.forEach((t,i) => {
-    if (!p.me[i]){ F(id+"-ty", {opacity:0}, {opacity:1, duration:.15}, t-.7); F(id+"-ty", {opacity:1}, {opacity:0, duration:.1}, t-.12); }
+  cues.forEach((t,i) => {
+    if (!p.me[i] && t-.7 > c.t0+.1){ F(id+"-ty", {opacity:0}, {opacity:1, duration:.15}, t-.7); F(id+"-ty", {opacity:1}, {opacity:0, duration:.1}, t-.12); }
     show(id+"-m"+i, t-.1, .35, {y:30, scale:.9});
   });
 },
@@ -1088,18 +1460,18 @@ grafico(c, p){
     F(id+"-b"+i, {scaleY:0}, {scaleY:1, duration:.7, ease:"power3.out"}, c.t0+.35+i*.12);
     show(id+"-v"+i, c.t0+.75+i*.12, .3, {y:10});
   }
-  F(id+" .gr-b.hi", {filter:"brightness(1)"}, {filter:"brightness(1.4)", duration:.3, yoyo:true, repeat:1}, p.cue);
+  F(id+" .gr-b.hi", {filter:"brightness(1)"}, {filter:"brightness(1.4)", duration:.3, yoyo:true, repeat:1}, Math.max(p.cue, c.t0+1.2));
 },
 comparacion(c, p){
-  const id = "#"+c.id;
-  show(id+"-an", p.cues[0]-.1, .5, {y:-50});
-  pop(id+"-vs", (p.cues[0]+p.cues[1])/2);
-  show(id+"-de", p.cues[1]-.1, .5, {y:60});
+  const id = "#"+c.id, a = early(c, p.cues[0], .5), d = Math.max(a+.9, Math.min(p.cues[1], c.t0+(c.t1-c.t0)*.55));
+  show(id+"-an", a-.1, .5, {y:-50});
+  pop(id+"-vs", (a+d)/2);
+  show(id+"-de", d-.1, .5, {y:60});
 },
 terminal(c, p){
-  const id = "#"+c.id;
+  const id = "#"+c.id, cues = stagger(c, p.cues, .45);
   F(id+"-win", {rotationX:10, rotationY:-8}, {rotationX:0, rotationY:4, duration:c.t1-c.t0, ease:"sine.inOut"}, c.t0);
-  p.cues.forEach((t, i) => {
+  cues.forEach((t, i) => {
     const ln = id+"-ln"+i;
     if (p.tipos[i] === "cmd"){
       tl.set(ln, {opacity:1}, t-.05);
@@ -1110,19 +1482,99 @@ terminal(c, p){
       F(ln, {opacity:0, x:-24}, {opacity:1, x:0, duration:.3, ease:E}, t-.05);
     }
   });
-  const last = p.cues.length ? p.cues[p.cues.length-1]+.5 : c.t0+.5;
+  const last = cues.length ? cues[cues.length-1]+.5 : c.t0+.5;
   F(id+"-cur", {opacity:0}, {opacity:1, duration:.01, repeat:Math.max(1, Math.floor((c.t1-last)/.5)), yoyo:true, repeatDelay:.25}, last);
 },
 linea_tiempo(c, p){
-  const id = "#"+c.id;
+  const id = "#"+c.id, cues = stagger(c, p.cues, .6);
   const fr = (i) => p.n > 1 ? (60 + i*(860/p.n) + 42)/860 : .1;
   F(id+"-fill", {scaleY:0}, {scaleY:fr(0), duration:.5, ease:E}, c.t0+.2);
-  p.cues.forEach((t, i) => {
+  cues.forEach((t, i) => {
     if (i > 0) F(id+"-fill", {scaleY:fr(i-1)}, {scaleY:fr(i), duration:.5, ease:"power2.inOut"}, t-.35);
     F(id+"-h"+i, {opacity:0, x:60}, {opacity:1, x:0, duration:.45, ease:E}, t-.1);
     F(id+"-d"+i, {scale:.3}, {scale:1, duration:.4, ease:"back.out(2.4)"}, t-.1);
     if (i > 0) F(id+"-h"+(i-1), {opacity:1}, {opacity:.45, duration:.3}, t);
   });
+},
+imagen(c, p){
+  const id = "#"+c.id, Dd = c.t1-c.t0, k = (c.k+SEED) % 4;
+  const mv = p.mov || ["acercar","alejar","derecha","izquierda"][k];
+  const from = mv === "alejar" ? {scale:1.22, x:0, y:0} : (mv === "derecha" ? {scale:1.14, x:60, y:0} : (mv === "izquierda" ? {scale:1.14, x:-60, y:0} : {scale:1.04, x:0, y:10}));
+  const to = mv === "alejar" ? {scale:1.04, x:0, y:0} : (mv === "derecha" ? {scale:1.14, x:-60, y:0} : (mv === "izquierda" ? {scale:1.14, x:60, y:0} : {scale:1.2, x:0, y:-10}));
+  F(id+"-img", from, Object.assign({duration:Dd, ease:"none"}, to), c.t0);
+  if (p.modo === "tarjeta"){
+    F(id+"-card", {opacity:0, y:80, rotation:-4, scale:.92}, {opacity:1, y:0, rotation:-2, scale:1, duration:.7, ease:E}, c.t0+.05);
+    F(id+"-card", {rotation:-2}, {rotation:1.5, duration:Dd, ease:"sine.inOut"}, c.t0+.7);
+    show(id+"-cred", c.t0+1, .4, {y:10});
+  } else {
+    const t = Math.max(c.t0+.7, Math.min(p.cue, c.t0+(c.t1-c.t0)*.5));
+    show(id+"-tit", t, .5, {y:40});
+    show(id+"-cred", c.t0+.6, .4, {y:0});
+  }
+},
+codigo(c, p){
+  const id = "#"+c.id, cues = stagger(c, p.cues, .3);
+  F(id+"-win", {rotationX:8, rotationY:-6}, {rotationX:0, rotationY:3, duration:c.t1-c.t0, ease:"sine.inOut"}, c.t0);
+  cues.forEach((t, i) => F(id+"-ln"+i, {opacity:0, x:-30}, {opacity:1, x:0, duration:.28, ease:E}, t-.05));
+  p.mk.forEach(i => { const t = cues[i]; tl.set(id+"-ln"+i, {className:"cd-l mk"}, t+.25); F(id+"-ln"+i, {scale:1}, {scale:1.03, duration:.18, yoyo:true, repeat:1, transformOrigin:"0 50%"}, t+.3); });
+},
+pasos(c, p){
+  const id = "#"+c.id, cues = stagger(c, p.cues, .5), n = p.n;
+  for (let i=0;i<n;i++){
+    F(id+"-k"+i, {opacity:0, x:-60}, {opacity:.4, x:0, duration:.45, ease:E}, c.t0+.2+i*.12);
+    F(id+"-k"+i, {opacity:.4}, {opacity:1, duration:.25}, cues[i]-.05);
+    tl.set(id+"-n"+i, {className:"ps-n on"}, cues[i]);
+    F(id+"-n"+i, {scale:.7}, {scale:1, duration:.45, ease:"back.out(2.2)"}, cues[i]);
+    if (i > 0) F(id+"-fill", {scaleY:(i-1)/(n-1)}, {scaleY:i/(n-1), duration:.5, ease:"power2.inOut"}, cues[i]-.4);
+  }
+},
+anillo(c, p){
+  const id = "#"+c.id, o = {v:p.desde}, land = Math.max(c.t0+1.2, Math.min(p.cue+.15, c.t1-.6)), dur = land-c.t0-.1;
+  F(id+"-ring", {strokeDashoffset:100}, {strokeDashoffset:100-p.val, duration:dur, ease:"power3.out"}, c.t0+.1);
+  F(o, {v:p.desde}, {v:p.val, duration:dur, ease:"power3.out", onUpdate:()=>{ $(id+"-n").textContent = fmt(o.v, p.dec); }}, c.t0+.1);
+  F(id+"-n", {scale:1}, {scale:1.08, duration:.18, yoyo:true, repeat:1, ease:"power2.inOut"}, land-.1);
+  show(id+"-l", c.t0+.5, .5, {y:30});
+},
+titular(c, p){
+  const id = "#"+c.id;
+  F(id+"-card", {opacity:0, y:50, rotationX:10}, {opacity:1, y:0, rotationX:0, duration:.55, ease:E}, c.t0+.05);
+  F(id+"-tag", {opacity:0, scale:1.6}, {opacity:1, scale:1, duration:.3, ease:"back.out(2)"}, c.t0+.4);
+  const dt = Math.min(.14, (c.t1-c.t0-1.6)/Math.max(1,p.n));
+  for (let i=0;i<p.n;i++) F(id+"-w"+i, {opacity:0, y:30, scale:1.3, filter:"blur(6px)"}, {opacity:1, y:0, scale:1, filter:"blur(0px)", duration:.3, ease:E}, c.t0+.55+i*dt);
+  show(id+"-baj", c.t0+.6+p.n*dt+.15, .45, {y:20});
+  F(id+"-rule", {scaleX:0}, {scaleX:1, duration:.7, ease:"power2.inOut"}, Math.max(c.t0+1.2, Math.min(p.cue, c.t1-.8)));
+},
+cita(c, p){
+  const id = "#"+c.id;
+  F(id+"-card", {opacity:0, y:40, scale:.96}, {opacity:1, y:0, scale:1, duration:.5, ease:E}, c.t0+.05);
+  p.cues.forEach((t,i) => F(id+"-w"+i, {opacity:0, y:14}, {opacity:1, y:0, duration:.22, ease:"power2.out"}, Math.max(t-.04, c.t0+.4)));
+  show(id+"-a", Math.max(c.t0+1.0, Math.min(p.autor, c.t0+(c.t1-c.t0)*.6)), .45, {y:20, x:-20});
+},
+tabla(c, p){
+  const id = "#"+c.id, cue = Math.max(c.t0+1.0+p.n*.1, Math.min(p.cue, c.t1-.6));
+  for (let i=0;i<p.n;i++) F(id+"-r"+i, {opacity:0, x:-40}, {opacity:1, x:0, duration:.35, ease:E}, c.t0+.3+i*.12);
+  if (p.mk >= 0){
+    tl.set(id+"-r"+p.mk, {className:"tb-r mk on"}, cue);
+    F(id+"-r"+p.mk, {scale:1}, {scale:1.03, duration:.16, yoyo:true, repeat:1}, cue);
+  }
+},
+calendario(c, p){
+  const id = "#"+c.id, cues = stagger(c, p.cues, .4);
+  for (let d=1; d<=p.n; d++) F(id+"-d"+d, {opacity:0, scale:.6}, {opacity:1, scale:1, duration:.3, ease:"back.out(1.5)"}, c.t0+.15+d*.018);
+  p.dias.forEach((d, i) => {
+    const t = Math.max(cues[i], c.t0+.9);
+    tl.set(id+"-d"+d, {className:"ca-c mk on"}, t);
+    F(id+"-d"+d, {scale:1}, {scale:1.12, duration:.2, yoyo:true, repeat:1, ease:"power2.inOut"}, t);
+    F(id+"-b"+d, {opacity:0, y:10}, {opacity:1, y:0, duration:.3, ease:E}, t+.15);
+  });
+},
+planes(c, p){
+  const id = "#"+c.id, cues = stagger(c, p.cues, .35);
+  for (let i=0;i<p.n;i++){
+    F(id+"-c"+i, {opacity:0, y:80, scale:.94}, {opacity:1, y:0, scale:1, duration:.5, ease:E}, c.t0+.15+i*.14);
+    F(id+"-c"+i, {scale:1}, {scale:1.04, duration:.2, yoyo:true, repeat:1, ease:"power2.inOut"}, Math.max(cues[i], c.t0+.8+i*.14));
+  }
+  p.hi.forEach(i => F(id+"-c"+i, {y:0}, {y:-18, duration:.5, ease:E}, Math.max(cues[i], c.t0+.9)));
 },
 cierre(c, p){
   const id = "#"+c.id;
@@ -1137,15 +1589,17 @@ cierre(c, p){
 const CALLS = __CALLS__;
 CALLS.forEach(c => { CAM(c); (SC[c.p.tipo] || (()=>{}))(c, c.p); });
 
-// subtítulos palabra por palabra
+// subtítulos palabra por palabra: la palabra que suena entra con un pop; las ya dichas quedan en el tono suave del tema
 const CAPS = __CAPS__;
+const DONE = getComputedStyle(document.documentElement).getPropertyValue("--cap-done").trim() || "#C6CFE0";
+const TXT = getComputedStyle(document.documentElement).getPropertyValue("--text").trim() || "#FFFFFF";
 CAPS.forEach(g => {
   const el = "#g"+g.g;
   F(el, {opacity:0}, {opacity:1, duration:.01}, g.t0);
   F(el, {opacity:1}, {opacity:0, duration:.1}, g.t1-.1);
   g.w.forEach(([w, t0, t1, kw]) => {
-    F("#"+w, {opacity:0, y:16, scale:1.06}, {opacity:1, y:0, scale:1, duration:.14, ease:"power2.out"}, t0);
-    if (!kw) F("#"+w, {color:"#FFFFFF"}, {color:MUT, duration:.18}, t1);
+    F("#"+w, {opacity:0, y:16, scale:1.08, color:TXT}, {opacity:1, y:0, scale:1, duration:.14, ease:"power2.out"}, t0);
+    if (!kw) F("#"+w, {color:TXT}, {color:DONE, duration:.25}, t1+.05);
   });
   g.k.forEach(([k, t]) => F("#"+k+" .kb", {opacity:0, scale:.7}, {opacity:1, scale:1, duration:.22, ease:"back.out(2)"}, t));
 });
@@ -1157,19 +1611,24 @@ window.__timelines["main"] = tl;
 
 
 # ---------------------------------------------------------------- audio
-def mix_audio(work, voice, D, beats, groups):
+def mix_audio(work, voice, D, beats, groups, guion=None):
     import numpy as np, soundfile as sf
+    guion = guion or {}
     vw = os.path.join(work, "voz.wav")
     sf.write(vw, voice[: int((D + 0.2) * SR)], SR)
     scenes = [b["t0"] for b in beats]
     cards = []
     for b in beats:
         e = b["escena"]
-        if e["tipo"] in ("chips", "lista", "flujo"):
-            cards += scene_cues(b, [x.get("en", x.get("texto", "")) for x in (e.get("items") or e.get("entradas") or [])][:4], b["t0"], b["t1"])
+        if e["tipo"] in ("chips", "lista", "flujo", "pasos", "planes", "calendario"):
+            items = e.get("items") or e.get("entradas") or e.get("pasos") or e.get("planes") or e.get("marcas") or []
+            cards += scene_cues(b, [x.get("en", x.get("texto", x.get("titulo", x.get("nombre", "")))) for x in items][:4], b["t0"], b["t1"])
+    mus = guion.get("musica")
+    estilo = (mus.get("estilo") if isinstance(mus, dict) else mus) or "tech"
     mw = os.path.join(work, "music.wav")
     subprocess.run([sys.executable, os.path.join(HERE, "music.py"), mw, str(round(D + 0.2, 3)),
-                    json.dumps({"scenes": scenes, "cards": cards})], check=True, stdout=subprocess.DEVNULL)
+                    json.dumps({"scenes": scenes, "cards": cards, "estilo": estilo, "semilla": seed_of(guion) if guion.get("beats") else 7})],
+                   check=True, stdout=subprocess.DEVNULL)
     out = os.path.join(work, "assets", "audio.mp3")
     fc = ("[0:a]aresample=44100,highpass=f=70,equalizer=f=3200:t=q:w=1.2:g=2.5,acompressor=threshold=-20dB:ratio=3:attack=5:release=90,volume=2.0,"
           "aformat=channel_layouts=stereo,asplit=2[v][sc];"
@@ -1192,7 +1651,9 @@ def find_browser():
 
 REQUIRED = {"terminal": "lineas", "linea_tiempo": "hitos", "chips": "items", "lista": "items", "flujo": "entradas",
             "numero": "valor", "particulas": "valor", "comparacion": "despues", "grafico": "barras", "celular": "mensajes",
-            "alerta": "filas", "reloj": "despues", "prompt": "texto", "cursores": "despues", "capas": "items"}
+            "alerta": "filas", "reloj": "despues", "prompt": "texto", "cursores": "despues", "capas": "items",
+            "codigo": "lineas", "pasos": "pasos", "anillo": "valor", "titular": "titulo", "cita": "autor", "tabla": "filas",
+            "calendario": "marcas", "planes": "planes"}
 ENGLISH = {"claude", "chatgpt", "openai", "google", "microsoft", "gemini", "whatsapp", "iphone", "slides", "app", "apps",
            "prompt", "prompts", "code", "copilot", "meta", "apple", "android", "windows", "excel", "powerpoint", "notion",
            "canva", "youtube", "instagram", "tiktok", "linkedin", "email", "online", "software", "startup", "freelance",
@@ -1232,6 +1693,15 @@ def validar(guion, historial=None):
             if (re.search(r"[a-záéíóú][A-Z]", w) or (len(w) > 1 and w.isupper() and w.isalpha()) or "@" in w
                     or re.search(r"\w\.\w", w) or wl in ENGLISH):
                 warn.append(f"beat {i}: '{w}' sin pronunciación; usá {{{w}|cómo se dice}}")
+        if t == "imagen":
+            if not (e.get("archivo") or e.get("url")):
+                err.append(f"beat {i}: la escena 'imagen' necesita 'archivo' (ruta local) o 'url' (https)")
+            elif not e.get("credito"):
+                warn.append(f"beat {i}: la imagen no tiene 'credito' (autor y licencia); ponelo salvo que sea propia o generada")
+        if t == "cita" and e.get("texto") and len(e["texto"]) > 160:
+            warn.append(f"beat {i}: la cita es larga ({len(e['texto'])} caracteres); hasta 160 se lee bien")
+        if t == "titular" and len(re.sub(r"[*]", "", e.get("titulo", ""))) > 70:
+            warn.append(f"beat {i}: el titular es largo (más de 70 caracteres)")
     if tipos and tipos[-1] != "cierre":
         err.append("el último beat tiene que ser 'cierre'")
     for i in range(1, len(tipos)):
@@ -1241,6 +1711,16 @@ def validar(guion, historial=None):
         warn.append("menos de 5 tipos de escena distintos")
     if not 8 <= len(beats) <= 12:
         warn.append(f"{len(beats)} beats (lo recomendado es 8 a 12)")
+    tema = guion.get("tema")
+    if tema is not None and tema not in THEMES:
+        err.append(f"tema '{tema}' no existe; opciones: {', '.join(THEMES)}")
+    tr = guion.get("transiciones")
+    for t in ([tr] if isinstance(tr, str) else (tr or [])):
+        if t not in TRANSITIONS:
+            err.append(f"transición '{t}' no existe; opciones: {', '.join(TRANSITIONS)}")
+    mus = (guion.get("musica") or {}).get("estilo") if isinstance(guion.get("musica"), dict) else guion.get("musica")
+    if mus is not None and mus not in MUSIC_STYLES:
+        err.append(f"estilo de música '{mus}' no existe; opciones: {', '.join(MUSIC_STYLES)}")
     if historial:
         prev = [x for x in historial.get("publicados", []) if x.get("escenas")]
         if prev:
@@ -1249,6 +1729,20 @@ def validar(guion, historial=None):
                 warn.append(f"arranca con '{tipos[0]}', igual que el reel anterior")
             if last.get("acento", "").lower() == str(guion.get("acento", "")).lower():
                 warn.append("mismo color de acento que el reel anterior")
+            recent = prev[-2:]
+            if any((x.get("tema") or "noche") == (tema or "noche") for x in recent):
+                warn.append(f"tema '{tema or 'noche'}' usado en uno de los últimos 2 reels; alterná ({', '.join(THEMES)})")
+            if any((x.get("musica") or "tech") == (mus or "tech") for x in prev[-1:]):
+                warn.append(f"misma música ('{mus or 'tech'}') que el reel anterior; alterná ({', '.join(MUSIC_STYLES)})")
+            mine = set(t for t in tipos if t != "cierre")
+            used3 = set(t for x in prev[-3:] for t in x.get("escenas", []) if t != "cierre")
+            fresh = mine - used3
+            if len(fresh) < 2:
+                libres = sorted(SCENE_TYPES - used3 - {"cierre"})
+                warn.append(f"solo {len(fresh)} tipo(s) de escena que no aparecieron en los últimos 3 reels; usá al menos 2 (libres: {', '.join(libres)})")
+            same = mine & set(t for t in last.get("escenas", []) if t != "cierre")
+            if mine and len(same) / len(mine) > 0.7:
+                warn.append(f"{len(same)} de {len(mine)} escenas repiten las del reel anterior; cambiá algunas")
     return err, warn
 
 
@@ -1258,6 +1752,51 @@ def browser_env():
     if br:
         env["HYPERFRAMES_BROWSER_PATH"] = br
     return env
+
+
+def image_ext(path):
+    head = open(path, "rb").read(12)
+    for magic, ext in IMG_MAGIC.items():
+        if head.startswith(magic):
+            return ext
+    return None
+
+
+def prepare_images(guion, beats, work, guion_dir):
+    """Copia (o baja) las imágenes de las escenas `imagen` a assets/img y deja la ruta en escena['_src'].
+    Falla con ERROR si no se pudo conseguir el archivo o no es una imagen: mejor cambiar la escena que publicar un cuadro vacío."""
+    import hashlib
+    dst_dir = os.path.join(work, "assets", "img")
+    for i, b in enumerate(beats, 1):
+        e = b["escena"]
+        if e["tipo"] != "imagen":
+            continue
+        os.makedirs(dst_dir, exist_ok=True)
+        src = None
+        if e.get("archivo"):
+            src = e["archivo"] if os.path.isabs(e["archivo"]) else os.path.join(guion_dir, e["archivo"])
+            if not os.path.exists(src):
+                print(f"ERROR beat {i}: no existe la imagen {src}")
+                sys.exit(2)
+        elif e.get("url"):
+            h = hashlib.sha256(e["url"].encode()).hexdigest()[:16]
+            cache = os.path.join(EL_CACHE, "img-" + h)
+            if not os.path.exists(cache):
+                os.makedirs(EL_CACHE, exist_ok=True)
+                r = subprocess.run(["curl", "-sSL", "--max-time", "60", "-A", "tobdev-media/1.0 (reel)", "-o", cache + ".part", e["url"]], capture_output=True, text=True)
+                if r.returncode != 0 or not os.path.exists(cache + ".part") or os.path.getsize(cache + ".part") < 1000:
+                    print(f"ERROR beat {i}: no se pudo bajar la imagen ({(r.stderr or '').strip()[-160:] or 'respuesta vacía'}). "
+                          "Si el sitio está bloqueado en este entorno, pedí que la permitan en Ajustes → Capacidades, adjuntala como 'archivo' o cambiá la escena.")
+                    sys.exit(2)
+                os.replace(cache + ".part", cache)
+            src = cache
+        ext = image_ext(src)
+        if not ext:
+            print(f"ERROR beat {i}: {src} no es una imagen (jpg, png, webp o gif)")
+            sys.exit(2)
+        name = f"img{i}.{ext}"
+        shutil.copy(src, os.path.join(dst_dir, name))
+        e["_src"] = "assets/img/" + name
 
 
 def main():
@@ -1294,6 +1833,13 @@ def main():
             print("ERROR no existe el audio de voz_archivo:", voz_path)
             sys.exit(2)
         raw = raw + open(voz_path, "rb").read()
+    guion_dir = os.path.dirname(os.path.abspath(args[0]))
+    for b in guion.get("beats", []):  # imágenes locales: si cambian, se vuelve a armar
+        e = b.get("escena") or {}
+        if e.get("tipo") == "imagen" and e.get("archivo"):
+            ip = e["archivo"] if os.path.isabs(e["archivo"]) else os.path.join(guion_dir, e["archivo"])
+            if os.path.exists(ip):
+                raw = raw + open(ip, "rb").read()
     key = hashlib.sha256(raw + open(os.path.abspath(__file__), "rb").read()).hexdigest()[:12]
     work = os.environ.get("REEL_WORK") or os.path.join(tempfile.gettempdir(), "reel2-" + key)
     ready = all(os.path.exists(os.path.join(work, f)) for f in ("index.html", "assets/audio.mp3", "tiempos.json")) \
@@ -1327,10 +1873,12 @@ def main():
         for f in ("mark-white.svg", "grain.png"):
             shutil.copy(os.path.join(HERE, "marca", f), os.path.join(work, "assets", f))
         shutil.copy(os.path.join(HERE, "gsap.min.js"), os.path.join(work, "assets", "gsap.min.js"))
+        prepare_images(guion, beats, work, guion_dir)
         open(os.path.join(work, "index.html"), "w").write(build_html(guion, beats, groups, D))
         open(os.path.join(work, "meta.json"), "w").write('{"id":"reel","name":"reel"}')
-        mix_audio(work, voice, D, beats, groups)
-        json.dump({"duracion": D, "escenas": [[b["escena"]["tipo"], b["t0"], b["t1"]] for b in beats]},
+        mix_audio(work, voice, D, beats, groups, guion)
+        tema = guion.get("tema") if guion.get("tema") in THEMES else "noche"
+        json.dump({"duracion": D, "tema": tema, "semilla": seed_of(guion), "escenas": [[b["escena"]["tipo"], b["t0"], b["t1"]] for b in beats]},
                   open(os.path.join(work, "tiempos.json"), "w"), indent=1)
         open(os.path.join(work, ".key"), "w").write(key)
         print("WORK", work, "DUR", D)

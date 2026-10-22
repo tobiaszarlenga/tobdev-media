@@ -1,0 +1,207 @@
+{
+ "etiqueta": "TIP #2",
+ "fuente": "code.claude.com/docs",
+ "acento": "#D97757",
+ "tema": "claro",
+ "musica": "suave",
+ "beats": [
+  {
+   "texto": "Si usás {Claude Code|clod cod} así, estás *perdiendo tiempo* en cada sesión.",
+   "escena": {
+    "tipo": "titular",
+    "titulo": "Le explicás tu proyecto *todos los días*",
+    "bajada": "Hay un archivo que lo evita y tarda un minuto",
+    "medio": "tobdev.ia",
+    "fecha": "TIP #2",
+    "etiqueta": "TIP",
+    "en": "sesión"
+   }
+  },
+  {
+   "texto": "Un archivo de texto en la raíz, y listo: lo lee *solo* al arrancar.",
+   "escena": {
+    "tipo": "codigo",
+    "archivo": "CLAUDE.md",
+    "lineas": [
+     {
+      "texto": "# Mi tienda online",
+      "en": "archivo"
+     },
+     {
+      "texto": "- Next.js 15 + Supabase",
+      "en": "texto"
+     },
+     {
+      "texto": "- Tests: npm test antes de cada commit",
+      "en": "raíz"
+     },
+     {
+      "texto": "- Nunca tocar /migrations sin avisar",
+      "en": "lee",
+      "marcar": true
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Son *tres pasos*: lo creás, lo escribís corto, y lo subís al repo.",
+   "escena": {
+    "tipo": "pasos",
+    "pasos": [
+     {
+      "titulo": "Crear CLAUDE.md",
+      "sub": "en la raíz del proyecto",
+      "en": "creás"
+     },
+     {
+      "titulo": "Escribir *lo esencial*",
+      "sub": "stack, comandos, reglas",
+      "en": "escribís"
+     },
+     {
+      "titulo": "Subirlo al repo",
+      "sub": "lo usa todo el equipo",
+      "en": "subís"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "En nuestros proyectos, el *ochenta por ciento* del contexto ya viene de ahí.",
+   "escena": {
+    "tipo": "anillo",
+    "valor": 80,
+    "sufijo": "%",
+    "etiqueta": "del contexto sale del *archivo*",
+    "en": "ochenta"
+   }
+  },
+  {
+   "texto": "Charley lo resumió así en {1969|mil novecientos sesenta y nueve}.",
+   "escena": {
+    "tipo": "cita",
+    "texto": "Lo único que llegó fue LO. Y con eso alcanzó para cambiar todo.",
+    "autor": "Charley Kline",
+    "cargo": "UCLA · 1969",
+    "en": "resumió"
+   }
+  },
+  {
+   "texto": "Una foto de archivo, con el crédito abajo, y *movimiento lento* de cámara.",
+   "escena": {
+    "tipo": "imagen",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/640px-Sunflower_from_Silesia2.jpg",
+    "titulo": "La sala donde *empezó todo*",
+    "credito": "Foto: Pudelek · Wikimedia Commons · CC BY-SA 3.0",
+    "en": "cámara"
+   }
+  },
+  {
+   "texto": "Y la comparación de planes: {Pro|pro}, {Max|max} y el equipo, con lo que incluye cada uno.",
+   "escena": {
+    "tipo": "tabla",
+    "titulo": "Qué incluye",
+    "columnas": [
+     "Plan",
+     "Precio",
+     "Uso"
+    ],
+    "filas": [
+     [
+      "Pro",
+      "USD 20",
+      "5x"
+     ],
+     [
+      "Max",
+      "USD 100",
+      "20x"
+     ],
+     [
+      "Team",
+      "USD 25",
+      "por puesto"
+     ]
+    ],
+    "marcar": 1,
+    "en": "Max"
+   }
+  },
+  {
+   "texto": "El agente publica *todos los días hábiles*, a las siete de la tarde.",
+   "escena": {
+    "tipo": "calendario",
+    "mes": "Octubre",
+    "anio": "2026",
+    "inicio": 3,
+    "cantidad": 31,
+    "marcas": [
+     {
+      "dia": 19,
+      "texto": "Tip",
+      "en": "agente"
+     },
+     {
+      "dia": 20,
+      "texto": "Plata",
+      "en": "publica"
+     },
+     {
+      "dia": 21,
+      "texto": "Historia",
+      "en": "días"
+     },
+     {
+      "dia": 22,
+      "texto": "Noticia",
+      "en": "siete"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Hay un plan para cada tamaño: desde {USD 20|veinte dólares} hasta el de *empresa*.",
+   "escena": {
+    "tipo": "planes",
+    "planes": [
+     {
+      "nombre": "Pro",
+      "precio": "USD 20",
+      "detalle": "Para una persona",
+      "en": "plan"
+     },
+     {
+      "nombre": "Max",
+      "precio": "USD 100",
+      "detalle": "Uso intensivo",
+      "destacado": true,
+      "tag": "Más usado",
+      "en": "veinte"
+     },
+     {
+      "nombre": "Team",
+      "precio": "USD 25",
+      "detalle": "Por puesto, con admin",
+      "en": "empresa"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Más de *seis mil* equipos ya lo usan así.",
+   "escena": {
+    "tipo": "numero",
+    "valor": 6000,
+    "prefijo": "+",
+    "etiqueta": "equipos lo *usan*",
+    "en": "seis"
+   }
+  },
+  {
+   "texto": "Guardalo para cuando lo necesites, y seguí a {@tobdev.ia|tob dev punto i a} para más tips de {Claude|clod}.",
+   "escena": {
+    "tipo": "cierre"
+   }
+  }
+ ]
+}
