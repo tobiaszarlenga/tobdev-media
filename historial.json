@@ -113,6 +113,30 @@
     "cierre"
    ],
    "voz": "ElevenLabs (tobias), reeditado a mano"
+  },
+  {
+   "fecha": "2026-10-22",
+   "pilar": "noticia",
+   "serie": "22 OCT",
+   "titulo": "Anthropic presenta Claude Duet, un agente que trabaja en segundo plano",
+   "url_fuente": "https://claude.com/resources/articles/claude-duet",
+   "video": "videos/2026-10-22.mp4",
+   "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-5665458508237618666",
+   "acento": "#D97757",
+   "escenas": [
+    "celular",
+    "numero",
+    "flujo",
+    "navegador",
+    "alerta",
+    "lista",
+    "frase",
+    "capas",
+    "chips",
+    "reloj",
+    "cierre"
+   ],
+   "voz": "elevenlabs"
   }
  ]
 }
