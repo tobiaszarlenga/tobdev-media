@@ -93,12 +93,12 @@ Iconos disponibles: `archivo`, `chat`, `lista`, `check`, `alerta`, `candado`, `r
 
 Solo imágenes que se puedan usar en una cuenta comercial. **No** capturas de Google Imágenes ni fotos de prensa sin licencia.
 
-1. **Wikimedia Commons** (`upload.wikimedia.org`): fotos históricas y de dominio público o CC (ARPANET, ENIAC, Turing, la polilla del Mark II). Crédito: "Foto: <autor> · Wikimedia Commons · <licencia>".
-2. **Unsplash / Pexels** (`images.unsplash.com`, `images.pexels.com`): fotos genéricas (oficinas, comercios, teclados). Crédito: "Foto: <autor> · Unsplash".
+1. **Unsplash / Pexels** (`images.unsplash.com`, `images.pexels.com`): fotos genéricas (oficinas, comercios, teclados, hardware). Crédito: "Foto: <autor> · Unsplash". Funcionan por `url` desde el agente.
+2. **Wikimedia Commons** (`upload.wikimedia.org`): fotos históricas de dominio público o CC (ARPANET, ENIAC, Turing, la polilla del Mark II). Crédito: "Foto: <autor> · Wikimedia Commons · <licencia>". **Wikimedia rechaza las descargas automáticas desde la nube (429, política de robots)**: no sirve por `url` desde el agente. Para usar una, Tob la baja y la adjunta (`archivo`), o se usa otra fuente.
 3. **Generada con IA** con el conector de ElevenLabs (`creative_generate_image`, 9:16 o 4:5, estilo fotográfico sobrio; sin logos ni personas reales). Crédito: "Ilustración generada con IA". Para avatares o personas reales, nunca.
 4. **Propia** de Tob (capturas del pipeline, fotos del local): adjunta en el chat o en el repo, `archivo`.
 
-El dominio de donde se baja la imagen tiene que estar permitido en claude.ai → Ajustes → Capacidades (hoy solo GitHub, npm y pip). Si la descarga falla, `--revisar` corta con `ERROR` y hay que adjuntar la imagen como `archivo` o cambiar la escena. Nunca publiques un reel con una `imagen` que no viste en la hoja de contacto.
+El dominio de donde se baja la imagen tiene que estar permitido en claude.ai → Ajustes → Capacidades (desde el 23/10: Unsplash, Pexels y `storage.googleapis.com` están permitidos). Si la descarga falla, `--revisar` corta con `ERROR` y hay que adjuntar la imagen como `archivo` o cambiar la escena. Nunca publiques un reel con una `imagen` que no viste en la hoja de contacto.
 
 ## Render
 
