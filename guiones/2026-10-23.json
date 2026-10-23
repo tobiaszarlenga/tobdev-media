@@ -1,0 +1,37 @@
+{
+  "etiqueta": "IA Y PLATA #2",
+  "fuente": "Ayuda de Google Perfil de Empresa · WhatsApp Business",
+  "acento": "#22C55E",
+  "voz": "em_alex",
+  "voz_archivo": "/tmp/voz-2026-10-23.mp3",
+  "beats": [
+    {"texto": "Cinco servicios con {IA|i a} que le podés ofrecer al *comercio de tu barrio*.",
+     "escena": {"tipo": "numero", "valor": 5, "etiqueta": "servicios con *IA* para vender", "en": "Cinco"}},
+    {"texto": "Uno: una *página {web|güeb}* simple, con horarios, ubicación y un botón para escribir.",
+     "escena": {"tipo": "navegador", "url": "panaderiademo.com.ar", "pestanas": ["Panadería Demo"], "titulo": "Panadería Demo · Horarios y ubicación", "en": "botón"}},
+    {"texto": "Con {Claude Code|clod coud} la armás mucho más rápido que a mano, y le cobrás el *mantenimiento*.",
+     "escena": {"tipo": "terminal", "titulo": "claude — ~/panaderia-demo", "lineas": [
+       {"tipo": "cmd", "texto": "claude", "en": "Claude"},
+       {"tipo": "out", "texto": "Armá una landing con horarios, mapa y botón de WhatsApp", "en": "armás"},
+       {"tipo": "ok", "texto": "Landing lista: index.html", "en": "rápido"}]}},
+    {"texto": "Dos: las *respuestas de siempre*, para el mensaje de ausencia de {WhatsApp Business|guasap bísnes}.",
+     "escena": {"tipo": "celular", "app": "WhatsApp Business", "icono": "chat", "mensajes": [
+       {"de": "yo", "texto": "Hola, ¿abren el domingo?", "en": "respuestas"},
+       {"de": "ia", "texto": "¡Hola! Ahora estamos cerrados. Abrimos de lunes a sábado de 8 a 20.", "en": "ausencia"}]}},
+    {"texto": "Tres: *{reels|rils}* para sus redes. Este que estás viendo lo arma un agente de {IA|i a}.",
+     "escena": {"tipo": "capas", "items": ["Guion", "Voz", "Escenas", "Reel listo"], "en": "agente"}},
+    {"texto": "Cuatro: *presupuestos*, a partir de su lista de precios y el pedido del cliente.",
+     "escena": {"tipo": "flujo", "entradas": [
+       {"texto": "Lista de precios", "icono": "lista", "en": "lista"},
+       {"texto": "Pedido del cliente", "icono": "chat", "en": "pedido"}],
+       "salida": "Presupuesto listo para enviar", "en": "cliente"}},
+    {"texto": "Cinco: *responder las reseñas* de {Google|gugol} con el tono del negocio.",
+     "escena": {"tipo": "prompt", "texto": "Respondé esta reseña de 3 estrellas con tono cálido y sin excusas", "etiqueta": "Tu mensaje", "estado": "Escribiendo respuesta…"}},
+    {"texto": "Ojo: para responder reseñas, el negocio tiene que tener el perfil *verificado*.",
+     "escena": {"tipo": "alerta", "titulo": "Antes de ofrecerlo", "filas": [["Perfil de Empresa", "Verificado"], ["Respuesta", "Pública"], ["Google", "La revisa antes"]], "marcar": 0, "en": "verificado"}},
+    {"texto": "Lo que hace la {IA|i a}, lo revisás vos.",
+     "escena": {"tipo": "frase"}},
+    {"texto": "Mandáselo a quien siempre dice que quiere emprender. Seguí a {@tobdev.ia|tob dev punto i a}.",
+     "escena": {"tipo": "cierre", "cta": "Mandáselo a quien quiere emprender"}}
+  ]
+}
