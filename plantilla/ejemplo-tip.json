@@ -136,7 +136,7 @@
    }
   },
   {
-   "texto": "Seguí a {@tobdev.ia|tob dev punto i a} para más tips de {Claude|clod}.",
+   "texto": "Seguí a {@tobdev.ia|tob dev} para más tips de {Claude|clod}.",
    "escena": {
     "tipo": "cierre"
    }

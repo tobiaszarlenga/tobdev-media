@@ -28,9 +28,11 @@ SCENE_TYPES = {"terminal", "linea_tiempo", "prompt", "capas", "flujo", "cursores
                # v2.1
                "imagen", "codigo", "pasos", "anillo", "titular", "cita", "tabla", "calendario", "planes",
                # v2.2
-               "presentador"}
+               "presentador",
+               # v2.3
+               "marcas", "impacto"}
 LEAD = 0.12  # silencio al principio de la pista de voz
-NOCAPS = {"frase", "cierre"}          # escenas que ya muestran el texto: sin subtítulos arriba
+NOCAPS = {"frase", "cierre", "impacto"}          # escenas que ya muestran el texto: sin subtítulos arriba
 PUNCT_PAUSE = {",": 0.10, ";": 0.16, ":": 0.18, ".": 0.24, "?": 0.26, "!": 0.24, "…": 0.26}
 BEAT_GAP = 0.14
 # Temas visuales: cambian fondo, superficies, tipografía y subtítulos. El cierre y la cabecera son siempre de TobDev.
@@ -51,7 +53,7 @@ THEMES = {
                       soft="#D9CDB4", muted="#9A8E78", border="rgba(244,236,220,.14)", line="rgba(244,236,220,.16)", capdone="#D9CDB4",
                       display='"Lora","Georgia",serif', radius="6px", mark="none", glow=".2"),
 }
-TRANSITIONS = ["zoom", "rise", "wipe", "slide", "iris", "flip", "push", "swing", "corte"]
+TRANSITIONS = ["zoom", "rise", "wipe", "slide", "iris", "flip", "push", "swing", "flash", "whip", "corte"]
 MUSIC_STYLES = ["tech", "suave", "urgente", "retro"]
 IMG_MAGIC = {b"\xff\xd8\xff": "jpg", b"\x89PNG": "png", b"RIFF": "webp", b"GIF8": "gif"}
 
@@ -415,6 +417,47 @@ def icon(name, size=56, color="currentColor"):
             f'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{p}</svg>')
 
 
+_LOGOS = None
+
+
+def logos_db():
+    global _LOGOS
+    if _LOGOS is None:
+        pth = os.path.join(HERE, "logos", "marcas.json")
+        _LOGOS = json.load(open(pth)) if os.path.exists(pth) else {}
+    return _LOGOS
+
+
+def logo_key(name):
+    if not name:
+        return None
+    db = logos_db()
+    k = re.sub(r"[^a-z0-9]", "", str(name).lower())
+    k = db.get("_alias", {}).get(k, k)
+    return k if k in db and not k.startswith("_") else None
+
+
+def logo_svg(name, size=120, blanco=False):
+    """Logo de marca en línea (SVG). Monocromos en el color de la marca (o blanco); los `multi` traen sus colores."""
+    k = logo_key(name)
+    if not k:
+        return ""
+    m = logos_db()[k]
+    raw = open(os.path.join(HERE, "logos", k + ".svg")).read()
+    inner = re.sub(r"^.*?<svg[^>]*>", "", raw, flags=re.S).rsplit("</svg>", 1)[0]
+    col = "#FFFFFF" if blanco else m["color"]
+    fill = "" if m.get("multi") else f' fill="currentColor" style="color:{col}"'
+    return f'<svg class="lg" width="{size}" height="{size}" viewBox="{m["viewBox"]}"{fill} xmlns="http://www.w3.org/2000/svg">{inner}</svg>'
+
+
+def logo_badge(name, size=120, cls=""):
+    """Logo sobre una ficha blanca redondeada (se lee igual en cualquier tema)."""
+    svg = logo_svg(name, int(size * 0.62))
+    k = logo_key(name)
+    bg = logos_db()[k].get("fondo", "#FFFFFF") if k else "#FFFFFF"
+    return f'<div class="lg-badge {cls}" style="width:{size}px;height:{size}px;border-radius:{int(size * .26)}px;background:{bg}">{svg}</div>' if svg else ""
+
+
 def kw_text(s):
     """Texto con *destacado* para escenas (no subtítulos)."""
     parts = re.split(r"(\*[^*]+\*)", s)
@@ -489,7 +532,7 @@ def scene_html(sid, b, D):
                            f'<span class="ch-ext">{esc(x.get("sub", ""))}</span></div><div class="ch-name">{esc(x.get("texto", ""))}</div>'
                            f'<div class="ch-dl" id="{p}-dl{i}">{icon("bajar", 44, "var(--acc)")}</div></div>' for i, x in enumerate(it))
             return f'<div class="ch-col">{rows}</div>'
-        rows = "".join(f'<div class="ch-tag glass" id="{p}-k{i}">{icon(x.get("icono", "estrella"), 50, "var(--acc)")}<span>{esc(x.get("texto", ""))}</span></div>' for i, x in enumerate(it))
+        rows = "".join(f'<div class="ch-tag glass" id="{p}-k{i}">{logo_badge(x["logo"], 84) if logo_key(x.get("logo")) else icon(x.get("icono", "estrella"), 50, "var(--acc)")}<span>{esc(x.get("texto", ""))}</span></div>' for i, x in enumerate(it))
         bar = ""
         if e.get("barra"):
             bar = (f'<div class="ch-bar" id="{p}-bar"><div class="mono ch-bl"><span>{esc(e["barra"].get("texto", ""))}</span><span id="{p}-pct">0%</span></div>'
@@ -550,7 +593,8 @@ def scene_html(sid, b, D):
         return f'<div class="gr-wrap glass"><div class="eyebrow">{esc(e.get("titulo", ""))}</div><div class="gr-cols">{bh}</div></div>'
     if t == "comparacion":
         a = e.get("antes", {}); d = e.get("despues", {})
-        col = lambda x, cls, ic: (f'<div class="cm-col {cls} glass" id="{p}-{cls}"><div class="eyebrow">{esc(x.get("titulo", ""))}</div>' +
+        col = lambda x, cls, ic: (f'<div class="cm-col {cls} glass" id="{p}-{cls}">'
+                                  + (f'<div class="cm-head">{logo_badge(x["logo"], 96)}<div class="eyebrow">{esc(x.get("titulo", ""))}</div></div>' if logo_key(x.get("logo")) else f'<div class="eyebrow">{esc(x.get("titulo", ""))}</div>') +
                                   "".join(f'<div class="cm-it">{icon(ic, 34, "currentColor")}<span>{esc(s)}</span></div>' for s in x.get("items", [])[:4]) + '</div>')
         return f'<div class="cm-wrap">{col(a, "an", a.get("icono", "reloj"))}<div class="cm-vs mono" id="{p}-vs">VS</div>{col(d, "de", d.get("icono", "check"))}</div>'
     if t == "particulas":
@@ -579,6 +623,43 @@ def scene_html(sid, b, D):
                         f'<div class="lt-y">{esc(h.get("anio", ""))}</div><div class="lt-t">{kw_text(h.get("texto", ""))}</div></div>'
                         for i, h in enumerate(hs))
         return f'<div class="lt-rail"></div><div class="lt-fill" id="{p}-fill"></div>{items}'
+    if t == "marcas":
+        lg = [x for x in (e.get("logos") or []) if logo_key(x.get("marca"))][:4]
+        n = len(lg)
+        size = {1: 380, 2: 300, 3: 230, 4: 200}.get(n, 200)
+        union = e.get("union", "vs")
+        cells = []
+        for i, x in enumerate(lg):
+            est = x.get("estado")
+            pill = ""
+            if est:
+                ok = x.get("ok", True)
+                pill = (f'<div class="mk-pill {"ok" if ok else "no"}" id="{p}-pl{i}">{icon("check" if ok else "alerta", 30, "currentColor")}'
+                        f'<span>{esc(est)}</span></div>')
+            m = logos_db()[logo_key(x["marca"])]
+            cells.append(f'<div class="mk-it" id="{p}-k{i}" style="--bc:{m["color"]}"><div class="mk-glow"></div>{logo_badge(x["marca"], size)}'
+                         f'<div class="mk-name">{esc(x.get("texto", m["nombre"]))}</div>{pill}</div>')
+            if i < n - 1 and n == 2:
+                mid = {"vs": "VS", "flecha": "→", "y": "+", "x": "×"}.get(union, union)
+                cells.append(f'<div class="mk-mid mono" id="{p}-mid">{esc(mid)}</div>')
+        tit = f'<div class="mk-tit eyebrow" id="{p}-tit">{esc(e["titulo"])}</div>' if e.get("titulo") else ""
+        return f'<div class="mk-wrap n{n}">{tit}<div class="mk-row">{"".join(cells)}</div></div><div class="mk-burst" id="{p}-burst"></div>'
+    if t == "impacto":
+        words = b["words"]
+        ln, lines = [], []
+        for i, w in enumerate(words):
+            ln.append((i, w))
+            if len(ln) >= int(e.get("por_linea", 2)) or w["cap"][-1] in ".,:;?!":
+                lines.append(ln); ln = []
+        if ln:
+            lines.append(ln)
+        longest = max((sum(len(w["cap"]) for _, w in l) + len(l) - 1) for l in lines) if lines else 8
+        fs = max(96, min(250, int(930 / (max(5, longest) * 0.64))))
+        rows = "".join('<div class="im-ln">' + " ".join(
+            f'<span class="ip-w{" kw" if w["kw"] is not None else ""}" id="{p}-w{i}"><i class="ip-bg" id="{p}-b{i}"></i><span>{esc(w["cap"].upper())}</span></span>'
+            for i, w in l) + '</div>' for l in lines)
+        lg = f'<div class="ip-logo" id="{p}-logo">{logo_badge(e["logo"], 170)}</div>' if logo_key(e.get("logo")) else ""
+        return f'<div class="ip-box" style="font-size:{fs}px">{lg}{rows}</div>'
     if t == "presentador":
         # Clip de avatar (sincronización labial) a pantalla completa. El video va mudo: la voz sale de voz_archivo,
         # y data-media-start lo alinea con esa pista (ver prepare_presentador).
@@ -623,7 +704,8 @@ def scene_html(sid, b, D):
         ws = " ".join(f'<span class="ti-w{" acc" if w["kw"] is not None else ""}" id="{p}-w{i}">{esc(w["cap"])}</span>' for i, w in enumerate(words))
         fs = fit(re.sub(r"[*]", "", e.get("titulo", "")), [(24, 104), (40, 86), (60, 70), (999, 58)])
         baj = f'<div class="ti-baj" id="{p}-baj">{esc(e["bajada"])}</div>' if e.get("bajada") else ""
-        return (f'<div class="ti-card" id="{p}-card"><div class="ti-top mono"><span class="ti-tag" id="{p}-tag">{esc(e.get("etiqueta", "ÚLTIMO"))}</span>'
+        lg = f'<div class="ti-logo" id="{p}-logo">{logo_badge(e["logo"], 150)}</div>' if logo_key(e.get("logo")) else ""
+        return (f'{lg}<div class="ti-card{" con-logo" if lg else ""}" id="{p}-card"><div class="ti-top mono"><span class="ti-tag" id="{p}-tag">{esc(e.get("etiqueta", "ÚLTIMO"))}</span>'
                 f'<span>{esc(e.get("medio", ""))}</span><span class="ti-fe">{esc(e.get("fecha", ""))}</span></div>'
                 f'<div class="ti-h" style="font-size:{fs}px">{ws}</div>{baj}<div class="ti-rule" id="{p}-rule"></div></div>')
     if t == "cita":
@@ -758,6 +840,15 @@ def scene_params(b, t0, t1):
         p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
     elif t == "presentador":
         p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+    elif t == "marcas":
+        lg = [x for x in (e.get("logos") or []) if logo_key(x.get("marca"))][:4]
+        p["cues"] = scene_cues(b, [x.get("en", "") for x in lg], t0, t1)
+        p["n"] = len(lg)
+        p["pills"] = [bool(x.get("estado")) for x in lg]
+    elif t == "impacto":
+        p["cues"] = [round(w["t0"], 3) for w in b["words"]]
+        p["kw"] = [w["kw"] is not None for w in b["words"]]
+        p["logo"] = bool(logo_key(e.get("logo")))
     elif t == "imagen":
         p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
         p["modo"] = "tarjeta" if e.get("encuadre") == "tarjeta" else "cover"
@@ -875,7 +966,9 @@ def build_html(guion, beats, groups, D):
                                       ("Poppins", "Poppins", (400, 700), "ttf", "truetype"))
         for w in ws)
     fonts += '@font-face{font-family:"Lora";font-weight:400 700;font-style:normal;font-display:block;src:url("assets/fonts/Lora-Variable.ttf") format("truetype");}\n'
-    css = theme_css(tema, acc) + (CSS.replace("__ACC__", acc).replace("__ACCRGB__", f"{r},{g},{bl}"))
+    lum = (0.2126 * r + 0.7152 * g + 0.0722 * bl) / 255
+    on_acc = "#0A0E1A" if lum > 0.55 else "#FFFFFF"  # texto legible sobre el color de acento
+    css = theme_css(tema, acc) + f":root{{--on-acc:{on_acc}}}\n" + (CSS.replace("__ACC__", acc).replace("__ACCRGB__", f"{r},{g},{bl}"))
     # escenas: la saliente termina antes de que la entrante empiece (sin solapes), ambas alrededor del arranque de la voz
     sc_html, calls = [], []
     n = len(beats)
@@ -891,7 +984,12 @@ def build_html(guion, beats, groups, D):
         sc_html.append(f'<div id="{sid}" class="clip scene t-{b["escena"]["tipo"]}" data-start="{t0}" data-duration="{round(t1 - t0, 3)}" data-track-index="{1 + i % 2}">'
                        f'<div class="stage{full}"><div class="cam"><div class="drift">{scene_html(sid, b, D)}</div></div></div></div>')
         prm = scene_params(b, t0, t1)
-        calls.append({"id": sid, "t0": t0, "t1": t1, "k": i, "first": i == 0, "last": i == n - 1, "p": prm,
+        kwt, prev = [], None
+        for w in b["words"]:
+            if w["kw"] is not None and w["kw"] != prev:
+                kwt.append(round(w["t0"], 3))
+            prev = w["kw"]
+        calls.append({"id": sid, "t0": t0, "t1": t1, "k": i, "first": i == 0, "last": i == n - 1, "p": prm, "kw": kwt,
                       "tin": trans[i], "tout": trans[i + 1] if i + 1 < n else "zoom"})
     # subtítulos
     cap_html, cap_js = [], []
@@ -933,6 +1031,7 @@ def build_html(guion, beats, groups, D):
 {"".join(sc_html)}
 <div id="caps" class="clip" data-start="0" data-duration="{round(D, 3)}" data-track-index="3">{"".join(cap_html)}</div>
 {hdr}
+<div id="flash" class="clip" data-start="0" data-duration="{round(D, 3)}" data-track-index="5"></div>
 <div id="prog"></div>
 <audio id="el-audio" src="assets/audio.mp3" data-start="0" data-duration="{round(D, 3)}" data-track-index="11" data-volume="1"></audio>
 </div>
@@ -1144,6 +1243,8 @@ box-shadow:0 0 0 14px rgba(255,255,255,.03),0 40px 90px -30px rgba(0,0,0,.95)}
 .cm-col{position:relative;padding:40px 44px;opacity:0}
 .cm-col.an{color:var(--text-muted)}.cm-col.an .eyebrow{color:var(--text-muted)}
 .cm-col.de{border:2px solid rgba(var(--acc-rgb),.5)}
+.cm-head{display:flex;align-items:center;gap:26px}.cm-head .eyebrow{font-size:34px}
+.cm-col.an .lg-badge{filter:grayscale(1);opacity:.75}
 .cm-it{display:flex;align-items:center;gap:20px;font-size:46px;font-weight:700;margin-top:24px;letter-spacing:-.01em;line-height:1.12}
 .cm-col.de .cm-it svg{color:var(--acc)}
 .cm-vs{align-self:center;width:100px;height:100px;border-radius:50%;background:var(--surface2);border:2px solid var(--line);
@@ -1177,6 +1278,35 @@ box-shadow:var(--shadow),0 0 0 8px rgba(var(--acc-rgb),.05);overflow:hidden}
 .cta{margin-top:60px;display:flex;align-items:center;gap:18px;padding:30px 54px;border-radius:24px;background:var(--grad);font-weight:700;font-size:46px;color:#fff;box-shadow:0 10px 30px -8px rgba(91,111,228,.55)}
 .src{margin-top:50px;font-size:26px;color:var(--text-muted)}
 
+/* logos */
+.lg-badge{display:flex;align-items:center;justify-content:center;background:#FFFFFF;box-shadow:0 20px 50px -18px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.06);flex:none}
+.lg-badge .lg{display:block}
+/* marcas */
+.mk-wrap{position:absolute;left:40px;right:40px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:50px}
+.mk-row{display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;width:100%}
+.mk-wrap.n3 .mk-row,.mk-wrap.n4 .mk-row{gap:36px 50px}
+.mk-wrap.n4 .mk-row{display:grid;grid-template-columns:1fr 1fr;justify-items:center}
+.mk-it{position:relative;display:flex;flex-direction:column;align-items:center;gap:26px;opacity:0}
+.mk-glow{position:absolute;left:50%;top:0;width:520px;height:520px;margin-left:-260px;margin-top:-80px;border-radius:50%;
+background:radial-gradient(circle,color-mix(in srgb,var(--bc) 55%,transparent) 0%,transparent 62%);opacity:.0;pointer-events:none}
+.mk-name{font-weight:700;font-size:52px;letter-spacing:-.02em}
+.mk-wrap.n1 .mk-name{font-size:84px}
+.mk-pill{display:flex;align-items:center;gap:12px;padding:12px 24px;border-radius:999px;font-weight:700;font-size:32px;opacity:0}
+.mk-pill.ok{background:rgba(34,197,94,.16);color:#22C55E;border:2px solid rgba(34,197,94,.5)}
+.mk-pill.no{background:rgba(239,68,68,.16);color:#EF4444;border:2px solid rgba(239,68,68,.5)}
+.mk-mid{font-size:60px;font-weight:700;color:var(--acc);opacity:0;align-self:center;margin-top:-90px}
+.mk-tit{font-size:30px}
+.mk-burst{position:absolute;left:540px;top:505px;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:6px solid var(--acc);opacity:0}
+/* impacto */
+.ip-box{position:absolute;left:60px;right:60px;top:-120px;bottom:-60px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+font-weight:700;line-height:.98;letter-spacing:-.045em}
+.im-ln{white-space:nowrap}
+.ip-w{position:relative;display:inline-block;padding:0 .08em;margin-right:.04em;opacity:0}
+.ip-w>span{position:relative}
+.ip-bg{position:absolute;left:0;right:0;top:.06em;bottom:.02em;background:var(--acc);transform-origin:0 50%;transform:scaleX(0);border-radius:.06em}
+.ip-w.kw>span{color:var(--on-acc)}
+.ip-logo{margin-bottom:40px;opacity:0}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
 /* presentador */
 .stage.full{top:0;height:1920px;clip-path:none}
 .pv-wrap{position:absolute;inset:-40px;overflow:hidden;background:#000}
@@ -1218,7 +1348,7 @@ font-size:22px;letter-spacing:.16em;color:#fff;opacity:0}
 .ps-fill{background:var(--acc);transform-origin:50% 0;transform:scaleY(0);box-shadow:0 0 24px rgba(var(--acc-rgb),.5)}
 .ps-it{display:flex;align-items:center;gap:40px;opacity:0}
 .ps-n{width:110px;height:110px;flex:none;border-radius:50%;background:var(--surface2);border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:54px;color:var(--text-muted)}
-.ps-n.on{background:var(--acc);color:var(--ink);border-color:var(--acc);box-shadow:0 0 40px rgba(var(--acc-rgb),.45)}
+.ps-n.on{background:var(--acc);color:var(--on-acc);border-color:var(--acc);box-shadow:0 0 40px rgba(var(--acc-rgb),.45)}
 .ps-t{font-weight:700;font-size:54px;letter-spacing:-.02em;line-height:1.08}
 .ps-s{margin-top:8px;font-size:30px;color:var(--text-muted)}
 /* anillo */
@@ -1230,9 +1360,11 @@ font-size:22px;letter-spacing:.16em;color:#fff;opacity:0}
 .an-suf{font-size:100px;color:var(--acc);margin-left:8px;margin-top:40px}
 .an-l{position:absolute;left:60px;right:60px;top:790px;text-align:center;font-weight:700;font-size:52px;color:var(--text-soft);line-height:1.15;opacity:0}
 /* titular */
+.ti-logo{position:absolute;left:70px;top:0;z-index:2;opacity:0}
+.ti-card.con-logo{top:190px}
 .ti-card{position:absolute;left:50px;right:50px;top:110px;padding:40px 50px 50px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);opacity:0}
 .ti-top{display:flex;align-items:center;gap:22px;font-size:24px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted)}
-.ti-tag{padding:8px 16px;border-radius:8px;background:var(--acc);color:var(--ink);font-weight:700;opacity:0}
+.ti-tag{padding:8px 16px;border-radius:8px;background:var(--acc);color:var(--on-acc);font-weight:700;opacity:0}
 .ti-fe{margin-left:auto}
 .ti-h{margin-top:36px;font-weight:700;line-height:1.06;letter-spacing:-.03em}
 .ti-w{display:inline-block;opacity:0;margin-right:.24em}
@@ -1321,6 +1453,9 @@ const TR = {
           out:[{y:0}, {y:-1010}]},
   swing: {in:[{opacity:0, rotationX:28, y:120, filter:"blur(10px)"}, {opacity:1, rotationX:0, y:0, filter:"blur(0px)"}],
           out:[{opacity:1, rotationX:0, y:0}, {opacity:0, rotationX:-22, y:-90}]},
+  flash: {in:[{opacity:1, scale:1.12}, {opacity:1, scale:1}], out:[{opacity:1, scale:1}, {opacity:1, scale:1.06}], fx:"flash"},
+  whip:  {in:[{x:420, opacity:0, filter:"blur(22px)"}, {x:0, opacity:1, filter:"blur(0px)"}],
+          out:[{x:0, opacity:1, filter:"blur(0px)"}, {x:-420, opacity:0, filter:"blur(22px)"}]},
   corte: {in:[{opacity:0}, {opacity:1}], out:[{opacity:1}, {opacity:0}]},
 };
 const DRIFTS = [
@@ -1334,16 +1469,19 @@ const SEED = __SEED__;
 function CAM(c){
   const cam = "#"+c.id+" .cam", dr = "#"+c.id+" .drift", Dd = c.t1 - c.t0;
   const tin = TR[c.tin] || TR.zoom, tout = TR[c.tout] || TR.zoom;
-  const din = c.tin === "corte" ? .08 : (c.tin === "wipe" || c.tin === "slide" || c.tin === "push" ? .5 : .6);
+  const din = c.tin === "corte" ? .08 : (c.tin === "flash" || c.tin === "whip" ? .32 : (c.tin === "wipe" || c.tin === "slide" || c.tin === "push" ? .45 : .5));
+  if (!c.first && tin.fx === "flash"){ F("#flash", {opacity:0}, {opacity:.85, duration:.05, ease:"none"}, c.t0-.02); F("#flash", {opacity:.85}, {opacity:0, duration:.28, ease:"power2.out"}, c.t0+.03); }
   if (!c.first){ F(cam, tin.in[0], Object.assign({duration:din, ease:(c.tin === "slide" || c.tin === "push") ? "power3.out" : E}, tin.in[1]), c.t0); tl.set(cam, {filter:"none", clipPath:"none"}, c.t0+din+.02); }
   else F(cam, {scale:1.06}, {scale:1, duration:.8, ease:E}, 0);
   const d = DRIFTS[(c.k + SEED) % DRIFTS.length];
   F(dr, d[0], Object.assign({duration:Dd, ease:"none"}, d[1]), c.t0);
   if (!c.last){
-    const dout = c.tout === "corte" ? .06 : .4;
+    const dout = c.tout === "corte" ? .06 : (c.tout === "flash" || c.tout === "whip" ? .22 : .34);
     F(cam, tout.out[0], Object.assign({duration:dout, ease:(c.tout === "slide" || c.tout === "push") ? "power3.in" : "power2.in"}, tout.out[1]), c.t1-dout);
   }
 }
+// golpe de cámara cuando la voz dice una palabra clave (le da ritmo a la edición)
+function PUNCH(c, times){ (times||[]).forEach(t => { if (t > c.t0+.75 && t < c.t1-.45) F("#"+c.id+" .stage", {scale:1}, {scale:1.035, duration:.09, yoyo:true, repeat:1, ease:"power2.out"}, t); }); }
 // elementos que dependen de la voz: nunca dejar la escena vacía (lo primero aparece como muy tarde `max` s después de arrancar)
 const early = (c, t, max) => Math.min(t, c.t0 + (max === undefined ? .55 : max));
 function stagger(c, cues, gap, first){ const out = []; let prev = c.t0; cues.forEach((t, i) => { let v = i ? Math.max(t, prev + (gap||.22)) : early(c, t, first); out.push(v); prev = v; }); return out; }
@@ -1533,6 +1671,29 @@ linea_tiempo(c, p){
     if (i > 0) F(id+"-h"+(i-1), {opacity:1}, {opacity:.45, duration:.3}, t);
   });
 },
+marcas(c, p){
+  const id = "#"+c.id, cues = stagger(c, p.cues, .35, .3);
+  for (let i=0;i<p.n;i++){
+    const t = cues[i];
+    F(id+"-k"+i, {opacity:0, scale:.4, y:60, rotation:i%2?8:-8}, {opacity:1, scale:1, y:0, rotation:0, duration:.55, ease:"back.out(1.9)"}, t-.08);
+    F(id+"-k"+i+" .mk-glow", {opacity:0, scale:.6}, {opacity:1, scale:1, duration:.7, ease:E}, t);
+    F(id+"-k"+i+" .lg-badge", {rotation:0}, {rotation:i%2?-2:2, duration:Math.max(.5, c.t1-t), ease:"sine.inOut"}, t+.5);
+    if (p.pills[i]) F(id+"-pl"+i, {opacity:0, y:20, scale:.8}, {opacity:1, y:0, scale:1, duration:.35, ease:"back.out(2)"}, t+.45);
+  }
+  if ($(id+"-mid")) F(id+"-mid", {opacity:0, scale:2.2}, {opacity:1, scale:1, duration:.35, ease:"power3.out"}, (cues[0]+(cues[1]||cues[0]))/2);
+  if ($(id+"-tit")) show(id+"-tit", c.t0+.2, .4, {y:-20});
+  F(id+"-burst", {opacity:.9, scale:1}, {opacity:0, scale:16, duration:.7, ease:"power2.out"}, cues[0]);
+},
+impacto(c, p){
+  const id = "#"+c.id;
+  if (p.logo) F(id+"-logo", {opacity:0, scale:.5, rotation:-12}, {opacity:1, scale:1, rotation:0, duration:.45, ease:"back.out(2)"}, c.t0+.05);
+  p.cues.forEach((t, i) => {
+    const tt = Math.max(t-.04, c.t0+.08+i*.05);
+    F(id+"-w"+i, {opacity:0, scale:1.8, y:40, rotation:i%2?-4:4}, {opacity:1, scale:1, y:0, rotation:0, duration:.22, ease:"power4.out"}, tt);
+    if (p.kw[i]) F(id+"-b"+i, {scaleX:0}, {scaleX:1, duration:.25, ease:"power3.out"}, tt+.08);
+    F("#"+c.id+" .stage", {x:0, y:0}, {x:(i%2?7:-7), y:(i%2?-5:5), duration:.05, yoyo:true, repeat:1, ease:"none"}, tt+.02);
+  });
+},
 presentador(c, p){
   const id = "#"+c.id, Dd = c.t1-c.t0, cs = getComputedStyle(document.documentElement);
   tl.set("#hdr .h", {color:"#FFFFFF"}, c.t0); tl.set("#hdr .d", {color:"rgba(255,255,255,.8)"}, c.t0); tl.set("#hdr img", {filter:"none"}, c.t0);
@@ -1585,6 +1746,8 @@ titular(c, p){
   const id = "#"+c.id;
   F(id+"-card", {opacity:0, y:50, rotationX:10}, {opacity:1, y:0, rotationX:0, duration:.55, ease:E}, c.t0+.05);
   F(id+"-tag", {opacity:0, scale:1.6}, {opacity:1, scale:1, duration:.3, ease:"back.out(2)"}, c.t0+.4);
+  if ($(id+"-logo")){ F(id+"-logo", {opacity:0, scale:.4, rotation:-14}, {opacity:1, scale:1, rotation:0, duration:.5, ease:"back.out(2)"}, c.t0+.15);
+    F(id+"-logo", {y:0}, {y:-10, duration:.9, yoyo:true, repeat:Math.max(1, Math.floor((c.t1-c.t0)/1.8)), ease:"sine.inOut"}, c.t0+.7); }
   const dt = Math.min(.14, (c.t1-c.t0-1.6)/Math.max(1,p.n));
   for (let i=0;i<p.n;i++) F(id+"-w"+i, {opacity:0, y:30, scale:1.3, filter:"blur(6px)"}, {opacity:1, y:0, scale:1, filter:"blur(0px)", duration:.3, ease:E}, c.t0+.55+i*dt);
   show(id+"-baj", c.t0+.6+p.n*dt+.15, .45, {y:20});
@@ -1633,7 +1796,7 @@ cierre(c, p){
 };
 
 const CALLS = __CALLS__;
-CALLS.forEach(c => { CAM(c); (SC[c.p.tipo] || (()=>{}))(c, c.p); });
+CALLS.forEach(c => { CAM(c); (SC[c.p.tipo] || (()=>{}))(c, c.p); if (c.p.tipo !== "presentador" && c.p.tipo !== "impacto") PUNCH(c, c.kw); });
 
 // subtítulos palabra por palabra: la palabra que suena entra con un pop; las ya dichas quedan en el tono suave del tema
 const CAPS = __CAPS__;
@@ -1664,9 +1827,13 @@ def mix_audio(work, voice, D, beats, groups, guion=None):
     vw = os.path.join(work, "voz.wav")
     sf.write(vw, voice[: int((D + 0.2) * SR)], SR)
     scenes = [b["t0"] for b in beats]
-    cards = []
+    cards, hits = [], []
     for b in beats:
         e = b["escena"]
+        if e["tipo"] == "impacto":
+            hits += [round(w["t0"], 3) for w in b["words"]]
+        if e["tipo"] == "marcas":
+            hits += scene_cues(b, [x.get("en", "") for x in (e.get("logos") or [])][:4], b["t0"], b["t1"])
         if e["tipo"] in ("chips", "lista", "flujo", "pasos", "planes", "calendario"):
             items = e.get("items") or e.get("entradas") or e.get("pasos") or e.get("planes") or e.get("marcas") or []
             cards += scene_cues(b, [x.get("en", x.get("texto", x.get("titulo", x.get("nombre", "")))) for x in items][:4], b["t0"], b["t1"])
@@ -1674,7 +1841,7 @@ def mix_audio(work, voice, D, beats, groups, guion=None):
     estilo = (mus.get("estilo") if isinstance(mus, dict) else mus) or "tech"
     mw = os.path.join(work, "music.wav")
     subprocess.run([sys.executable, os.path.join(HERE, "music.py"), mw, str(round(D + 0.2, 3)),
-                    json.dumps({"scenes": scenes, "cards": cards, "estilo": estilo, "semilla": seed_of(guion) if guion.get("beats") else 7})],
+                    json.dumps({"scenes": scenes, "cards": cards, "hits": hits, "estilo": estilo, "semilla": seed_of(guion) if guion.get("beats") else 7})],
                    check=True, stdout=subprocess.DEVNULL)
     out = os.path.join(work, "assets", "audio.mp3")
     fc = ("[0:a]aresample=44100,highpass=f=70,equalizer=f=3200:t=q:w=1.2:g=2.5,acompressor=threshold=-20dB:ratio=3:attack=5:release=90,volume=2.0,"
@@ -1732,6 +1899,9 @@ def validar(guion, historial=None):
             err.append(f"beat {i}: hay un '*' sin cerrar")
         if txt.count("{") != txt.count("}"):
             err.append(f"beat {i}: hay una llave {{ }} sin cerrar")
+        for _cap, _pron in re.findall(r"\{([^|}]*)\|([^}]*)\}", txt):
+            if re.search(r"(^|\s)i a(\s|$|[.,;:?!])", _pron):
+                warn.append(f"beat {i}: '{{{_cap}|{_pron}}}': la voz junta 'i a' y suena 'i'; usá 'inteligencia artificial'")
         if txt.count("*") // 2 > 2:
             warn.append(f"beat {i}: más de 2 palabras clave; si todo está destacado, nada lo está")
         plano = re.sub(r"\{[^}]*\}", " ", txt)
@@ -1740,6 +1910,13 @@ def validar(guion, historial=None):
             if (re.search(r"[a-záéíóú][A-Z]", w) or (len(w) > 1 and w.isupper() and w.isalpha()) or "@" in w
                     or re.search(r"\w\.\w", w) or wl in ENGLISH):
                 warn.append(f"beat {i}: '{w}' sin pronunciación; usá {{{w}|cómo se dice}}")
+        refs = [e.get("logo")] + [x.get("marca") for x in e.get("logos") or []] + [x.get("logo") for x in e.get("items") or [] if isinstance(x, dict)] \
+            + [(e.get(k) or {}).get("logo") for k in ("antes", "despues") if isinstance(e.get(k), dict)]
+        for r in refs:
+            if r and not logo_key(r):
+                err.append(f"beat {i}: no hay logo para '{r}' (ver plantilla/logos/marcas.json o sumalo)")
+        if t == "marcas" and not e.get("logos"):
+            err.append(f"beat {i}: la escena 'marcas' necesita 'logos'")
         if t == "presentador":
             if not guion.get("voz_archivo"):
                 warn.append(f"beat {i}: 'presentador' sin voz_archivo: los labios no van a coincidir con la voz")

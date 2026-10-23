@@ -41,11 +41,11 @@
       "escena": {"tipo": "reloj", "antes": "Una tarde", "despues": "Minutos", "en": "minutos"}
     },
     {
-      "texto": "Eso sí: *revisá los números* antes de mandarla. La {IA|i a} se puede equivocar.",
+      "texto": "Eso sí: *revisá los números* antes de mandarla. La {IA|inteligencia artificial} se puede equivocar.",
       "escena": {"tipo": "alerta", "titulo": "Revisá antes de mandar", "filas": [["Materiales", "$ 1.240.000"], ["Mano de obra", "$ 860.000"], ["Total", "$ 2.010.000"]], "marcar": 2, "en": "números"}
     },
     {
-      "texto": "Seguí a {@tobdev.ia|tob dev punto i a} para más {IA|i a} aplicada a negocios.",
+      "texto": "Seguí a {@tobdev.ia|tob dev} para más {IA|inteligencia artificial} aplicada a negocios.",
       "escena": {"tipo": "cierre"}
     }
   ]

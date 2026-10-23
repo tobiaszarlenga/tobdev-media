@@ -25,7 +25,7 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 | `acento` | Color de acento de este reel (hex). Usá el color de marca de la empresa de la que se habla si es reconocible (Google `#4285F4`, OpenAI `#19C37D`, Anthropic `#D97757`, Microsoft `#00A4EF`, Meta `#0866FF`, Apple `#A1A1AA`, Mercado Libre `#FFE600`). Si no, alterná entre `#11BFD6`, `#F59E0B`, `#B48CFF`, `#FF6B6B`, `#22C55E`. No repitas el acento del reel anterior. |
 | `tema` | **Look del reel**: `noche` (por defecto: aurora azul/violeta y piso de puntos), `claro` (papel cálido, texto oscuro, tipografía Poppins), `grilla` (plano técnico: cuadrícula, bordes rectos, línea de escaneo), `neon` (negro con brillo fuerte y franjas), `editorial` (serif Lora, reglas finas, papel oscuro). **No repitas el tema de los últimos 2 reels.** El cierre y la cabecera son siempre de TobDev. |
 | `musica` | Estilo de la música procedural: `tech` (por defecto), `suave` (más lenta, sin batería), `urgente` (rápida, menor), `retro` (plucks cortos). Distinto al del reel anterior. |
-| `transiciones` | Opcional. Lista de transiciones entre escenas (`zoom`, `rise`, `wipe`, `slide`, `iris`, `flip`, `push`, `swing`, `corte`) o un solo nombre para todas. Si no la ponés, el motor baraja el catálogo con la semilla del reel (nunca dos iguales seguidas). |
+| `transiciones` | Opcional. Lista de transiciones entre escenas (`zoom`, `rise`, `wipe`, `slide`, `iris`, `flip`, `push`, `swing`, `flash` (destello blanco, corte con golpe), `whip` (barrido rápido con desenfoque), `corte`) o un solo nombre para todas. Si no la ponés, el motor baraja el catálogo con la semilla del reel (nunca dos iguales seguidas). |
 | `semilla` | Opcional. Entero que fija transiciones, deriva de cámara y variación de la música. Por defecto sale del texto del guion. |
 | `voz` | `em_alex` (por defecto, masculina) o `ef_dora` (femenina). Solo para Kokoro. |
 | `acento_voz` | `rio` (por defecto: "y" y "ll" como "sh") o `latam` (neutro). |
@@ -37,7 +37,7 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 
 - `*palabras*` → palabras clave: recuadro de selección en el color de acento. **Máximo 1 o 2 por beat**; si todo está destacado, nada lo está.
 - `{Texto|pronunciación}` → se ve "Texto" y la voz dice "pronunciación". Obligatorio para siglas, marcas y palabras en inglés:
-  `{ChatGPT|chat yi pi ti}`, `{OpenAI|open ei ai}`, `{IA|i a}`, `{PDF|pe de efe}`, `{Google|gugol}`, `{Microsoft|maicrosoft}`, `{Gemini|yémini}`, `{Claude|clod}`, `{WhatsApp|guasap}`, `{iPhone|ai fon}`, `{app|ap}`, `{@tobdev.ia|tob dev punto i a}`. Los números escribilos en palabras dentro de la pronunciación si son largos: `{2.000 millones|dos mil millones}`.
+  `{ChatGPT|chat yi pi ti}`, `{OpenAI|open ei ai}`, `{IA|inteligencia artificial}` (**nunca** `i a`: la voz de ElevenLabs lo junta y suena "i"), `{PDF|pe de efe}`, `{Google|gugol}`, `{Microsoft|maicrosoft}`, `{Gemini|yémini}`, `{Claude|clod}`, `{WhatsApp|guasap}`, `{iPhone|ai fon}`, `{app|ap}`, `{@tobdev.ia|tob dev}` (en pantalla se ve el usuario completo). Los números escribilos en palabras dentro de la pronunciación si son largos: `{2.000 millones|dos mil millones}`.
 - La puntuación manda las pausas: coma = pausa corta, punto = pausa larga. Frases cortas.
 
 ## Reglas del guion
@@ -47,10 +47,10 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 3. Orden sugerido: gancho → qué es (con la empresa) → cómo funciona (2–3 beats) → límite o dato real (planes, precio, países) → `frase` "¿Y para tu negocio?" → usos concretos → advertencia honesta si corresponde → `cierre`.
 4. **Variedad (lo que más se nota)**: cada beat cambia de escena, nunca dos beats seguidos usan el mismo `tipo`, **al menos 5 tipos distintos** por reel y **al menos 2 tipos que no hayan aparecido en los últimos 3 reels** (mirá `escenas` en `historial.json`; `--revisar` te dice cuáles están libres). No arranques con el mismo tipo que el reel anterior, cambiá `tema`, `musica` y `acento` respecto del anterior. Si una idea pide una escena que no existe, se crea (ver `TAREA.md` / la skill).
 5. Cada escena tiene que ser la **imagen literal** de lo que dice la frase (si dice "en minutos", `reloj`; si dice "le escribís", `prompt` o `celular`; si da una cifra, `numero` o `anillo`; si muestra algo real, `imagen`).
-6. Datos de la noticia: solo los que están en la fuente. Datos dentro de los mockups (nombres, montos, empresas): **inventados y verosímiles** ("Constructora Demo", "Sofi"). Nunca logos: las marcas van como texto.
+6. Datos de la noticia: solo los que están en la fuente. Datos dentro de los mockups (nombres, montos, empresas): **inventados y verosímiles** ("Constructora Demo", "Sofi"). Las empresas reales de la noticia van con **su logo** (`marcas`, o `logo` en `titular`, `impacto`, `chips` y `comparacion`): uso editorial para identificarlas, nunca como si patrocinaran el video. Las empresas inventadas de los mockups, sin logo.
 7. Ver `CONTENIDO.md` para ganchos y llamados a la acción por pilar.
 8. Voz TobDev: rioplatense con voseo, directo, sin hype (nada de "revolucionario", "increíble", "cambia todo"). Sin emojis.
-9. El último beat siempre es `cierre`, con "Seguí a {@tobdev.ia|tob dev punto i a}" y el remate del pilar (por ejemplo, "para más tips de {Claude|clod}").
+9. El último beat siempre es `cierre`, con "Seguí a {@tobdev.ia|tob dev}" y el remate del pilar (por ejemplo, "para más tips de {Claude|clod}").
 
 ## Escenas (`escena.tipo`)
 
@@ -68,6 +68,8 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 | `cursores` | Trabajo en equipo / edición en vivo / IA que corrige | `personas` (2 nombres), `comentario` (con @mención), `en_comentario`, `antes`, `despues` (título que cambia), `en_cambio`, `aplicado` |
 | `chips` estilo `archivo` | Formatos, archivos, exportaciones | `estilo:"archivo"`, `items` [{`texto`, `sub` (extensión), `en`}] (2–4) |
 | `chips` estilo `etiqueta` | Planes, países, integraciones, requisitos | `estilo:"etiqueta"`, `items` [{`texto`, `icono`, `en`}], `barra` opcional {`texto`, `valor` 0–1, `en`} |
+| `impacto` | **Tipografía cinética**: las palabras del beat entran gigantes y en mayúsculas, golpe por golpe, con las `*claves*` sobre un bloque del color de acento y temblor de cámara. Ideal para el gancho o un remate corto. Oculta los subtítulos | `logo` (marca arriba del texto, opcional), `por_linea` (palabras por renglón, def. 2) |
+| `marcas` | **Logos de las empresas** de la noticia: 1 (presentación grande), 2 (enfrentados con `VS`, `→`, `+` o `×`) o 3–4 (grilla) | `logos` [{`marca` (clave de `plantilla/logos/marcas.json`, ej. `walmart`, `amazon`, `openai`, `claude`, `gemini`, `meta`, `microsoft`, `mcp`), `texto` (nombre que se muestra), `estado` (pastilla abajo, ej. "Los bloquea"), `ok` (true verde / false rojo), `en`}], `union` (`vs`, `flecha`, `y`, `x`), `titulo` |
 | `frase` | Frase fuerte en grande (oculta los subtítulos) | — usa el texto del beat. Ideal para "¿Y para tu negocio?" o el remate. ≤8 palabras |
 | `cita` | Una frase textual de alguien (historia, declaraciones) | `texto` (la cita, ≤160 car.; si no lo ponés usa el texto del beat palabra por palabra), `autor`, `cargo` ("UCLA · 1969"), `en` (cuándo empieza a escribirse), `en_autor` |
 | `titular` | Una noticia como tapa de diario | `titulo` (≤70 car., admite `*destacado*`), `bajada`, `medio` (fuente), `fecha`, `etiqueta` (def. "ÚLTIMO"), `en` (cuándo se subraya) |
@@ -87,6 +89,8 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 | `imagen` | **Una foto o ilustración real** con movimiento lento de cámara (historia, productos, lugares, personas públicas) | `archivo` (ruta relativa al guion) **o** `url` (https; el motor la baja), `credito` (obligatorio salvo imagen propia o generada: "Foto: NASA · dominio público"), `titulo` (texto sobre la foto, admite `*destacado*`), `en`, `encuadre`: `cover` (def., llena la escena) o `tarjeta` (foto impresa inclinada con pie), `movimiento`: `acercar` / `alejar` / `derecha` / `izquierda` (def. por semilla) |
 | `presentador` | **Tob hablando a cámara** (avatar con sincronización labial) a pantalla completa, con subtítulos abajo y su nombre. Pensado para el beat 1 (gancho) | `video` (mp4 9:16 del avatar), `nombre`, `cargo`, `marca` (pastilla arriba a la derecha, def. "EN VIVO"; `false` la saca), `video_desde` (segundo de `voz_archivo` donde empieza el audio del clip; def. 0). Necesita `voz_archivo` con el clip primero (ver abajo) |
 | `cierre` | Marca TobDev + CTA + fuente | `sub`, `cta` opcionales |
+
+Logos disponibles (80, en `plantilla/logos/marcas.json`, se suman más según `plantilla/logos/LEEME.md`): IA (`openai`/`chatgpt`, `claude`, `anthropic`, `gemini`, `google`, `meta`, `microsoft`, `copilot`, `mcp`, `deepseek`, `mistral`, `perplexity`, `grok`, `nvidia`, `huggingface`, `cursor`, `elevenlabs`…), comercio (`walmart`, `amazon`, `mercadopago`, `shopify`, `stripe`, `paypal`) y apps (`whatsapp`, `instagram`, `youtube`, `tiktok`, `x`, `linkedin`, `gmail`, `notion`…). `titular`, `impacto`, `chips` (`items[].logo`) y `comparacion` (`antes.logo`, `despues.logo`) también aceptan `logo`.
 
 Iconos disponibles: `archivo`, `chat`, `lista`, `check`, `alerta`, `candado`, `rayo`, `usuario`, `enviar`, `flecha`, `bajar`, `lupa`, `chip`, `globo`, `escudo`, `grafico`, `reloj`, `estrella`, `codigo`, `dinero`.
 

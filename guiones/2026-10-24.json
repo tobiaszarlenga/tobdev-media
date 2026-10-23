@@ -2,66 +2,109 @@
  "etiqueta": "24 OCT",
  "fuente": "TechCrunch · 21/10/2026",
  "acento": "#0071DC",
- "tema": "claro",
+ "tema": "neon",
  "musica": "urgente",
+ "transiciones": [
+  "flash",
+  "whip",
+  "push",
+  "zoom",
+  "whip",
+  "flash",
+  "slide",
+  "iris",
+  "flash",
+  "whip",
+  "zoom"
+ ],
  "beats": [
   {
-   "texto": "{Walmart|uólmart} le acaba de abrir la puerta a clientes que *no son personas*. Te cuento.",
+   "texto": "{Walmart|uólmart} ya le vende a clientes *que no son personas*.",
    "escena": {
-    "tipo": "presentador",
-    "video": "/tmp/avatar-2026-10-24.mp4",
-    "nombre": "Tobías Zarlenga",
-    "cargo": "tobdev.ia",
-    "marca": "NOTICIA"
+    "tipo": "impacto",
+    "logo": "walmart"
    }
   },
   {
-   "texto": "Se llama {Agent Gateway|éiyent guéituei}: un agente de {IA|i a} *busca y compra* por vos.",
+   "texto": "Se llama {Agent Gateway|éiyent guéituei}, y lo anunció su {CEO|si i ou} esta semana.",
    "escena": {
     "tipo": "titular",
+    "logo": "walmart",
     "titulo": "Walmart abre su tienda a los *agentes de IA*",
     "bajada": "Pueden buscar en el catálogo y comprar a nombre del usuario",
     "medio": "TechCrunch",
     "fecha": "21 OCT 2026",
     "etiqueta": "NOTICIA",
-    "en": "compra"
+    "en": "semana"
    }
   },
   {
-   "texto": "Usa {MCP|eme ce pe}, el estándar que creó {Anthropic|ántropic} para que la {IA|i a} *use herramientas*.",
+   "texto": "Le pedís a tu asistente lo de siempre, y él *busca y compra* por vos.",
    "escena": {
-    "tipo": "codigo",
-    "archivo": "ejemplo · agente → tienda",
-    "lineas": [
+    "tipo": "celular",
+    "app": "Tu asistente",
+    "icono": "chat",
+    "mensajes": [
      {
-      "texto": "# pedido: \"lo de siempre para la semana\"",
-      "en": "Usa"
+      "de": "yo",
+      "texto": "Comprá lo de siempre para la semana",
+      "en": "pedís"
      },
      {
-      "texto": "buscar_productos(\"leche, café, pan\")",
-      "en": "estándar"
-     },
-     {
-      "texto": "# → 12 productos en stock",
-      "en": "creó"
-     },
-     {
-      "texto": "comprar(carrito, total=86.40)",
-      "en": "herramientas",
-      "marcar": true
+      "de": "ia",
+      "texto": "Listo: 12 productos en Walmart, US$ 86,40. ¿Confirmo?",
+      "en": "compra"
      }
     ]
    }
   },
   {
-   "texto": "Se integra con {ChatGPT|chat yi pi ti}, {Gemini|yémini} y el asistente de {Meta|meta}.",
+   "texto": "Se conecta con {ChatGPT|chat yi pi ti}, {Gemini|yémini} y el asistente de {Meta|meta}.",
    "escena": {
-    "tipo": "imagen",
-    "url": "https://images.unsplash.com/photo-1601598851547-4302969d0614?w=1200&q=80",
-    "titulo": "ChatGPT, Gemini y *Meta*",
-    "credito": "Foto: Eduardo Soares · Unsplash",
-    "en": "Meta",
-    "movimiento": "acercar"
+    "tipo": "marcas",
+    "logos": [
+     {
+      "marca": "openai",
+      "texto": "ChatGPT",
+      "en": "ChatGPT"
+     },
+     {
+      "marca": "gemini",
+      "texto": "Gemini",
+      "en": "Gemini"
+     },
+     {
+      "marca": "meta",
+      "texto": "Meta",
+      "en": "Meta"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Por dentro usa {MCP|eme ce pe}, el estándar que creó {Anthropic|ántropic}.",
+   "escena": {
+    "tipo": "codigo",
+    "archivo": "ejemplo · agente → tienda",
+    "lineas": [
+     {
+      "texto": "pedir(\"lo de siempre\")",
+      "en": "dentro"
+     },
+     {
+      "texto": "buscar(\"leche, café, pan\")",
+      "en": "MCP"
+     },
+     {
+      "texto": "# 12 productos en stock",
+      "en": "estándar"
+     },
+     {
+      "texto": "comprar(total=86.40)",
+      "en": "Anthropic",
+      "marcar": true
+     }
+    ]
    }
   },
   {
@@ -96,7 +139,7 @@
    }
   },
   {
-   "texto": "Reglas: no ve tu tarjeta, no hace nada que no pediste, y si se equivoca, *devolvés igual*.",
+   "texto": "No ve tu tarjeta, y si se equivoca, *devolvés igual*.",
    "escena": {
     "tipo": "lista",
     "titulo": "Las reglas del agente",
@@ -106,10 +149,6 @@
       "en": "tarjeta"
      },
      {
-      "texto": "Solo hace lo que pediste",
-      "en": "pediste"
-     },
-     {
       "texto": "Si se equivoca, devolvés igual",
       "en": "devolvés"
      }
@@ -117,35 +156,37 @@
    }
   },
   {
-   "texto": "Mientras tanto, {Amazon|ámazon} hace *lo contrario*: bloquea a los agentes.",
+   "texto": "Mientras tanto, {Amazon|ámazon} hace *lo contrario*: los bloquea.",
    "escena": {
-    "tipo": "comparacion",
-    "antes": {
-     "titulo": "Amazon",
-     "items": [
-      "Bloquea las compras con agentes"
-     ],
-     "icono": "candado",
-     "en": "Amazon"
-    },
-    "despues": {
-     "titulo": "Walmart",
-     "items": [
-      "Las habilita, con tope y reglas"
-     ],
-     "icono": "check",
-     "en": "bloquea"
-    }
+    "tipo": "marcas",
+    "union": "vs",
+    "logos": [
+     {
+      "marca": "walmart",
+      "texto": "Walmart",
+      "estado": "Los deja comprar",
+      "ok": true,
+      "en": "Mientras"
+     },
+     {
+      "marca": "amazon",
+      "texto": "Amazon",
+      "estado": "Los bloquea",
+      "ok": false,
+      "en": "Amazon"
+     }
+    ]
    }
   },
   {
-   "texto": "¿Y para tu negocio?",
+   "texto": "¿Y tu negocio?",
    "escena": {
-    "tipo": "frase"
+    "tipo": "impacto",
+    "por_linea": 1
    }
   },
   {
-   "texto": "Si un agente busca lo que vendés, necesita *precios*, stock y fotos claras y al día.",
+   "texto": "Si un agente busca lo que vendés, necesita *precios*, stock y fotos al día.",
    "escena": {
     "tipo": "pasos",
     "pasos": [
@@ -168,14 +209,11 @@
    }
   },
   {
-   "texto": "¿Dejarías que una {IA|i a} compre por vos? *Contámelo* en los comentarios, y seguí a {@tobdev.ia|tob dev punto i a}.",
+   "texto": "¿Dejarías que una {IA|inteligencia artificial} compre por vos? *Contámelo* en los comentarios, y seguí a {@tobdev.ia|tob dev}.",
    "escena": {
     "tipo": "cierre"
    }
   }
  ],
- "voz_archivo": [
-  "/tmp/avatar-2026-10-24.mp4",
-  "/tmp/voz-resto-2026-10-24.mp3"
- ]
+ "voz_archivo": "/tmp/voz-2026-10-24-v2.mp3"
 }

@@ -1,0 +1,492 @@
+{
+ "claude": {
+  "nombre": "Claude",
+  "color": "#D97757",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "gemini": {
+  "nombre": "Gemini",
+  "color": "#4285F4",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "google": {
+  "nombre": "Google",
+  "color": "#4285F4",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "meta": {
+  "nombre": "Meta",
+  "color": "#0866FF",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "copilot": {
+  "nombre": "Copilot",
+  "color": "#0078D4",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "deepseek": {
+  "nombre": "DeepSeek",
+  "color": "#4D6BFE",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "mistral": {
+  "nombre": "Mistral",
+  "color": "#FA520F",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "perplexity": {
+  "nombre": "Perplexity",
+  "color": "#20808D",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "qwen": {
+  "nombre": "Qwen",
+  "color": "#615CED",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "kimi": {
+  "nombre": "Kimi",
+  "color": "#000000",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "nvidia": {
+  "nombre": "NVIDIA",
+  "color": "#76B900",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "huggingface": {
+  "nombre": "Hugging Face",
+  "color": "#FFD21E",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "aws": {
+  "nombre": "AWS",
+  "color": "#FF9900",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "figma": {
+  "nombre": "Figma",
+  "color": "#F24E1E",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "n8n": {
+  "nombre": "n8n",
+  "color": "#EA4B71",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "zapier": {
+  "nombre": "Zapier",
+  "color": "#FF4F00",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "lovable": {
+  "nombre": "Lovable",
+  "color": "#FF4D8D",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "replit": {
+  "nombre": "Replit",
+  "color": "#F26207",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "openrouter": {
+  "nombre": "OpenRouter",
+  "color": "#6566F1",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "openai": {
+  "nombre": "OpenAI",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "_alias": {
+  "chatgpt": "openai",
+  "googlegemini": "gemini",
+  "modelcontextprotocol": "mcp",
+  "twitter": "x",
+  "nextjs": "nextdotjs",
+  "node": "nodedotjs",
+  "facebook": "meta"
+ },
+ "mcp": {
+  "nombre": "MCP",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "grok": {
+  "nombre": "Grok",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "xai": {
+  "nombre": "xAI",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "cursor": {
+  "nombre": "Cursor",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "elevenlabs": {
+  "nombre": "ElevenLabs",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "midjourney": {
+  "nombre": "Midjourney",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "runway": {
+  "nombre": "Runway",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "suno": {
+  "nombre": "Suno",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "v0": {
+  "nombre": "v0",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "windsurf": {
+  "nombre": "Windsurf",
+  "color": "#0B100F",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "ollama": {
+  "nombre": "Ollama",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "notion": {
+  "nombre": "Notion",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "vercel": {
+  "nombre": "Vercel",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "github": {
+  "nombre": "GitHub",
+  "color": "#181717",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "githubcopilot": {
+  "nombre": "GitHub Copilot",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "anthropic": {
+  "nombre": "Anthropic",
+  "color": "#191919",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "walmart": {
+  "nombre": "Walmart",
+  "color": "#0071DC",
+  "multi": true,
+  "viewBox": "0 0 24 24",
+  "fondo": "#0071DC"
+ },
+ "amazon": {
+  "nombre": "Amazon",
+  "color": "#FF9900",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "linkedin": {
+  "nombre": "LinkedIn",
+  "color": "#0A66C2",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "microsoft": {
+  "nombre": "Microsoft",
+  "color": "#00A4EF",
+  "multi": true,
+  "viewBox": "0 0 24 24"
+ },
+ "apple": {
+  "nombre": "Apple",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "whatsapp": {
+  "nombre": "WhatsApp",
+  "color": "#25D366",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "mercadopago": {
+  "nombre": "Mercado Pago",
+  "color": "#00B1EA",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "instagram": {
+  "nombre": "Instagram",
+  "color": "#FF0069",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "youtube": {
+  "nombre": "YouTube",
+  "color": "#FF0000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "tiktok": {
+  "nombre": "TikTok",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "x": {
+  "nombre": "X",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "android": {
+  "nombre": "Android",
+  "color": "#3DDC84",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "stripe": {
+  "nombre": "Stripe",
+  "color": "#635BFF",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "shopify": {
+  "nombre": "Shopify",
+  "color": "#7AB55C",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "supabase": {
+  "nombre": "Supabase",
+  "color": "#3FCF8E",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "cloudflare": {
+  "nombre": "Cloudflare",
+  "color": "#F38020",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "netflix": {
+  "nombre": "Netflix",
+  "color": "#E50914",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "spotify": {
+  "nombre": "Spotify",
+  "color": "#1ED760",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "tesla": {
+  "nombre": "Tesla",
+  "color": "#CC0000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "spacex": {
+  "nombre": "SpaceX",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "intel": {
+  "nombre": "Intel",
+  "color": "#0071C5",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "amd": {
+  "nombre": "AMD",
+  "color": "#ED1C24",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "samsung": {
+  "nombre": "Samsung",
+  "color": "#1428A0",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "linux": {
+  "nombre": "Linux",
+  "color": "#FCC624",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "linuxfoundation": {
+  "nombre": "Linux Foundation",
+  "color": "#003778",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "python": {
+  "nombre": "Python",
+  "color": "#3776AB",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "react": {
+  "nombre": "React",
+  "color": "#61DAFB",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "nextdotjs": {
+  "nombre": "Next.js",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "nodedotjs": {
+  "nombre": "Node.js",
+  "color": "#5FA04E",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "wordpress": {
+  "nombre": "WordPress",
+  "color": "#21759B",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "googlechrome": {
+  "nombre": "Google Chrome",
+  "color": "#4285F4",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "gmail": {
+  "nombre": "Gmail",
+  "color": "#EA4335",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "googledrive": {
+  "nombre": "Google Drive",
+  "color": "#4285F4",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "googlemaps": {
+  "nombre": "Google Maps",
+  "color": "#4285F4",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "telegram": {
+  "nombre": "Telegram",
+  "color": "#26A5E4",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "discord": {
+  "nombre": "Discord",
+  "color": "#5865F2",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "zoom": {
+  "nombre": "Zoom",
+  "color": "#0B5CFF",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "paypal": {
+  "nombre": "PayPal",
+  "color": "#002991",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "uber": {
+  "nombre": "Uber",
+  "color": "#000000",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "airbnb": {
+  "nombre": "Airbnb",
+  "color": "#FF5A5F",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "docker": {
+  "nombre": "Docker",
+  "color": "#2496ED",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "firebase": {
+  "nombre": "Firebase",
+  "color": "#DD2C00",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "typescript": {
+  "nombre": "TypeScript",
+  "color": "#3178C6",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ },
+ "javascript": {
+  "nombre": "JavaScript",
+  "color": "#F7DF1E",
+  "multi": false,
+  "viewBox": "0 0 24 24"
+ }
+}

@@ -198,7 +198,7 @@
    }
   },
   {
-   "texto": "Guardalo para cuando lo necesites, y seguí a {@tobdev.ia|tob dev punto i a} para más tips de {Claude|clod}.",
+   "texto": "Guardalo para cuando lo necesites, y seguí a {@tobdev.ia|tob dev} para más tips de {Claude|clod}.",
    "escena": {
     "tipo": "cierre"
    }
