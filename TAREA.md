@@ -40,6 +40,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    - Solo datos verificados en las fuentes; nada de cifras inventadas. Los datos de los mockups (nombres, montos, empresas) son ficticios. Las empresas reales de la noticia van con su logo (escena `marcas` o `logo` en `titular`/`impacto`); las inventadas, sin logo. Sin emojis.
    - Pronunciación: **"IA" nunca como `{IA|i a}`** (suena "i"): usá `{IA|inteligencia artificial}` o reescribí la frase. El cierre dice `{@tobdev.ia|tob dev}`.
    - Edición con ritmo: gancho con `impacto` (tipografía gigante) o `marcas`, beats cortos (2–4 s), y transiciones `flash`/`whip` en los cambios fuertes.
+   - **Referencia de calidad: `guiones/2026-10-23-walmart.json`** (a Tob le encantó: logos reales, impacto, ritmo rápido). Tomá ese nivel, **no la copia**: cada día otro tema visual, otra música, otro gancho y otras escenas.
    - Voz de marca TobDev: español rioplatense con voseo, directo, técnico, **sin hype**. Nada de "revolucionario", "increíble", "cambia todo".
    - Último beat: `cierre`.
    La cabecera, el logo y el cierre son de TobDev y están fijos en la plantilla: no los toques. Fondo, superficies, tipografía y subtítulos cambian con `tema`. Hay guiones de ejemplo en `plantilla/ejemplo-guion.json` (noticia), `plantilla/ejemplo-tip.json` (tip) y `plantilla/ejemplo-claro.json` (tema claro con las escenas nuevas).

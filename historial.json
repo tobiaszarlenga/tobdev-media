@@ -162,12 +162,12 @@
    "voz": "elevenlabs"
   },
   {
-   "fecha": "2026-10-24",
+   "fecha": "2026-10-23",
    "pilar": "noticia",
-   "serie": "24 OCT",
+   "serie": "23 OCT",
    "titulo": "Walmart abre su tienda a agentes de IA (Agent Gateway); Amazon los bloquea",
    "url_fuente": "https://techcrunch.com/2026/10/21/while-amazon-blocks-ai-agents-walmart-rolls-out-the-welcome-mat/",
-   "video": "videos/2026-10-24-v2.mp4",
+   "video": "videos/2026-10-23-walmart.mp4",
    "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=6911682764737759534",
    "acento": "#0071DC",
    "tema": "neon",
@@ -186,7 +186,8 @@
     "cierre"
    ],
    "voz": "elevenlabs",
-   "nota": "Especial de sábado hecho en chat con Tob. Rehecho sin avatar (no le gustó cómo se veía), con logos y edición más rápida."
+   "nota": "Especial de sábado hecho en chat con Tob. Rehecho sin avatar (no le gustó cómo se veía), con logos y edición más rápida.",
+   "hora": "publicado a pedido de Tob el 23/10 ~18:15"
   }
  ]
 }
