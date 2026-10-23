@@ -1,0 +1,181 @@
+{
+ "etiqueta": "24 OCT",
+ "fuente": "TechCrunch · 21/10/2026",
+ "acento": "#0071DC",
+ "tema": "claro",
+ "musica": "urgente",
+ "beats": [
+  {
+   "texto": "{Walmart|uólmart} le acaba de abrir la puerta a clientes que *no son personas*. Te cuento.",
+   "escena": {
+    "tipo": "presentador",
+    "video": "/tmp/avatar-2026-10-24.mp4",
+    "nombre": "Tobías Zarlenga",
+    "cargo": "tobdev.ia",
+    "marca": "NOTICIA"
+   }
+  },
+  {
+   "texto": "Se llama {Agent Gateway|éiyent guéituei}: un agente de {IA|i a} *busca y compra* por vos.",
+   "escena": {
+    "tipo": "titular",
+    "titulo": "Walmart abre su tienda a los *agentes de IA*",
+    "bajada": "Pueden buscar en el catálogo y comprar a nombre del usuario",
+    "medio": "TechCrunch",
+    "fecha": "21 OCT 2026",
+    "etiqueta": "NOTICIA",
+    "en": "compra"
+   }
+  },
+  {
+   "texto": "Usa {MCP|eme ce pe}, el estándar que creó {Anthropic|ántropic} para que la {IA|i a} *use herramientas*.",
+   "escena": {
+    "tipo": "codigo",
+    "archivo": "ejemplo · agente → tienda",
+    "lineas": [
+     {
+      "texto": "# pedido: \"lo de siempre para la semana\"",
+      "en": "Usa"
+     },
+     {
+      "texto": "buscar_productos(\"leche, café, pan\")",
+      "en": "estándar"
+     },
+     {
+      "texto": "# → 12 productos en stock",
+      "en": "creó"
+     },
+     {
+      "texto": "comprar(carrito, total=86.40)",
+      "en": "herramientas",
+      "marcar": true
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Se integra con {ChatGPT|chat yi pi ti}, {Gemini|yémini} y el asistente de {Meta|meta}.",
+   "escena": {
+    "tipo": "imagen",
+    "url": "https://images.unsplash.com/photo-1601598851547-4302969d0614?w=1200&q=80",
+    "titulo": "ChatGPT, Gemini y *Meta*",
+    "credito": "Foto: Eduardo Soares · Unsplash",
+    "en": "Meta",
+    "movimiento": "acercar"
+   }
+  },
+  {
+   "texto": "Desde noviembre, cada agente tiene *su perfil*: con tope de gasto, o aprobando cada compra.",
+   "escena": {
+    "tipo": "tabla",
+    "titulo": "Perfiles de agentes · ejemplo",
+    "columnas": [
+     "Agente",
+     "Tope",
+     "Aprueba"
+    ],
+    "filas": [
+     [
+      "ChatGPT",
+      "US$ 150",
+      "Auto"
+     ],
+     [
+      "Gemini",
+      "US$ 60",
+      "Vos"
+     ],
+     [
+      "Meta",
+      "—",
+      "Vos"
+     ]
+    ],
+    "marcar": 0,
+    "en": "tope"
+   }
+  },
+  {
+   "texto": "Reglas: no ve tu tarjeta, no hace nada que no pediste, y si se equivoca, *devolvés igual*.",
+   "escena": {
+    "tipo": "lista",
+    "titulo": "Las reglas del agente",
+    "items": [
+     {
+      "texto": "No ve tus datos de pago",
+      "en": "tarjeta"
+     },
+     {
+      "texto": "Solo hace lo que pediste",
+      "en": "pediste"
+     },
+     {
+      "texto": "Si se equivoca, devolvés igual",
+      "en": "devolvés"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Mientras tanto, {Amazon|ámazon} hace *lo contrario*: bloquea a los agentes.",
+   "escena": {
+    "tipo": "comparacion",
+    "antes": {
+     "titulo": "Amazon",
+     "items": [
+      "Bloquea las compras con agentes"
+     ],
+     "icono": "candado",
+     "en": "Amazon"
+    },
+    "despues": {
+     "titulo": "Walmart",
+     "items": [
+      "Las habilita, con tope y reglas"
+     ],
+     "icono": "check",
+     "en": "bloquea"
+    }
+   }
+  },
+  {
+   "texto": "¿Y para tu negocio?",
+   "escena": {
+    "tipo": "frase"
+   }
+  },
+  {
+   "texto": "Si un agente busca lo que vendés, necesita *precios*, stock y fotos claras y al día.",
+   "escena": {
+    "tipo": "pasos",
+    "pasos": [
+     {
+      "titulo": "*Precios* al día",
+      "sub": "nada de \"consultar precio\"",
+      "en": "precios"
+     },
+     {
+      "titulo": "Stock real",
+      "sub": "lo que hay hoy",
+      "en": "stock"
+     },
+     {
+      "titulo": "Fotos y descripciones",
+      "sub": "que se entiendan sin preguntar",
+      "en": "fotos"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "¿Dejarías que una {IA|i a} compre por vos? *Contámelo* en los comentarios, y seguí a {@tobdev.ia|tob dev punto i a}.",
+   "escena": {
+    "tipo": "cierre"
+   }
+  }
+ ],
+ "voz_archivo": [
+  "/tmp/avatar-2026-10-24.mp4",
+  "/tmp/voz-resto-2026-10-24.mp3"
+ ]
+}

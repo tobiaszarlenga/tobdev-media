@@ -26,7 +26,10 @@ MODEL_URLS = {
 SCENE_TYPES = {"terminal", "linea_tiempo", "prompt", "capas", "flujo", "cursores", "chips", "frase", "lista", "reloj", "alerta", "numero",
                "navegador", "celular", "grafico", "comparacion", "particulas", "cierre",
                # v2.1
-               "imagen", "codigo", "pasos", "anillo", "titular", "cita", "tabla", "calendario", "planes"}
+               "imagen", "codigo", "pasos", "anillo", "titular", "cita", "tabla", "calendario", "planes",
+               # v2.2
+               "presentador"}
+LEAD = 0.12  # silencio al principio de la pista de voz
 NOCAPS = {"frase", "cierre"}          # escenas que ya muestran el texto: sin subtítulos arriba
 PUNCT_PAUSE = {",": 0.10, ";": 0.16, ":": 0.18, ".": 0.24, "?": 0.26, "!": 0.24, "…": 0.26}
 BEAT_GAP = 0.14
@@ -194,8 +197,9 @@ def synth_external(guion, beats, path):
     ref, ref_total = synth(guion, beats)  # deja t0/t1/t_speech/t_end en la línea de tiempo de la referencia
     ref = ref[: int(ref_total * SR)]
     y, _ = librosa.load(path, sr=SR, mono=True)
-    y, _ = librosa.effects.trim(y, top_db=40)
-    lead = 0.12
+    y, _trim_idx = librosa.effects.trim(y, top_db=40)
+    guion["_trim0"] = float(_trim_idx[0]) / SR  # segundos de silencio que se cortaron al principio del archivo
+    lead = LEAD
     ext = np.concatenate([np.zeros(int(lead * SR), dtype=np.float32), y.astype(np.float32)])
     # mismo nivel que la voz Kokoro para que la cadena de mezcla (volumen, compresor) funcione igual
     def rms(a):
@@ -339,6 +343,8 @@ def caption_groups(beats):
     for bi, b in enumerate(beats):
         if b["escena"]["tipo"] in NOCAPS:
             continue
+        for w in b["words"]:
+            w["_low"] = b["escena"]["tipo"] == "presentador"
         cur = []
         for w in b["words"]:
             n = sum(len(x["cap"]) + 1 for x in cur) + len(w["cap"])
@@ -353,7 +359,7 @@ def caption_groups(beats):
     for i, g in enumerate(groups):
         nxt = groups[i + 1][0]["t0"] if i + 1 < len(groups) else g[-1]["t1"] + 0.4
         g_end = min(nxt, g[-1]["t1"] + 0.55)
-        groups[i] = {"words": g, "t0": g[0]["t0"] - 0.04, "t1": g_end}
+        groups[i] = {"words": g, "t0": g[0]["t0"] - 0.04, "t1": g_end, "low": bool(g[0].get("_low"))}
     return groups
 
 
@@ -573,6 +579,21 @@ def scene_html(sid, b, D):
                         f'<div class="lt-y">{esc(h.get("anio", ""))}</div><div class="lt-t">{kw_text(h.get("texto", ""))}</div></div>'
                         for i, h in enumerate(hs))
         return f'<div class="lt-rail"></div><div class="lt-fill" id="{p}-fill"></div>{items}'
+    if t == "presentador":
+        # Clip de avatar (sincronización labial) a pantalla completa. El video va mudo: la voz sale de voz_archivo,
+        # y data-media-start lo alinea con esa pista (ver prepare_presentador).
+        t0, t1 = b["t0"], b["t1"]
+        m = round(t0 - LEAD + float(e.get("_trim0", 0)) - float(e.get("video_desde", 0)), 3)
+        start = t0 if m >= 0 else round(t0 - m, 3)
+        m = max(0.0, m)
+        dur = round(max(0.1, min(t1 - start, float(e.get("_dur", t1 - t0)) - m)), 3)
+        name = (f'<div class="pv-name" id="{p}-name"><i></i><div><b>{esc(e["nombre"])}</b>'
+                f'<span class="mono">{esc(e.get("cargo", ""))}</span></div></div>') if e.get("nombre") else ""
+        live = f'<div class="pv-live mono" id="{p}-live"><i></i>{esc(e.get("marca", "EN VIVO"))}</div>' if e.get("marca") is not False else ""
+        return (f'<div class="pv-wrap" id="{p}-wrap"><img class="pv-poster" src="{e.get("_poster", "")}" alt=""/>'
+                f'<video class="pv-vid" id="{p}-v" src="{e.get("_src", "")}" muted playsinline data-start="{start}" '
+                f'data-duration="{dur}" data-media-start="{m}" data-track-index="6" data-volume="0"></video></div>'
+                f'<div class="pv-shade"></div>{live}{name}')
     if t == "imagen":
         src = e.get("_src", "")
         tit = f'<div class="im-tit" id="{p}-tit" style="font-size:{fit(re.sub(r"[*]", "", e.get("titulo", "")), [(18, 84), (30, 68), (999, 54)])}px">{kw_text(e.get("titulo", ""))}</div>' if e.get("titulo") else ""
@@ -735,6 +756,8 @@ def scene_params(b, t0, t1):
     elif t == "capas":
         p["n"] = len((e.get("items") or ["", "", "", ""])[:5])
         p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+    elif t == "presentador":
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
     elif t == "imagen":
         p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
         p["modo"] = "tarjeta" if e.get("encuadre") == "tarjeta" else "cover"
@@ -864,8 +887,9 @@ def build_html(guion, beats, groups, D):
         sid = f"s{i}"
         if b["escena"]["tipo"] == "cierre":
             b["escena"].setdefault("fuente_txt", f'Fuente: {guion.get("fuente", "")}' if guion.get("fuente") else "")
+        full = " full" if b["escena"]["tipo"] == "presentador" else ""
         sc_html.append(f'<div id="{sid}" class="clip scene t-{b["escena"]["tipo"]}" data-start="{t0}" data-duration="{round(t1 - t0, 3)}" data-track-index="{1 + i % 2}">'
-                       f'<div class="stage"><div class="cam"><div class="drift">{scene_html(sid, b, D)}</div></div></div></div>')
+                       f'<div class="stage{full}"><div class="cam"><div class="drift">{scene_html(sid, b, D)}</div></div></div></div>')
         prm = scene_params(b, t0, t1)
         calls.append({"id": sid, "t0": t0, "t1": t1, "k": i, "first": i == 0, "last": i == n - 1, "p": prm,
                       "tin": trans[i], "tout": trans[i + 1] if i + 1 < n else "zoom"})
@@ -888,8 +912,8 @@ def build_html(guion, beats, groups, D):
             else:
                 spans.append(f'<span class="w" id="w{gi}_{j}">{esc(w["cap"])}</span>')
                 j += 1
-        cap_html.append(f'<div class="cap" id="g{gi}">{" ".join(spans)}</div>')
-        cap_js.append({"g": gi, "t0": round(g["t0"], 3), "t1": round(g["t1"], 3),
+        cap_html.append(f'<div class="cap{" low" if g.get("low") else ""}" id="g{gi}">{" ".join(spans)}</div>')
+        cap_js.append({"g": gi, "t0": round(g["t0"], 3), "t1": round(g["t1"], 3), "low": bool(g.get("low")),
                        "w": [[f"w{gi}_{k}", round(w["t0"], 3), round(ws[k + 1]["t0"] if k + 1 < len(ws) else g["t1"], 3), w["kw"] is not None] for k, w in enumerate(ws)],
                        "k": [[f"k{gi}_{k}", round(w["t0"], 3)] for k, w in enumerate(ws) if w["kw"] is not None and (k == 0 or ws[k - 1]["kw"] != w["kw"])]})
     end_t = beats[-1]["t0"] if beats[-1]["escena"]["tipo"] == "cierre" else D
@@ -1116,14 +1140,14 @@ box-shadow:0 0 0 14px rgba(255,255,255,.03),0 40px 90px -30px rgba(0,0,0,.95)}
 .gr-v{font-size:34px;font-weight:700;margin-bottom:14px;opacity:0}
 .gr-l{margin-top:18px;font-size:28px;color:var(--text-soft);text-align:center}
 /* comparacion */
-.cm-wrap{position:absolute;left:50px;right:50px;top:30px;bottom:30px}
-.cm-col{position:absolute;left:0;right:0;height:430px;padding:40px 44px;opacity:0}
-.cm-col.an{top:0;color:var(--text-muted)}.cm-col.an .eyebrow{color:var(--text-muted)}
-.cm-col.de{bottom:0;border:2px solid rgba(var(--acc-rgb),.5)}
-.cm-it{display:flex;align-items:center;gap:20px;font-size:42px;font-weight:700;margin-top:24px;letter-spacing:-.01em}
+.cm-wrap{position:absolute;left:50px;right:50px;top:30px;bottom:30px;display:flex;flex-direction:column;justify-content:center;align-items:stretch;gap:26px}
+.cm-col{position:relative;padding:40px 44px;opacity:0}
+.cm-col.an{color:var(--text-muted)}.cm-col.an .eyebrow{color:var(--text-muted)}
+.cm-col.de{border:2px solid rgba(var(--acc-rgb),.5)}
+.cm-it{display:flex;align-items:center;gap:20px;font-size:46px;font-weight:700;margin-top:24px;letter-spacing:-.01em;line-height:1.12}
 .cm-col.de .cm-it svg{color:var(--acc)}
-.cm-vs{position:absolute;left:470px;top:440px;width:100px;height:100px;border-radius:50%;background:var(--surface2);border:2px solid var(--line);
-display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;opacity:0}
+.cm-vs{align-self:center;width:100px;height:100px;border-radius:50%;background:var(--surface2);border:2px solid var(--line);
+display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;opacity:0;flex:none}
 /* particulas */
 .pa-cv{position:absolute;left:0;top:0;width:1080px;height:1010px}
 .pa-box{position:absolute;left:60px;right:60px;top:300px;padding:40px;text-align:center;background:radial-gradient(ellipse,rgba(10,14,26,.92) 30%,transparent 72%)}
@@ -1150,9 +1174,22 @@ box-shadow:var(--shadow),0 0 0 8px rgba(var(--acc-rgb),.05);overflow:hidden}
 .end img{width:260px;height:260px;filter:var(--mark-filter)}
 .wm{margin-top:10px;font-weight:700;font-size:150px;letter-spacing:-.03em;line-height:1}
 .sub{margin-top:30px;font-size:46px;color:var(--text-soft)}
-.cta{margin-top:60px;display:flex;align-items:center;gap:18px;padding:30px 54px;border-radius:24px;background:var(--grad);font-weight:700;font-size:46px;color:var(--text);box-shadow:0 10px 30px -8px rgba(91,111,228,.55)}
+.cta{margin-top:60px;display:flex;align-items:center;gap:18px;padding:30px 54px;border-radius:24px;background:var(--grad);font-weight:700;font-size:46px;color:#fff;box-shadow:0 10px 30px -8px rgba(91,111,228,.55)}
 .src{margin-top:50px;font-size:26px;color:var(--text-muted)}
 
+/* presentador */
+.stage.full{top:0;height:1920px;clip-path:none}
+.pv-wrap{position:absolute;inset:-40px;overflow:hidden;background:#000}
+.pv-poster,.pv-vid{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover}
+.pv-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 52%,rgba(0,0,0,.72) 82%,rgba(0,0,0,.8) 100%)}
+.pv-name{position:absolute;left:70px;top:1500px;display:flex;align-items:center;gap:18px;opacity:0}
+.pv-name i{width:8px;height:74px;border-radius:4px;background:var(--acc)}
+.pv-name b{display:block;font-weight:700;font-size:40px;color:#fff;letter-spacing:-.01em}
+.pv-name span{display:block;margin-top:4px;font-size:24px;color:rgba(255,255,255,.75);letter-spacing:.12em;text-transform:uppercase}
+.pv-live{position:absolute;right:70px;top:226px;display:flex;align-items:center;gap:10px;padding:10px 18px;border-radius:999px;background:rgba(0,0,0,.45);
+font-size:22px;letter-spacing:.16em;color:#fff;opacity:0}
+.pv-live i{width:14px;height:14px;border-radius:50%;background:var(--acc);box-shadow:0 0 14px var(--acc)}
+.cap.low{top:1180px;color:#fff;text-shadow:0 4px 24px rgba(0,0,0,.85)}
 /* imagen */
 .im-full{position:absolute;left:40px;right:40px;top:0;bottom:0;border-radius:var(--radius);overflow:hidden;background:var(--surface2);box-shadow:var(--shadow)}
 .im-full img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 50%}
@@ -1165,7 +1202,7 @@ box-shadow:var(--shadow),0 0 0 8px rgba(var(--acc-rgb),.05);overflow:hidden}
 .im-cap{margin-top:30px;font-weight:700;font-size:44px;color:#1A1712;letter-spacing:-.02em;line-height:1.1}
 .im-card .im-cred{position:static;margin-top:10px;color:#7A7262}
 /* codigo */
-.cd-win{position:absolute;left:50px;right:50px;top:90px;height:800px;border-radius:var(--radius);background:var(--surface2);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}
+.cd-win{position:absolute;left:50px;right:50px;top:120px;min-height:420px;border-radius:var(--radius);background:var(--surface2);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}
 .cd-top{height:76px;display:flex;align-items:center;gap:24px;padding:0 28px;background:rgba(128,128,128,.08);border-bottom:1px solid var(--line)}
 .cd-tab{font-size:24px;color:var(--text-soft);padding:12px 20px;border-radius:10px 10px 0 0;background:var(--surface3);align-self:flex-end;margin-bottom:-1px}
 .cd-body{padding:34px 30px;font-size:34px;line-height:1.5}
@@ -1496,6 +1533,15 @@ linea_tiempo(c, p){
     if (i > 0) F(id+"-h"+(i-1), {opacity:1}, {opacity:.45, duration:.3}, t);
   });
 },
+presentador(c, p){
+  const id = "#"+c.id, Dd = c.t1-c.t0, cs = getComputedStyle(document.documentElement);
+  tl.set("#hdr .h", {color:"#FFFFFF"}, c.t0); tl.set("#hdr .d", {color:"rgba(255,255,255,.8)"}, c.t0); tl.set("#hdr img", {filter:"none"}, c.t0);
+  tl.set("#hdr .h", {color:cs.getPropertyValue("--text-soft").trim()}, c.t1); tl.set("#hdr .d", {color:cs.getPropertyValue("--text-muted").trim()}, c.t1);
+  tl.set("#hdr img", {filter:cs.getPropertyValue("--mark-filter").trim() || "none"}, c.t1);
+  F(id+"-wrap", {scale:1.0}, {scale:1.05, duration:Dd, ease:"none"}, c.t0);
+  if ($(id+"-live")){ show(id+"-live", c.t0+.25, .35, {x:20}); F(id+"-live i", {opacity:1}, {opacity:.25, duration:.45, yoyo:true, repeat:Math.max(1, Math.floor(Dd/.9)), ease:"sine.inOut"}, c.t0+.3); }
+  if ($(id+"-name")){ show(id+"-name", c.t0+.5, .45, {x:-40}); F(id+"-name", {opacity:1}, {opacity:0, duration:.3}, Math.max(c.t0+1.2, c.t1-.7)); }
+},
 imagen(c, p){
   const id = "#"+c.id, Dd = c.t1-c.t0, k = (c.k+SEED) % 4;
   const mv = p.mov || ["acercar","alejar","derecha","izquierda"][k];
@@ -1597,9 +1643,10 @@ CAPS.forEach(g => {
   const el = "#g"+g.g;
   F(el, {opacity:0}, {opacity:1, duration:.01}, g.t0);
   F(el, {opacity:1}, {opacity:0, duration:.1}, g.t1-.1);
+  const on = g.low ? "#FFFFFF" : TXT, done = g.low ? "rgba(255,255,255,.78)" : DONE;
   g.w.forEach(([w, t0, t1, kw]) => {
-    F("#"+w, {opacity:0, y:16, scale:1.08, color:TXT}, {opacity:1, y:0, scale:1, duration:.14, ease:"power2.out"}, t0);
-    if (!kw) F("#"+w, {color:TXT}, {color:DONE, duration:.25}, t1+.05);
+    F("#"+w, {opacity:0, y:16, scale:1.08, color:on}, {opacity:1, y:0, scale:1, duration:.14, ease:"power2.out"}, t0);
+    if (!kw) F("#"+w, {color:on}, {color:done, duration:.25}, t1+.05);
   });
   g.k.forEach(([k, t]) => F("#"+k+" .kb", {opacity:0, scale:.7}, {opacity:1, scale:1, duration:.22, ease:"back.out(2)"}, t));
 });
@@ -1653,7 +1700,7 @@ REQUIRED = {"terminal": "lineas", "linea_tiempo": "hitos", "chips": "items", "li
             "numero": "valor", "particulas": "valor", "comparacion": "despues", "grafico": "barras", "celular": "mensajes",
             "alerta": "filas", "reloj": "despues", "prompt": "texto", "cursores": "despues", "capas": "items",
             "codigo": "lineas", "pasos": "pasos", "anillo": "valor", "titular": "titulo", "cita": "autor", "tabla": "filas",
-            "calendario": "marcas", "planes": "planes"}
+            "calendario": "marcas", "planes": "planes", "presentador": "video"}
 ENGLISH = {"claude", "chatgpt", "openai", "google", "microsoft", "gemini", "whatsapp", "iphone", "slides", "app", "apps",
            "prompt", "prompts", "code", "copilot", "meta", "apple", "android", "windows", "excel", "powerpoint", "notion",
            "canva", "youtube", "instagram", "tiktok", "linkedin", "email", "online", "software", "startup", "freelance",
@@ -1693,6 +1740,11 @@ def validar(guion, historial=None):
             if (re.search(r"[a-záéíóú][A-Z]", w) or (len(w) > 1 and w.isupper() and w.isalpha()) or "@" in w
                     or re.search(r"\w\.\w", w) or wl in ENGLISH):
                 warn.append(f"beat {i}: '{w}' sin pronunciación; usá {{{w}|cómo se dice}}")
+        if t == "presentador":
+            if not guion.get("voz_archivo"):
+                warn.append(f"beat {i}: 'presentador' sin voz_archivo: los labios no van a coincidir con la voz")
+            if i != 1:
+                warn.append(f"beat {i}: 'presentador' está probado como beat 1 (gancho)")
         if t == "imagen":
             if not (e.get("archivo") or e.get("url")):
                 err.append(f"beat {i}: la escena 'imagen' necesita 'archivo' (ruta local) o 'url' (https)")
@@ -1762,6 +1814,53 @@ def image_ext(path):
     return None
 
 
+def concat_voz(parts, gap=0.3):
+    """Varias tomas de voz (mp3/wav, o el audio de un mp4 como el clip del avatar) en una sola pista, con `gap` s entre medio.
+    Así el gancho lo dice el clip del avatar (con su propio audio) y el resto sale de otra toma, todo alineado de una."""
+    import hashlib
+    h = hashlib.sha256(json.dumps([[x, os.path.getsize(x)] for x in parts]).encode()).hexdigest()[:10]
+    out = os.path.join(tempfile.gettempdir(), f"voz-concat-{h}.wav")
+    if os.path.exists(out):
+        return out
+    cmd = ["ffmpeg", "-loglevel", "error", "-y"]
+    for x in parts:
+        cmd += ["-i", x]
+    n = len(parts)
+    for _ in range(n - 1):
+        cmd += ["-f", "lavfi", "-t", str(gap), "-i", f"anullsrc=r={SR}:cl=mono"]
+    fc, seq = [], []
+    for i in range(n):
+        fc.append(f"[{i}:a]aresample={SR},aformat=channel_layouts=mono[a{i}]")
+        seq.append(f"[a{i}]")
+        if i < n - 1:
+            seq.append(f"[{n + i}:a]")
+    fc.append("".join(seq) + f"concat=n={2 * n - 1}:v=0:a=1[o]")
+    subprocess.run(cmd + ["-filter_complex", ";".join(fc), "-map", "[o]", out], check=True)
+    return out
+
+
+def prepare_presentador(guion, beats, work, guion_dir):
+    """Copia el clip del avatar a assets, saca un fotograma de fondo y anota duración y recorte de la voz."""
+    for i, b in enumerate(beats, 1):
+        e = b["escena"]
+        if e["tipo"] != "presentador":
+            continue
+        src = e["video"] if os.path.isabs(e["video"]) else os.path.join(guion_dir, e["video"])
+        if not os.path.exists(src):
+            print(f"ERROR beat {i}: no existe el video {src}")
+            sys.exit(2)
+        os.makedirs(os.path.join(work, "assets"), exist_ok=True)
+        name = f"presentador{i}.mp4"
+        shutil.copy(src, os.path.join(work, "assets", name))
+        poster = os.path.join(work, "assets", f"presentador{i}.jpg")
+        subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", src, "-frames:v", "1", "-q:v", "3", poster], check=True)
+        pr = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", src],
+                            capture_output=True, text=True, check=True)
+        e["_src"], e["_poster"] = "assets/" + name, f"assets/presentador{i}.jpg"
+        e["_dur"] = float(pr.stdout.strip() or 0)
+        e["_trim0"] = float(guion.get("_trim0", 0))
+
+
 def prepare_images(guion, beats, work, guion_dir):
     """Copia (o baja) las imágenes de las escenas `imagen` a assets/img y deja la ruta en escena['_src'].
     Falla con ERROR si no se pudo conseguir el archivo o no es una imagen: mejor cambiar la escena que publicar un cuadro vacío."""
@@ -1828,16 +1927,21 @@ def main():
         return
     voz_path = None
     if guion.get("voz_archivo"):
-        voz_path = os.path.join(os.path.dirname(os.path.abspath(args[0])), guion["voz_archivo"])
-        if not os.path.exists(voz_path):
-            print("ERROR no existe el audio de voz_archivo:", voz_path)
-            sys.exit(2)
-        raw = raw + open(voz_path, "rb").read()
+        va = guion["voz_archivo"]
+        parts = va if isinstance(va, list) else [va]
+        parts = [x if os.path.isabs(x) else os.path.join(os.path.dirname(os.path.abspath(args[0])), x) for x in parts]
+        for x in parts:
+            if not os.path.exists(x):
+                print("ERROR no existe el audio de voz_archivo:", x)
+                sys.exit(2)
+            raw = raw + open(x, "rb").read()
+        voz_path = parts[0] if len(parts) == 1 else concat_voz(parts)
     guion_dir = os.path.dirname(os.path.abspath(args[0]))
     for b in guion.get("beats", []):  # imágenes locales: si cambian, se vuelve a armar
         e = b.get("escena") or {}
-        if e.get("tipo") == "imagen" and e.get("archivo"):
-            ip = e["archivo"] if os.path.isabs(e["archivo"]) else os.path.join(guion_dir, e["archivo"])
+        loc = e.get("archivo") if e.get("tipo") == "imagen" else (e.get("video") if e.get("tipo") == "presentador" else None)
+        if loc:
+            ip = loc if os.path.isabs(loc) else os.path.join(guion_dir, loc)
             if os.path.exists(ip):
                 raw = raw + open(ip, "rb").read()
     key = hashlib.sha256(raw + open(os.path.abspath(__file__), "rb").read()).hexdigest()[:12]
@@ -1874,6 +1978,7 @@ def main():
             shutil.copy(os.path.join(HERE, "marca", f), os.path.join(work, "assets", f))
         shutil.copy(os.path.join(HERE, "gsap.min.js"), os.path.join(work, "assets", "gsap.min.js"))
         prepare_images(guion, beats, work, guion_dir)
+        prepare_presentador(guion, beats, work, guion_dir)
         open(os.path.join(work, "index.html"), "w").write(build_html(guion, beats, groups, D))
         open(os.path.join(work, "meta.json"), "w").write('{"id":"reel","name":"reel"}')
         mix_audio(work, voice, D, beats, groups, guion)

@@ -31,7 +31,7 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 | `acento_voz` | `rio` (por defecto: "y" y "ll" como "sh") o `latam` (neutro). |
 | `velocidad` | 1.1 por defecto. Entre 1.0 y 1.2. |
 | `elevenlabs` | Opcional. `{"voice_id": "...", "model_id": "eleven_v4", "stability": 0.5}`: la voz se genera con la API de ElevenLabs y los subtítulos usan los tiempos por carácter que devuelve. Necesita acceso a `api.elevenlabs.io` (secreto de red del entorno o `ELEVENLABS_API_KEY`). Si falla, usa Kokoro con `voz` y avisa. El audio queda en caché (`~/.cache/reel-voz`) por texto + voz. |
-| `voz_archivo` | Opcional. Ruta (relativa al guion) a una voz grabada aparte, por ejemplo de ElevenLabs. Se usa ese audio tal cual y los subtítulos y escenas se acomodan a sus tiempos (alineación automática contra una referencia Kokoro). El audio tiene que decir exactamente el texto del guion, con la pronunciación de `{Texto\|pronunciación}`. Necesita `librosa` (`pip install --break-system-packages librosa`). |
+| `voz_archivo` | Opcional. Ruta (relativa al guion) a una voz grabada aparte, por ejemplo de ElevenLabs. También acepta **una lista** de archivos (mp3, wav o el audio de un mp4) que se pegan en orden con 0,3 s entre medio: así el gancho lo dice el clip del avatar con su propio audio y el resto sale de otra toma (`["/tmp/avatar.mp4", "/tmp/voz-resto.mp3"]`). Se usa ese audio tal cual y los subtítulos y escenas se acomodan a sus tiempos (alineación automática contra una referencia Kokoro). El audio tiene que decir exactamente el texto del guion, con la pronunciación de `{Texto\|pronunciación}`. Necesita `librosa` (`pip install --break-system-packages librosa`). |
 
 ## Marcado dentro de `texto`
 
@@ -85,9 +85,19 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 | `comparacion` | Antes vs. ahora, o dos opciones | `antes` {`titulo`, `items`, `en`, `icono`}, `despues` {`titulo`, `items`, `en`, `icono`} (la de arriba se ve apagada y la de abajo resaltada) |
 | `particulas` | Muchas personas, usuarios o empresas | `valor`, `sufijo`, `etiqueta`, `en` |
 | `imagen` | **Una foto o ilustración real** con movimiento lento de cámara (historia, productos, lugares, personas públicas) | `archivo` (ruta relativa al guion) **o** `url` (https; el motor la baja), `credito` (obligatorio salvo imagen propia o generada: "Foto: NASA · dominio público"), `titulo` (texto sobre la foto, admite `*destacado*`), `en`, `encuadre`: `cover` (def., llena la escena) o `tarjeta` (foto impresa inclinada con pie), `movimiento`: `acercar` / `alejar` / `derecha` / `izquierda` (def. por semilla) |
+| `presentador` | **Tob hablando a cámara** (avatar con sincronización labial) a pantalla completa, con subtítulos abajo y su nombre. Pensado para el beat 1 (gancho) | `video` (mp4 9:16 del avatar), `nombre`, `cargo`, `marca` (pastilla arriba a la derecha, def. "EN VIVO"; `false` la saca), `video_desde` (segundo de `voz_archivo` donde empieza el audio del clip; def. 0). Necesita `voz_archivo` con el clip primero (ver abajo) |
 | `cierre` | Marca TobDev + CTA + fuente | `sub`, `cta` opcionales |
 
 Iconos disponibles: `archivo`, `chat`, `lista`, `check`, `alerta`, `candado`, `rayo`, `usuario`, `enviar`, `flecha`, `bajar`, `lupa`, `chip`, `globo`, `escudo`, `grafico`, `reloj`, `estrella`, `codigo`, `dinero`.
+
+### Avatar de Tob (`presentador`)
+
+1. Conector de ElevenLabs (`elevenlabs_personalizado`): `creative_create_flow`, después `creative_add_flow_asset_node` con la selfie de Tob (asset `eK9ZCRnHQXw5gyFeUr7h`, en el auto, 9:16; hay otras fotos suyas en el workspace).
+2. `creative_generate_speech` con el texto hablado **solo del beat 1** (primera línea de `--texto-voz`), voz `tobias`, `eleven_v4`, 1 toma, en el mismo flujo. El resto de las líneas va en otra generación.
+3. `creative_add_flow_node` tipo `avatar`, modelo `heygen-avatar4`, `{"aspect_ratio": "9:16", "talking_style": "stable"}`, `connect_from` = [foto, voz del gancho]. `creative_run_flow_nodes` (primero con `estimate_only`). Tarda ~2 min.
+4. Bajar el `content_url` del mp4 y en el guion: `"video": "/tmp/avatar.mp4"` y `"voz_archivo": ["/tmp/avatar.mp4", "/tmp/voz-resto.mp3"]`. El motor alinea solo labios, voz y subtítulos (probado: arranca exacto).
+
+Costo de referencia (23/10/2026): ~3.600 créditos por un gancho de 5 s (US$ 0,73), contra ~730 de la voz de todo el reel. Con la cara de Tob: solo con su consentimiento (ya lo dio) y siempre `isAiGenerated: true`. Con terceros: nunca sin consentimiento escrito.
 
 ### Imágenes: de dónde sacarlas
 
