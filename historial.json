@@ -137,6 +137,29 @@
     "cierre"
    ],
    "voz": "elevenlabs"
+  },
+  {
+   "fecha": "2026-10-23",
+   "pilar": "negocio",
+   "serie": "IA Y PLATA #2",
+   "titulo": "5 servicios con IA que le podés ofrecer al comercio de tu barrio",
+   "url_fuente": "https://support.google.com/business/answer/3474050?hl=en",
+   "video": "videos/2026-10-23.mp4",
+   "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-3497706655105855775",
+   "acento": "#22C55E",
+   "escenas": [
+    "numero",
+    "navegador",
+    "terminal",
+    "celular",
+    "capas",
+    "flujo",
+    "prompt",
+    "alerta",
+    "frase",
+    "cierre"
+   ],
+   "voz": "elevenlabs"
   }
  ]
 }
