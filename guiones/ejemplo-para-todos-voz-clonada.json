@@ -1,0 +1,153 @@
+{
+ "etiqueta": "PARA TODOS #1",
+ "fuente": "FBI (IC3, dic. 2024) · FTC (mar. 2023)",
+ "acento": "#128C7E",
+ "tema": "claro",
+ "musica": "tech",
+ "transiciones": [
+  "flash",
+  "zoom",
+  "whip",
+  "push",
+  "iris",
+  "slide",
+  "whip",
+  "flash",
+  "zoom",
+  "rise"
+ ],
+ "beats": [
+  {
+   "texto": "Esta voz *no es mía*.",
+   "escena": {
+    "tipo": "impacto",
+    "por_linea": 2
+   }
+  },
+  {
+   "texto": "La armó una inteligencia artificial, copiando unos *audios míos*.",
+   "escena": {
+    "tipo": "imagen",
+    "url": "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=1200&q=80",
+    "titulo": "Una IA *copió* mi voz",
+    "credito": "Foto: Jonathan Velasquez · Unsplash",
+    "en": "copiando",
+    "movimiento": "acercar"
+   }
+  },
+  {
+   "texto": "Y puede copiar la de *alguien de tu familia*.",
+   "escena": {
+    "tipo": "llamada",
+    "nombre": "Lucas",
+    "sub": "Llamada de WhatsApp",
+    "logo": "whatsapp",
+    "numero": "+54 9 381 ••• ••••",
+    "estado": "VOZ CLONADA",
+    "en": "familia"
+   }
+  },
+  {
+   "texto": "Te manda un audio desesperado: tuvo un problema, y necesita plata *ya*.",
+   "escena": {
+    "tipo": "celular",
+    "app": "Lucas",
+    "icono": "usuario",
+    "mensajes": [
+     {
+      "de": "ia",
+      "audio": "0:14",
+      "en": "audio"
+     },
+     {
+      "de": "ia",
+      "texto": "Mamá, transferime a esta cuenta, después te explico",
+      "en": "plata"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Las señales: apuro, un número nuevo, y que te pida *transferir*.",
+   "escena": {
+    "tipo": "alerta",
+    "titulo": "Señales de estafa",
+    "filas": [
+     [
+      "Apuro",
+      "¡Ya!"
+     ],
+     [
+      "Número",
+      "Nuevo"
+     ],
+     [
+      "Pide",
+      "Transferencia"
+     ],
+     [
+      "Explica",
+      "Después"
+     ]
+    ],
+    "marcar": 2,
+    "en": "transferir"
+   }
+  },
+  {
+   "texto": "Hasta el {FBI|efe, be, i} recomienda tener una *palabra secreta* en familia.",
+   "escena": {
+    "tipo": "cita",
+    "texto": "Creá una palabra o frase secreta con tu familia para verificar su identidad.",
+    "autor": "FBI",
+    "cargo": "Alerta pública · dic. 2024 (traducida)",
+    "en": "recomienda"
+   }
+  },
+  {
+   "texto": "Y si te pasa, cortá, y llamalo vos *al número de siempre*.",
+   "escena": {
+    "tipo": "comparacion",
+    "antes": {
+     "titulo": "No",
+     "items": [
+      "Responder el audio",
+      "Transferir"
+     ],
+     "icono": "alerta",
+     "en": "pasa"
+    },
+    "despues": {
+     "titulo": "Sí",
+     "items": [
+      "Cortar",
+      "Llamar al número de siempre"
+     ],
+     "icono": "telefono",
+     "en": "llamalo"
+    }
+   }
+  },
+  {
+   "texto": "*Nunca* transfieras por un audio.",
+   "escena": {
+    "tipo": "impacto",
+    "por_linea": 1
+   }
+  },
+  {
+   "texto": "Más vale una pregunta de más, que una *transferencia de menos*.",
+   "escena": {
+    "tipo": "frase"
+   }
+  },
+  {
+   "texto": "*Mandáselo* a tu familia, y seguí a {@tobdev.ia|tob dev}.",
+   "escena": {
+    "tipo": "cierre",
+    "sub": "Tecnología e IA explicadas fácil"
+   }
+  }
+ ],
+ "voz_archivo": "/tmp/voz-para-todos-1.mp3"
+}

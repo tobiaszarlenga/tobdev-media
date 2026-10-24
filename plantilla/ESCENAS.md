@@ -82,7 +82,8 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 | `numero` | Una cifra o un año | `valor` (número), `prefijo`, `sufijo`, `decimales`, `desde`, `separador` (`false` para años: 1969 y no 1.969), `etiqueta` (admite `*destacado*`), `en` |
 | `anillo` | Un porcentaje o una proporción | `valor` (0–100), `sufijo` (def. "%"), `etiqueta` (admite `*destacado*`), `en`, `desde`, `decimales` |
 | `navegador` | Algo que pasa en una web o un agente que navega | `url` (inventada), `pestanas` (1–3), `titulo`, `en` (clic) |
-| `celular` | Chat, WhatsApp, atención al cliente, app | `app`, `icono`, `mensajes` [{`de`:"yo"/"ia", `texto`, `en`}] (2–4) |
+| `celular` | Chat, WhatsApp, atención al cliente, app | `app`, `icono`, `mensajes` [{`de`:"yo"/"ia", `texto`, `en`}] (2–4). Un mensaje con `audio` (ej. `"0:14"`) en vez de `texto` se ve como **nota de voz** (play + onda que se llena + duración) |
+| `llamada` | **Llamada entrante** a pantalla completa: teléfono sonando con ondas, avatar, nombre y número, botones de cortar/atender. Para estafas, llamadas de IA, atención telefónica | `nombre` (def. "Mamá"), `sub` (def. "Llamada entrante"; ej. "Llamada de WhatsApp"), `logo` (app arriba, ej. `whatsapp`), `numero`, `estado` (sello que cae sobre la llamada con golpe, ej. "VOZ CLONADA"), `en` (cuándo cae el sello) |
 | `grafico` | Crecimiento, comparación de cifras | `titulo`, `barras` [{`label`, `valor`, `texto`}] (3–5), `marcar` (índice destacado, def. el último), `en` |
 | `comparacion` | Antes vs. ahora, o dos opciones | `antes` {`titulo`, `items`, `en`, `icono`}, `despues` {`titulo`, `items`, `en`, `icono`} (la de arriba se ve apagada y la de abajo resaltada) |
 | `particulas` | Muchas personas, usuarios o empresas | `valor`, `sufijo`, `etiqueta`, `en` |
@@ -92,7 +93,7 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 
 Logos disponibles (80, en `plantilla/logos/marcas.json`, se suman más según `plantilla/logos/LEEME.md`): IA (`openai`/`chatgpt`, `claude`, `anthropic`, `gemini`, `google`, `meta`, `microsoft`, `copilot`, `mcp`, `deepseek`, `mistral`, `perplexity`, `grok`, `nvidia`, `huggingface`, `cursor`, `elevenlabs`…), comercio (`walmart`, `amazon`, `mercadopago`, `shopify`, `stripe`, `paypal`) y apps (`whatsapp`, `instagram`, `youtube`, `tiktok`, `x`, `linkedin`, `gmail`, `notion`…). `titular`, `impacto`, `chips` (`items[].logo`) y `comparacion` (`antes.logo`, `despues.logo`) también aceptan `logo`.
 
-Iconos disponibles: `archivo`, `chat`, `lista`, `check`, `alerta`, `candado`, `rayo`, `usuario`, `enviar`, `flecha`, `bajar`, `lupa`, `chip`, `globo`, `escudo`, `grafico`, `reloj`, `estrella`, `codigo`, `dinero`.
+Iconos disponibles: `archivo`, `chat`, `lista`, `check`, `alerta`, `candado`, `rayo`, `usuario`, `enviar`, `flecha`, `bajar`, `lupa`, `chip`, `globo`, `escudo`, `grafico`, `reloj`, `estrella`, `codigo`, `dinero`, `telefono`, `play`.
 
 ### Avatar de Tob (`presentador`)
 

@@ -30,7 +30,9 @@ SCENE_TYPES = {"terminal", "linea_tiempo", "prompt", "capas", "flujo", "cursores
                # v2.2
                "presentador",
                # v2.3
-               "marcas", "impacto"}
+               "marcas", "impacto",
+               # v2.4
+               "llamada"}
 LEAD = 0.12  # silencio al principio de la pista de voz
 NOCAPS = {"frase", "cierre", "impacto"}          # escenas que ya muestran el texto: sin subtítulos arriba
 PUNCT_PAUSE = {",": 0.10, ";": 0.16, ":": 0.18, ".": 0.24, "?": 0.26, "!": 0.24, "…": 0.26}
@@ -411,6 +413,8 @@ def icon(name, size=56, color="currentColor"):
         "estrella": '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
         "codigo": '<path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/>',
         "dinero": '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>',
+        "telefono": '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+        "play": '<path d="M7 4.5v15l12-7.5z" fill="currentColor"/>',
     }
     p = paths.get(name, paths["rayo"])
     return (f'<svg width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" '
@@ -580,7 +584,17 @@ def scene_html(sid, b, D):
                 f'<div class="nv-cursor" id="{p}-cur"><svg width="54" height="54" viewBox="0 0 24 24"><path d="M4 2l15 9-7 1.5L8.5 20z" fill="var(--text)" stroke="var(--bg)" stroke-width="1.2"/></svg></div>')
     if t == "celular":
         msgs = e.get("mensajes", [])[:4]
-        bub = "".join(f'<div class="ph-m {"me" if m.get("de") == "yo" else "ia"}" id="{p}-m{i}">{esc(m.get("texto", ""))}</div>' for i, m in enumerate(msgs))
+        def _bars():
+            import math
+            return "".join(f'<i style="height:{int(18 + 34 * abs(math.sin(k * 1.7) * math.cos(k * .43)))}px"></i>' for k in range(26))
+        def _msg(i, m):
+            cls = "me" if m.get("de") == "yo" else "ia"
+            if m.get("audio"):
+                return (f'<div class="ph-m {cls} au" id="{p}-m{i}"><span class="au-play">{icon("play", 30, "currentColor")}</span>'
+                        f'<div class="au-w"><div class="au-bars">{_bars()}</div><div class="au-bars on" id="{p}-ap{i}">{_bars()}</div></div>'
+                        f'<span class="au-t mono">{esc(m["audio"])}</span></div>')
+            return f'<div class="ph-m {cls}" id="{p}-m{i}">{esc(m.get("texto", ""))}</div>'
+        bub = "".join(_msg(i, m) for i, m in enumerate(msgs))
         return (f'<div class="ph" id="{p}-ph"><div class="ph-notch"></div><div class="ph-top"><div class="ph-av">{icon(e.get("icono", "chip"), 34, "var(--ink)")}</div>'
                 f'<div><div class="ph-n">{esc(e.get("app", "Asistente"))}</div><div class="ph-s mono">en línea</div></div></div><div class="ph-body">{bub}'
                 f'<div class="ph-typing" id="{p}-ty"><i></i><i></i><i></i></div></div></div>')
@@ -623,6 +637,16 @@ def scene_html(sid, b, D):
                         f'<div class="lt-y">{esc(h.get("anio", ""))}</div><div class="lt-t">{kw_text(h.get("texto", ""))}</div></div>'
                         for i, h in enumerate(hs))
         return f'<div class="lt-rail"></div><div class="lt-fill" id="{p}-fill"></div>{items}'
+    if t == "llamada":
+        nom = e.get("nombre", "Mamá")
+        stamp = f'<div class="ll-stamp" id="{p}-st">{esc(e["estado"])}</div>' if e.get("estado") else ""
+        lg = f'<div class="ll-app">{logo_svg(e["logo"], 34, blanco=True)}<span>{esc(e.get("sub", "Llamada"))}</span></div>' if logo_key(e.get("logo")) else f'<div class="ll-app"><span>{esc(e.get("sub", "Llamada"))}</span></div>'
+        return (f'<div class="ll-ph" id="{p}-ph"><div class="ph-notch"></div>{lg}'
+                f'<div class="ll-avw"><i class="ll-ring" id="{p}-r0"></i><i class="ll-ring" id="{p}-r1"></i><i class="ll-ring" id="{p}-r2"></i>'
+                f'<div class="ll-av">{esc(nom[:1].upper())}</div></div><div class="ll-name">{esc(nom)}</div>'
+                f'<div class="ll-num mono">{esc(e.get("numero", ""))}</div>'
+                f'<div class="ll-btns"><div class="ll-b no">{icon("telefono", 52, "#fff")}</div><div class="ll-b si" id="{p}-si">{icon("telefono", 52, "#fff")}</div></div>'
+                f'{stamp}</div>')
     if t == "marcas":
         lg = [x for x in (e.get("logos") or []) if logo_key(x.get("marca"))][:4]
         n = len(lg)
@@ -828,6 +852,7 @@ def scene_params(b, t0, t1):
     elif t == "celular":
         p["cues"] = scene_cues(b, [m.get("en", "") for m in e.get("mensajes", [])[:4]], t0, t1)
         p["me"] = [m.get("de") == "yo" for m in e.get("mensajes", [])[:4]]
+        p["au"] = [bool(m.get("audio")) for m in e.get("mensajes", [])[:4]]
     elif t == "grafico":
         p["n"] = len(e.get("barras", [])[:5])
         p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
@@ -840,6 +865,9 @@ def scene_params(b, t0, t1):
         p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
     elif t == "presentador":
         p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+    elif t == "llamada":
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+        p["stamp"] = bool(e.get("estado"))
     elif t == "marcas":
         lg = [x for x in (e.get("logos") or []) if logo_key(x.get("marca"))][:4]
         p["cues"] = scene_cues(b, [x.get("en", "") for x in lg], t0, t1)
@@ -1278,6 +1306,30 @@ box-shadow:var(--shadow),0 0 0 8px rgba(var(--acc-rgb),.05);overflow:hidden}
 .cta{margin-top:60px;display:flex;align-items:center;gap:18px;padding:30px 54px;border-radius:24px;background:var(--grad);font-weight:700;font-size:46px;color:#fff;box-shadow:0 10px 30px -8px rgba(91,111,228,.55)}
 .src{margin-top:50px;font-size:26px;color:var(--text-muted)}
 
+/* audios de WhatsApp */
+.ph-m.au{display:flex;align-items:center;gap:14px;min-width:420px;padding:18px 22px}
+.au-play{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.14);flex:none}
+.ph-m.me .au-play{background:rgba(0,0,0,.12)}
+.au-w{position:relative;flex:1;height:56px}
+.au-bars{position:absolute;inset:0;display:flex;align-items:center;gap:4px}
+.au-bars i{flex:1;border-radius:3px;background:currentColor;opacity:.35}
+.au-bars.on{clip-path:inset(0 100% 0 0)}.au-bars.on i{opacity:1;background:var(--acc)}
+.ph-m.me .au-bars.on i{background:var(--on-acc)}
+.au-t{font-size:22px;opacity:.75;flex:none}
+/* llamada entrante */
+.ll-ph{position:absolute;left:250px;top:-10px;width:580px;height:1030px;border-radius:70px;overflow:hidden;
+background:radial-gradient(ellipse at 50% 30%,#2A3A5C 0%,#0E1424 60%,#05070D 100%);border:10px solid #1C2540;box-shadow:var(--shadow);color:#fff}
+.ll-app{position:absolute;left:0;right:0;top:96px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:26px;color:rgba(255,255,255,.75)}
+.ll-avw{position:absolute;left:150px;top:220px;width:260px;height:260px}
+.ll-ring{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,255,255,.5);opacity:0}
+.ll-av{position:absolute;inset:20px;border-radius:50%;background:var(--acc);color:var(--on-acc);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:110px}
+.ll-name{position:absolute;left:20px;right:20px;top:520px;text-align:center;font-weight:700;font-size:62px;letter-spacing:-.02em}
+.ll-num{position:absolute;left:20px;right:20px;top:605px;text-align:center;font-size:26px;color:rgba(255,255,255,.6)}
+.ll-btns{position:absolute;left:70px;right:70px;bottom:110px;display:flex;justify-content:space-between}
+.ll-b{width:130px;height:130px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ll-b.no{background:#EF4444}.ll-b.no svg{transform:rotate(135deg)}.ll-b.si{background:#22C55E}
+.ll-stamp{position:absolute;left:40px;right:40px;top:655px;padding:18px 10px;text-align:center;font-weight:700;font-size:58px;letter-spacing:.02em;color:#EF4444;
+border:7px solid #EF4444;border-radius:18px;background:rgba(10,0,0,.55);transform:rotate(-10deg);opacity:0}
 /* logos */
 .lg-badge{display:flex;align-items:center;justify-content:center;background:#FFFFFF;box-shadow:0 20px 50px -18px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.06);flex:none}
 .lg-badge .lg{display:block}
@@ -1304,7 +1356,7 @@ font-weight:700;line-height:.98;letter-spacing:-.045em}
 .ip-w{position:relative;display:inline-block;padding:0 .08em;margin-right:.04em;opacity:0}
 .ip-w>span{position:relative}
 .ip-bg{position:absolute;left:0;right:0;top:.06em;bottom:.02em;background:var(--acc);transform-origin:0 50%;transform:scaleX(0);border-radius:.06em}
-.ip-w.kw>span{color:var(--on-acc)}
+.ip-w.kw>span{color:var(--text)}
 .ip-logo{margin-bottom:40px;opacity:0}
 #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
 /* presentador */
@@ -1627,7 +1679,16 @@ celular(c, p){
   cues.forEach((t,i) => {
     if (!p.me[i] && t-.7 > c.t0+.1){ F(id+"-ty", {opacity:0}, {opacity:1, duration:.15}, t-.7); F(id+"-ty", {opacity:1}, {opacity:0, duration:.1}, t-.12); }
     show(id+"-m"+i, t-.1, .35, {y:30, scale:.9});
+    if (p.au && p.au[i]) F(id+"-ap"+i, {clipPath:"inset(0 100% 0 0)"}, {clipPath:"inset(0 0% 0 0)", duration:Math.max(1.2, Math.min(3.2, c.t1-t-.4)), ease:"none"}, t+.25);
   });
+},
+llamada(c, p){
+  const id = "#"+c.id, Dd = c.t1-c.t0, n = Math.max(1, Math.floor((Dd-.2)/1.1));
+  F(id+"-ph", {y:60, rotation:-3}, {y:0, rotation:2, duration:Dd, ease:"sine.inOut"}, c.t0);
+  for (let k=0;k<3;k++) F(id+"-r"+k, {opacity:.8, scale:1}, {opacity:0, scale:1.9, duration:1.1, repeat:n-1, ease:"power1.out"}, c.t0+.1+k*.36);
+  F(id+"-si", {y:0}, {y:-18, duration:.22, yoyo:true, repeat:Math.max(1, n*2-1), ease:"power2.out"}, c.t0+.3);
+  if (p.stamp){ const t = Math.max(c.t0+1.0, Math.min(p.cue, c.t1-.9)); F(id+"-st", {opacity:0, scale:2.4, rotation:-25}, {opacity:1, scale:1, rotation:-10, duration:.3, ease:"power4.out"}, t);
+    F("#"+c.id+" .stage", {x:0}, {x:10, duration:.05, yoyo:true, repeat:3, ease:"none"}, t+.25); }
 },
 grafico(c, p){
   const id = "#"+c.id;
@@ -1690,7 +1751,8 @@ impacto(c, p){
   p.cues.forEach((t, i) => {
     const tt = Math.max(t-.04, c.t0+.08+i*.05);
     F(id+"-w"+i, {opacity:0, scale:1.8, y:40, rotation:i%2?-4:4}, {opacity:1, scale:1, y:0, rotation:0, duration:.22, ease:"power4.out"}, tt);
-    if (p.kw[i]) F(id+"-b"+i, {scaleX:0}, {scaleX:1, duration:.25, ease:"power3.out"}, tt+.08);
+    if (p.kw[i]){ F(id+"-b"+i, {scaleX:0}, {scaleX:1, duration:.25, ease:"power3.out"}, tt+.08);
+      F(id+"-w"+i+" > span", {color:getComputedStyle(document.documentElement).getPropertyValue("--text").trim()}, {color:getComputedStyle(document.documentElement).getPropertyValue("--on-acc").trim(), duration:.12}, tt+.16); }
     F("#"+c.id+" .stage", {x:0, y:0}, {x:(i%2?7:-7), y:(i%2?-5:5), duration:.05, yoyo:true, repeat:1, ease:"none"}, tt+.02);
   });
 },
@@ -1832,6 +1894,8 @@ def mix_audio(work, voice, D, beats, groups, guion=None):
         e = b["escena"]
         if e["tipo"] == "impacto":
             hits += [round(w["t0"], 3) for w in b["words"]]
+        if e["tipo"] == "llamada" and e.get("estado"):
+            hits += scene_cues(b, [e.get("en", "")], b["t0"], b["t1"])
         if e["tipo"] == "marcas":
             hits += scene_cues(b, [x.get("en", "") for x in (e.get("logos") or [])][:4], b["t0"], b["t1"])
         if e["tipo"] in ("chips", "lista", "flujo", "pasos", "planes", "calendario"):
