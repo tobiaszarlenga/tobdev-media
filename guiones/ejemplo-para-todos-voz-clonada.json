@@ -95,7 +95,7 @@
    }
   },
   {
-   "texto": "Hasta el {FBI|efe, be, i} recomienda tener una *palabra secreta* en familia.",
+   "texto": "Hasta el {FBI|efe be í} recomienda tener una *palabra secreta* en familia.",
    "escena": {
     "tipo": "cita",
     "texto": "Creá una palabra o frase secreta con tu familia para verificar su identidad.",
@@ -149,5 +149,5 @@
    }
   }
  ],
- "voz_archivo": "/tmp/voz-para-todos-1.mp3"
+ "voz_archivo": "/tmp/voz-para-todos-1b.wav"
 }
