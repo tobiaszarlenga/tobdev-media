@@ -15,7 +15,7 @@ Objetivo: **que la cuenta crezca en seguidores y tenga movimiento** (vistas, gua
 Reglas del calendario:
 - **Martes y jueves sin noticia buena** (verificable, de las últimas 48 h, útil, no repetida): se usa el pilar `uso` (`IA EN TU NEGOCIO #N`): una tarea concreta de un negocio que se resuelve con IA y cómo hacerlo.
 - **Noticia muy grande cualquier día** (lanzamiento de un modelo o producto que usa mucha gente, de Anthropic, OpenAI, Google, Microsoft, Meta o Apple): puede reemplazar el pilar del día. Máximo 3 noticias por semana.
-- **Viernes**: si el último viernes de `historial.json` fue `negocio`, toca `marca`, y al revés.
+- **Viernes**: buscá en `historial.json` el último reel con pilar `negocio` o `marca`: si fue `negocio`, toca `marca`; si fue `marca`, toca `negocio`.
 - No repetir el mismo pilar dos días seguidos, salvo noticia muy grande.
 - `N` es el número dentro de la serie: contá en `historial.json` cuántos hay de ese pilar y sumá 1. Las series numeradas hacen que la gente siga la cuenta para ver la próxima.
 
