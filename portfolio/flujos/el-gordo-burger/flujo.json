@@ -1,0 +1,43 @@
+{
+ "sitio": "el-gordo-burger",
+ "pasos": [
+  {
+   "img": "portfolio/flujos/el-gordo-burger/01-menu.jpg",
+   "paso": "Menú: elegir las burgers"
+  },
+  {
+   "img": "portfolio/flujos/el-gordo-burger/02-antes.jpg",
+   "paso": "Tocar 'Agregar'",
+   "toque": [
+    0.759,
+    0.5
+   ]
+  },
+  {
+   "img": "portfolio/flujos/el-gordo-burger/03-agregado.jpg",
+   "paso": "Agregada (aparece la cantidad)"
+  },
+  {
+   "img": "portfolio/flujos/el-gordo-burger/04-agregado2.jpg",
+   "paso": "Segunda burger agregada"
+  },
+  {
+   "img": "portfolio/flujos/el-gordo-burger/05-carrito.jpg",
+   "paso": "Carrito con el formulario"
+  },
+  {
+   "img": "portfolio/flujos/el-gordo-burger/06-datos.jpg",
+   "paso": "Nombre, dirección y pago completos"
+  },
+  {
+   "img": "portfolio/flujos/el-gordo-burger/07-enviar.jpg",
+   "paso": "Botón 'Enviar pedido por WhatsApp'",
+   "toque": [
+    0.5,
+    0.948
+   ]
+  }
+ ],
+ "mensaje_whatsapp": "*NUEVO PEDIDO — El Gordo Burger*\n\n*Pedido:*\n• 1x Promo para 2 — $23.500\n• 1x Triple Q Criollita (burger del mes) — $13.500\n\n*TOTAL: $37.000*\n\n*Nombre:* Tob\n*Entrega en:* Av. Mate de Luna 1800\n*Pago:* Transferencia\n\n¡Gracias!",
+ "datos": "cliente de prueba (Tob, dirección inventada); menú y precios son los publicados en la página"
+}

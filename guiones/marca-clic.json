@@ -1,0 +1,183 @@
+{
+ "etiqueta": "UN CLIC",
+ "estilo": "marca",
+ "tema": "claro",
+ "fondo": "liso",
+ "acento": "#122A4D",
+ "musica": "suspenso",
+ "fuente": "",
+ "transiciones": [
+  "zoom",
+  "continuo",
+  "continuo",
+  "continuo",
+  "zoom",
+  "whip",
+  "rise",
+  "flash",
+  "zoom"
+ ],
+ "beats": [
+  {
+   "texto": "Este cursor está a punto de hacer *clic*.",
+   "escena": {
+    "tipo": "cuenta",
+    "boton": "Reservar turno",
+    "progreso": [
+     0,
+     0.3
+    ],
+    "desde": 165,
+    "hasta": 110
+   }
+  },
+  {
+   "texto": "Ya llevás *cinco segundos* mirándolo.",
+   "escena": {
+    "tipo": "cuenta",
+    "boton": "Reservar turno",
+    "progreso": [
+     0.3,
+     0.55
+    ],
+    "desde": 110,
+    "hasta": 61
+   }
+  },
+  {
+   "texto": "Un cursor que *ni siquiera existe*.",
+   "escena": {
+    "tipo": "cuenta",
+    "modo": "plano",
+    "boton": "Reservar turno",
+    "progreso": [
+     0.55,
+     0.75
+    ],
+    "desde": 61,
+    "hasta": 23,
+    "nota": "boton.tsx · 0 clics"
+   }
+  },
+  {
+   "texto": "Y seguís acá, esperando el clic.",
+   "escena": {
+    "tipo": "cuenta",
+    "boton": "Reservar turno",
+    "progreso": [
+     0.75,
+     0.9
+    ],
+    "desde": 23,
+    "hasta": 9
+   }
+  },
+  {
+   "texto": "Ahora imaginá que ese botón es el de *tu negocio*.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "celular",
+    "celular": [
+     {
+      "img": "../portfolio/capturas/el-gordo-burger/celular.jpg",
+      "toque": [
+       0.5,
+       0.539
+      ],
+      "scroll": 0
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Hago páginas donde la gente *sí* hace clic: para pedir, reservar o comprar.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "celular",
+    "celular": [
+     {
+      "img": "../portfolio/capturas/casa-pan/celular.jpg",
+      "toque": [
+       0.257,
+       0.475
+      ],
+      "scroll": 0
+     },
+     {
+      "img": "../portfolio/capturas/torneo-jogo/celular.jpg",
+      "toque": [
+       0.5,
+       0.593
+      ],
+      "scroll": 0,
+      "en": "pedir"
+     },
+     {
+      "img": "../portfolio/capturas/d12tinto/celular.jpg",
+      "toque": [
+       0.5,
+       0.81
+      ],
+      "scroll": 0,
+      "en": "reservar"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y los pedidos, las reservas y las consultas, te llegan directo.",
+   "escena": {
+    "tipo": "notificaciones",
+    "items": [
+     {
+      "logo": "whatsapp",
+      "app": "WhatsApp",
+      "titulo": "Pedido nuevo",
+      "texto": "Promo para 2 · $23.500",
+      "en": "pedidos"
+     },
+     {
+      "icono": "reloj",
+      "app": "Reservas",
+      "titulo": "Turno reservado",
+      "texto": "Viernes 21:00 · Cancha 2",
+      "en": "reservas"
+     },
+     {
+      "logo": "instagram",
+      "app": "Instagram",
+      "titulo": "Consulta nueva",
+      "texto": "¿Tenés talle M?",
+      "en": "consultas"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Entonces sí: *clic*.",
+   "escena": {
+    "tipo": "cuenta",
+    "boton": "Reservar turno",
+    "progreso": [
+     0.9,
+     1
+    ],
+    "desde": 9,
+    "hasta": 0,
+    "clic": true,
+    "en": "clic",
+    "confirmado": "Reservado"
+   }
+  },
+  {
+   "texto": "Escribime *clic*, y te muestro cómo se vería la tuya.",
+   "escena": {
+    "tipo": "cierre",
+    "sub": "Páginas que la gente toca",
+    "cta": "Escribime “CLIC”",
+    "lema": "PÁGINAS · SISTEMAS · IA"
+   }
+  }
+ ],
+ "pausa_inicial": 1.5
+}

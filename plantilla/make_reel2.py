@@ -32,9 +32,11 @@ SCENE_TYPES = {"terminal", "linea_tiempo", "prompt", "capas", "flujo", "cursores
                # v2.3
                "marcas", "impacto",
                # v2.4
-               "llamada"}
+               "llamada",
+               # v2.5 (estilo marca: sitios reales, caos, planilla, notificaciones, logo, cuenta regresiva)
+               "sitio", "carrusel", "muro", "notificaciones", "caos", "planilla", "logo", "cuenta"}
 LEAD = 0.12  # silencio al principio de la pista de voz
-NOCAPS = {"frase", "cierre", "impacto"}          # escenas que ya muestran el texto: sin subtítulos arriba
+NOCAPS = {"frase", "cierre", "impacto", "muro", "logo"}          # escenas que ya muestran el texto: sin subtítulos arriba
 PUNCT_PAUSE = {",": 0.10, ";": 0.16, ":": 0.18, ".": 0.24, "?": 0.26, "!": 0.24, "…": 0.26}
 BEAT_GAP = 0.14
 # Temas visuales: cambian fondo, superficies, tipografía y subtítulos. El cierre y la cabecera son siempre de TobDev.
@@ -54,9 +56,12 @@ THEMES = {
     "editorial": dict(bg="#15120E", surface="#1F1A14", surface2="#2A2319", surface3="#332B1F", ink="#15120E", text="#F4ECDC",
                       soft="#D9CDB4", muted="#9A8E78", border="rgba(244,236,220,.14)", line="rgba(244,236,220,.16)", capdone="#D9CDB4",
                       display='"Lora","Georgia",serif', radius="6px", mark="none", glow=".2"),
+    "estudio": dict(bg="#F4F3EF", surface="#FFFFFF", surface2="#ECEBE6", surface3="#E2E1DB", ink="#0A0E1A", text="#0E1B33",
+                    soft="#3A4763", muted="#7B859A", border="rgba(14,27,51,.10)", line="rgba(14,27,51,.12)", capdone="#3A4763",
+                    display='"Poppins","FreeSans",Arial,sans-serif', radius="22px", mark="brightness(0)", glow=".10"),
 }
-TRANSITIONS = ["zoom", "rise", "wipe", "slide", "iris", "flip", "push", "swing", "flash", "whip", "corte"]
-MUSIC_STYLES = ["tech", "suave", "urgente", "retro"]
+TRANSITIONS = ["zoom", "rise", "wipe", "slide", "iris", "flip", "push", "swing", "flash", "whip", "corte", "continuo"]
+MUSIC_STYLES = ["tech", "suave", "urgente", "retro", "suspenso"]
 IMG_MAGIC = {b"\xff\xd8\xff": "jpg", b"\x89PNG": "png", b"RIFF": "webp", b"GIF8": "gif"}
 
 
@@ -203,7 +208,7 @@ def synth_external(guion, beats, path):
     y, _ = librosa.load(path, sr=SR, mono=True)
     y, _trim_idx = librosa.effects.trim(y, top_db=40)
     guion["_trim0"] = float(_trim_idx[0]) / SR  # segundos de silencio que se cortaron al principio del archivo
-    lead = LEAD
+    lead = LEAD + float(guion.get("pausa_inicial", 0))  # `pausa_inicial`: segundos mudos antes de la voz (suspenso)
     ext = np.concatenate([np.zeros(int(lead * SR), dtype=np.float32), y.astype(np.float32)])
     # mismo nivel que la voz Kokoro para que la cadena de mezcla (volumen, compresor) funcione igual
     def rms(a):
@@ -489,8 +494,163 @@ def slide_skel(i, title):
     return f'<div class="cp-t">{esc(title)}</div><div class="cp-b">{body}</div>'
 
 
+def _imgs(v):
+    """Lista de imágenes [{img, en, toque, scroll}] desde un string, una lista de strings o una lista de dicts."""
+    if not v:
+        return []
+    if isinstance(v, (str, dict)):
+        v = [v]
+    return [x if isinstance(x, dict) else {"img": x} for x in v]
+
+
+def _wa_text(s):
+    """Texto de un mensaje con saltos de línea y *negrita* estilo WhatsApp."""
+    out = esc(s).replace("\n", "<br>")
+    return re.sub(r"\*([^*<]+)\*", r"<b>\1</b>", out)
+
+
+# geometría de los marcos de `sitio` / `carrusel` (ancho y alto visibles de la captura)
+FRAMES = {"duo-d": (960, 600), "esc-d": (1020, 638), "duo-c": (294, 664), "cel-c": (392, 876)}
+ANN_CURSOR = '<path d="M4 2l15 9-7 1.5L8.5 20z"'
+
+
+def scene_html_marca(sid, b, D):
+    e = b["escena"]; t = e["tipo"]; p = sid
+    m = e.get("_m", {})
+    if t == "sitio":
+        dl, cl = _imgs(e.get("escritorio")), _imgs(e.get("celular"))
+        lay = e.get("layout") or ("duo" if dl and cl else ("celular" if cl else "escritorio"))
+        out = ""
+        if lay in ("duo", "escritorio") and dl:
+            imgs = "".join(f'<img class="st-img" id="{p}-d{i}" src="{m.get(x["img"], "")}" alt=""/>' for i, x in enumerate(dl))
+            out += (f'<div class="st-br lay-{lay}" id="{p}-br"><div class="st-bar"><div class="cu-dots"><i></i><i></i><i></i></div>'
+                    f'<div class="st-url mono">{icon("candado", 22, "currentColor")}<span>{esc(e.get("url", ""))}</span></div></div>'
+                    f'<div class="st-shot">{imgs}</div></div>')
+        if lay in ("duo", "celular") and cl:
+            imgs = "".join(f'<img class="st-img" id="{p}-c{i}" src="{m.get(x["img"], "")}" alt=""/>' for i, x in enumerate(cl))
+            taps = "".join(f'<div class="st-tap" id="{p}-t{i}" style="left:{float(x["toque"][0]) * 100:.1f}%;top:{float(x["toque"][1]) * 100:.1f}%"><i></i></div>'
+                           for i, x in enumerate(cl) if x.get("toque"))
+            out += f'<div class="st-ph lay-{lay}" id="{p}-ph"><div class="st-scr">{imgs}{taps}</div><div class="st-isl"></div></div>'
+        chips = "".join(f'<div class="st-chip lay-{lay} c{i}" id="{p}-k{i}"><span class="st-dot"></span>{esc(x.get("texto", ""))}</div>'
+                        for i, x in enumerate((e.get("chips") or [])[:3]))
+        lab = ""
+        if e.get("nombre"):
+            rub = f'<div class="st-r mono">{esc(e["rubro"])}</div>' if e.get("rubro") else ""
+            lab = f'<div class="st-lab lay-{lay}" id="{p}-lab"><div class="st-n">{esc(e["nombre"])}</div>{rub}</div>'
+        return f'<div class="st-scene lay-{lay}">{out}{chips}{lab}</div>'
+    if t == "carrusel":
+        it = (e.get("items") or [])[:10]
+        cel = e.get("marco") == "celular"
+        imgs = "".join(f'<img class="st-img" id="{p}-i{k}" src="{m.get(x.get("img"), "")}" alt=""/>' for k, x in enumerate(it))
+        labs = "".join(f'<div class="cr-lab" id="{p}-l{k}"><b>{esc(x.get("nombre", ""))}</b><span class="mono">{esc(x.get("rubro", ""))}</span></div>'
+                       for k, x in enumerate(it))
+        nums = "".join(f'<span id="{p}-n{k}">{k + 1:02d}</span>' for k in range(len(it)))
+        urls = "".join(f'<span class="cr-u" id="{p}-u{k}">{esc(x.get("url", ""))}</span>' for k, x in enumerate(it))
+        if cel:
+            frame = f'<div class="st-ph lay-celular cr-fr" id="{p}-fr"><div class="st-scr">{imgs}</div><div class="st-isl"></div></div>'
+        else:
+            frame = (f'<div class="st-br lay-escritorio cr-fr" id="{p}-fr"><div class="st-bar"><div class="cu-dots"><i></i><i></i><i></i></div>'
+                     f'<div class="st-url mono">{icon("candado", 22, "currentColor")}<span class="cr-us">{urls}</span></div></div>'
+                     f'<div class="st-shot">{imgs}</div></div>')
+        return (f'<div class="cr-scene{" m-cel" if cel else ""}">{frame}<div class="cr-foot" id="{p}-foot"><div class="cr-labs">{labs}</div>'
+                f'<div class="cr-num mono"><span class="cr-nums">{nums}</span><em>/ {len(it):02d}</em></div></div></div>')
+    if t == "muro":
+        ims = [x if isinstance(x, str) else x.get("img") for x in (e.get("imagenes") or [])][:12]
+        cols = [[], [], []]
+        for k, x in enumerate(ims):
+            cols[k % 3].append(x)
+        colh = "".join(f'<div class="mu-col" id="{p}-c{j}">' + "".join(f'<div class="mu-it"><img src="{m.get(x, "")}" alt=""/></div>' for x in (col + col)) + "</div>"
+                       for j, col in enumerate(cols))
+        ws = []
+        for i, w in enumerate(b["words"]):
+            kw = w["kw"] is not None
+            ws.append(f'<span class="ip-w mu-w{" kw" if kw else ""}" id="{p}-w{i}">{"<span class=ip-bg id=" + p + "-b" + str(i) + "></span>" if kw else ""}<span>{esc(w["cap"])}</span></span>')
+        fs = fit(" ".join(w["cap"] for w in b["words"]), [(16, 128), (28, 106), (44, 86), (999, 70)])
+        return (f'<div class="mu-wall"><div class="mu-grid">{colh}</div></div><div class="mu-shade"></div>'
+                f'<div class="mu-txt" style="font-size:{fs}px">{" ".join(ws)}</div>')
+    if t == "notificaciones":
+        it = (e.get("items") or [])[:5]
+        cards = []
+        for i, x in enumerate(it):
+            ic = logo_badge(x["logo"], 86) if logo_key(x.get("logo")) else f'<div class="nt-ico">{icon(x.get("icono", "check"), 46, "#FFFFFF")}</div>'
+            body = f'<div class="nt-b">{esc(x["texto"])}</div>' if x.get("texto") else ""
+            cards.append(f'<div class="nt-card" id="{p}-k{i}">{ic}<div class="nt-tx"><div class="nt-top"><span class="nt-app mono">{esc(x.get("app", ""))}</span>'
+                         f'<span class="nt-ago mono">{esc(x.get("hora", "ahora"))}</span></div><div class="nt-t">{esc(x.get("titulo", ""))}</div>{body}</div></div>')
+        return f'<div class="nt-col">{"".join(cards)}</div>'
+    if t == "caos":
+        apps = (e.get("apps") or [])[:6]
+        notis = (e.get("notis") or [])[:8]
+        APOS = [(60, 40), (880, 70), (30, 400), (900, 430), (90, 790), (850, 800)]
+        NPOS = [(40, 230), (560, 170), (590, 560), (20, 600), (560, 860), (80, 950), (300, 0), (380, 990)]
+        ah = []
+        for i, x in enumerate(apps):
+            if logo_key(x.get("logo")):
+                bd = logo_badge(x["logo"], 120)
+            else:
+                bd = (f'<div class="lg-badge" style="width:120px;height:120px;border-radius:31px;background:{esc(x.get("color", "#1F7A4D"))}">'
+                      f'{icon(x.get("icono", "lista"), 64, "#FFFFFF")}</div>')
+            n = f'<span class="cz-n">{esc(str(x["n"]))}</span>' if x.get("n") else ""
+            ah.append(f'<div class="cz-app" id="{p}-a{i}" style="left:{APOS[i][0]}px;top:{APOS[i][1]}px">{bd}{n}</div>')
+        nh = []
+        for i, x in enumerate(notis):
+            v = f'<b>{esc(x["valor"])}</b>' if x.get("valor") else ""
+            nh.append(f'<div class="cz-noti t-{esc(x.get("tono", "neutro"))}" id="{p}-n{i}" style="left:{NPOS[i][0]}px;top:{NPOS[i][1]}px">'
+                      f'<span class="cz-dot"></span>{esc(x.get("texto", ""))}{v}</div>')
+        foto = m.get(e.get("foto"), "")
+        card = (f'<div class="cz-card" id="{p}-card"><img src="{foto}" alt=""/></div>' if foto
+                else f'<div class="cz-card cz-empty" id="{p}-card">{icon("usuario", 200, "var(--text-muted)")}</div>')
+        cred = f'<div class="cz-cred mono" id="{p}-cred">{esc(e["credito"])}</div>' if e.get("credito") else ""
+        return card + "".join(ah) + "".join(nh) + cred
+    if t == "planilla":
+        import random
+        rnd = random.Random(sum(map(ord, e.get("archivo", "x"))))
+        cols = "ABCDEF"
+        head = '<div class="pz-rn"></div>' + "".join(f'<div class="pz-ch mono">{c}</div>' for c in cols)
+        rows = []
+        for r_ in range(1, 15):
+            cells = f'<div class="pz-rn mono">{r_}</div>'
+            for _c in cols:
+                v = rnd.random()
+                cls = "pz-c rojo" if v < 0.09 else ("pz-c amar" if v < 0.17 else "pz-c")
+                fill = f'<i style="width:{int(28 + rnd.random() * 60)}%"></i>' if rnd.random() < 0.64 else ""
+                cells += f'<div class="{cls}">{fill}</div>'
+            rows.append(f'<div class="pz-row" id="{p}-r{r_}">{cells}</div>')
+        er = e.get("error") or {}
+        dlg = (f'<div class="pz-dlg" id="{p}-dlg"><div class="pz-dh">{icon("alerta", 46, "#D93025")}<b>{esc(er.get("titulo", "No se pudo guardar"))}</b></div>'
+               f'<div class="pz-dt">{esc(er.get("texto", ""))}</div><div class="pz-db"><span>Cancelar</span><span class="ok">Aceptar</span></div></div>')
+        return (f'<div class="pz-win" id="{p}-win"><div class="pz-top"><span class="pz-ttl">{esc(e.get("archivo", "planilla_FINAL.xlsx"))}</span>'
+                f'<span class="pz-wb"><i></i><i></i><i></i></span></div><div class="pz-fx mono"><span>fx</span><em>{esc(e.get("formula", "=SUMA(D2:D14)"))}</em></div>'
+                f'<div class="pz-grid"><div class="pz-row hd">{head}</div>{"".join(rows)}</div></div>{dlg}')
+    if t == "logo":
+        sub = f'<div class="lo-sub" id="{p}-sub">{esc(e["sub"])}</div>' if e.get("sub") else ""
+        lema = f'<div class="lo-lema mono" id="{p}-lema">{esc(e["lema"])}</div>' if e.get("lema") else ""
+        return (f'<div class="lo-bg f-{esc(e.get("fondo", "degrade"))}" id="{p}-bg"></div><div class="lo-box">'
+                f'<img class="lo-mark" id="{p}-mark" src="assets/mark-white.svg" alt=""/><div class="lo-wm" id="{p}-wm">Tob<span>Dev</span></div>{sub}{lema}</div>')
+    if t == "cuenta":
+        plano = e.get("modo") == "plano"
+        ann = f'<div class="cu2-ann mono">{esc(e.get("nota", "boton.tsx · 0 clics"))}</div>' if plano else ""
+        ok = f'<span class="cu2-ok" id="{p}-ok">{icon("check", 40, "currentColor")}{esc(e["confirmado"])}</span>' if e.get("confirmado") else ""
+        card = (f'<div class="cu2-card{" plano" if plano else ""}" id="{p}-card"><div class="cu2-sk"><i></i><i class="s"></i></div>'
+                f'<div class="cu2-btn" id="{p}-btn"><span class="cu2-bt" id="{p}-bt">{esc(e.get("boton", "Reservar"))}</span>{ok}</div>{ann}</div>')
+        fill = "none" if plano else "var(--text)"
+        stroke = "var(--acc)" if plano else "var(--bg)"
+        cann = '<span class="cu2-cann mono">cursor.svg</span>' if plano else ""
+        cur = (f'<div class="cu2-trail{" plano" if plano else ""}" id="{p}-tr"></div><div class="cu2-cur" id="{p}-cur">'
+               f'<svg width="74" height="74" viewBox="0 0 24 24">{ANN_CURSOR} fill="{fill}" stroke="{stroke}" stroke-width="1.2"/></svg>{cann}</div>')
+        import math
+        sp = "".join(f'<i class="cu2-sp" id="{p}-sp{k}" style="transform:rotate({k * 30}deg)"></i>' for k in range(12))
+        rip = f'<div class="cu2-rip" id="{p}-rip"></div><div class="cu2-sps" id="{p}-sps">{sp}</div>'
+        cnt = (f'<div class="cu2-cnt"><div class="cu2-lab mono">{esc(e.get("etiqueta", "FRAMES PARA EL CLIC"))}</div>'
+               f'<div class="cu2-num mono" id="{p}-num">{int(e.get("desde", 165)):03d}</div></div>')
+        grid = '<div class="cu2-grid"></div>' if plano else ""
+        return grid + card + rip + cur + cnt
+    return ""
+
+
 def scene_html(sid, b, D):
     e = b["escena"]; t = e["tipo"]; p = sid
+    if t in ("sitio", "carrusel", "muro", "notificaciones", "caos", "planilla", "logo", "cuenta"):
+        return scene_html_marca(sid, b, D)
     if t == "prompt":
         chars = "".join(f'<span class="ch">{esc(c) if c != " " else "&nbsp;"}</span>' if c != " " else '<span class="ch sp"> </span>'
                         for c in e.get("texto", ""))
@@ -593,10 +753,12 @@ def scene_html(sid, b, D):
                 return (f'<div class="ph-m {cls} au" id="{p}-m{i}"><span class="au-play">{icon("play", 30, "currentColor")}</span>'
                         f'<div class="au-w"><div class="au-bars">{_bars()}</div><div class="au-bars on" id="{p}-ap{i}">{_bars()}</div></div>'
                         f'<span class="au-t mono">{esc(m["audio"])}</span></div>')
-            return f'<div class="ph-m {cls}" id="{p}-m{i}">{esc(m.get("texto", ""))}</div>'
+            hora = f'<span class="ph-h mono">{esc(m["hora"])}</span>' if m.get("hora") else ""
+            return f'<div class="ph-m {cls}" id="{p}-m{i}">{_wa_text(m.get("texto", ""))}{hora}</div>'
         bub = "".join(_msg(i, m) for i, m in enumerate(msgs))
-        return (f'<div class="ph" id="{p}-ph"><div class="ph-notch"></div><div class="ph-top"><div class="ph-av">{icon(e.get("icono", "chip"), 34, "var(--ink)")}</div>'
-                f'<div><div class="ph-n">{esc(e.get("app", "Asistente"))}</div><div class="ph-s mono">en línea</div></div></div><div class="ph-body">{bub}'
+        wa = " wa" if e.get("estilo") == "whatsapp" else ""
+        return (f'<div class="ph{wa}" id="{p}-ph"><div class="ph-notch"></div><div class="ph-top"><div class="ph-av">{icon(e.get("icono", "chip"), 34, "var(--ink)")}</div>'
+                f'<div><div class="ph-n">{esc(e.get("app", "Asistente"))}</div><div class="ph-s mono">{esc(e.get("estado", "en línea"))}</div></div></div><div class="ph-body">{bub}'
                 f'<div class="ph-typing" id="{p}-ty"><i></i><i></i><i></i></div></div></div>')
     if t == "grafico":
         bars = e.get("barras", [])[:5]
@@ -769,6 +931,7 @@ def scene_html(sid, b, D):
     if t == "cierre":
         return (f'<div class="end"><img id="{p}-mark" src="assets/mark-white.svg" alt="TobDev"/>'
                 f'<div class="wm" id="{p}-wm">Tob<span class="grad">Dev</span></div>'
+                + (f'<div class="lema mono" id="{p}-lema">{esc(e["lema"])}</div>' if e.get("lema") else "") +
                 f'<div class="sub" id="{p}-sub">{esc(e.get("sub", "Sistemas e IA para tu PyME"))}</div>'
                 f'<div class="cta" id="{p}-cta">{esc(e.get("cta", "Seguí a @tobdev.ia"))}{icon("flecha", 40, "#fff")}</div>'
                 f'<div class="src mono" id="{p}-src">{esc(e.get("fuente_txt", ""))}</div></div>')
@@ -922,6 +1085,48 @@ def scene_params(b, t0, t1):
         p["cues"] = scene_cues(b, [x.get("en", x.get("nombre", "")) for x in pl], t0, t1)
         p["n"] = len(pl)
         p["hi"] = [i for i, x in enumerate(pl) if x.get("destacado")]
+    elif t == "sitio":
+        dl, cl = _imgs(e.get("escritorio")), _imgs(e.get("celular"))
+        lay = e.get("layout") or ("duo" if dl and cl else ("celular" if cl else "escritorio"))
+        dims = e.get("_dims", {})
+
+        def stack(lst, key):
+            W, V = FRAMES[key]
+            cues = scene_cues(b, [x.get("en", "") for x in lst], t0, t1)
+            out = []
+            for x, cue in zip(lst, cues):
+                w, h = dims.get(x["img"], (1, 1))
+                avail = max(0.0, h * W / w - V)
+                frac = x.get("scroll", e.get("scroll"))
+                if frac is None:
+                    frac = 0.35 if avail > V * 0.6 else 0
+                out.append({"cue": cue, "scroll": round(avail * float(frac), 1), "tap": bool(x.get("toque"))})
+            return out
+        p["lay"] = lay
+        p["desk"] = stack(dl, "duo-d" if lay == "duo" else "esc-d") if lay in ("duo", "escritorio") else []
+        p["cel"] = stack(cl, "duo-c" if lay == "duo" else "cel-c") if lay in ("duo", "celular") else []
+        p["chips"] = scene_cues(b, [x.get("en", "") for x in (e.get("chips") or [])[:3]], t0, t1)
+    elif t == "carrusel":
+        it = (e.get("items") or [])[:10]
+        p["cues"] = scene_cues(b, [x.get("en", x.get("nombre", "")) for x in it], t0, t1)
+        p["n"] = len(it)
+    elif t == "muro":
+        p["cues"] = [round(w["t0"], 3) for w in b["words"]]
+        p["kw"] = [w["kw"] is not None for w in b["words"]]
+    elif t == "notificaciones":
+        p["cues"] = scene_cues(b, [x.get("en", "") for x in (e.get("items") or [])[:5]], t0, t1)
+    elif t == "caos":
+        p["apps"] = scene_cues(b, [x.get("en", "") for x in (e.get("apps") or [])[:6]], t0, t1)
+        p["notis"] = scene_cues(b, [x.get("en", "") for x in (e.get("notis") or [])[:8]], t0, t1)
+    elif t == "planilla":
+        p["cue"] = scene_cues(b, [(e.get("error") or {}).get("en", "")], t0, t1)[0]
+    elif t == "logo":
+        pass
+    elif t == "cuenta":
+        pr = e.get("progreso") or [0, 1]
+        p.update(p0=float(pr[0]), p1=float(pr[1]), desde=int(e.get("desde", 165)), hasta=int(e.get("hasta", 0)),
+                 rojo=int(e.get("rojo", 30)), clic=bool(e.get("clic")), plano=e.get("modo") == "plano")
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0] if e.get("clic") else None
     return p
 
 
@@ -950,7 +1155,7 @@ def pick_transitions(guion, n, seed):
         tr = [t if t in TRANSITIONS else "zoom" for t in tr]
         return [tr[i % len(tr)] for i in range(n)]
     rnd = random.Random(seed)
-    pool = [t for t in TRANSITIONS if t != "corte"]
+    pool = [t for t in TRANSITIONS if t not in ("corte", "continuo")]
     out, uses = [], {}
     for i in range(n):
         cands = [t for t in pool if (not out or t != out[-1]) and uses.get(t, 0) < 2]
@@ -978,6 +1183,8 @@ def bg_html(tema):
         return ('<div class="blob" id="b3"></div><div class="blob" id="b4"></div><div id="stripes"></div><div id="floor"></div><div id="vig"></div><div id="grain"></div>')
     if tema == "editorial":
         return ('<div class="blob" id="b3"></div><div id="rules"></div><div id="vig"></div><div id="grain"></div>')
+    if tema == "estudio":
+        return ('<div class="blob" id="b1"></div><div class="blob" id="b3"></div><div id="sgrid"></div><div id="vig"></div><div id="grain"></div>')
     return ('<div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div><div class="blob" id="b4"></div>'
             '<div id="floor"></div><div id="vig"></div><div id="grain"></div>')
 
@@ -996,7 +1203,8 @@ def build_html(guion, beats, groups, D):
     fonts += '@font-face{font-family:"Lora";font-weight:400 700;font-style:normal;font-display:block;src:url("assets/fonts/Lora-Variable.ttf") format("truetype");}\n'
     lum = (0.2126 * r + 0.7152 * g + 0.0722 * bl) / 255
     on_acc = "#0A0E1A" if lum > 0.55 else "#FFFFFF"  # texto legible sobre el color de acento
-    css = theme_css(tema, acc) + f":root{{--on-acc:{on_acc}}}\n" + (CSS.replace("__ACC__", acc).replace("__ACCRGB__", f"{r},{g},{bl}"))
+    br, bg_, bb = hex_rgb(THEMES[tema]["bg"])
+    css = theme_css(tema, acc) + f":root{{--on-acc:{on_acc};--bg-rgb:{br},{bg_},{bb}}}\n" + (CSS.replace("__ACC__", acc).replace("__ACCRGB__", f"{r},{g},{bl}"))
     # escenas: la saliente termina antes de que la entrante empiece (sin solapes), ambas alrededor del arranque de la voz
     sc_html, calls = [], []
     n = len(beats)
@@ -1008,7 +1216,8 @@ def build_html(guion, beats, groups, D):
         sid = f"s{i}"
         if b["escena"]["tipo"] == "cierre":
             b["escena"].setdefault("fuente_txt", f'Fuente: {guion.get("fuente", "")}' if guion.get("fuente") else "")
-        full = " full" if b["escena"]["tipo"] == "presentador" else ""
+        _tp = b["escena"]["tipo"]
+        full = " full" if _tp in ("presentador", "logo", "muro") else (" libre" if _tp == "cuenta" else "")
         sc_html.append(f'<div id="{sid}" class="clip scene t-{b["escena"]["tipo"]}" data-start="{t0}" data-duration="{round(t1 - t0, 3)}" data-track-index="{1 + i % 2}">'
                        f'<div class="stage{full}"><div class="cam"><div class="drift">{scene_html(sid, b, D)}</div></div></div></div>')
         prm = scene_params(b, t0, t1)
@@ -1043,15 +1252,17 @@ def build_html(guion, beats, groups, D):
                        "w": [[f"w{gi}_{k}", round(w["t0"], 3), round(ws[k + 1]["t0"] if k + 1 < len(ws) else g["t1"], 3), w["kw"] is not None] for k, w in enumerate(ws)],
                        "k": [[f"k{gi}_{k}", round(w["t0"], 3)] for k, w in enumerate(ws) if w["kw"] is not None and (k == 0 or ws[k - 1]["kw"] != w["kw"])]})
     end_t = beats[-1]["t0"] if beats[-1]["escena"]["tipo"] == "cierre" else D
-    hdr = (f'<div id="hdr" class="clip hdr" data-start="0" data-duration="{round(end_t + 0.3, 3)}" data-track-index="4">'
+    marca = guion.get("estilo") == "marca"
+    hdr = "" if marca else (f'<div id="hdr" class="clip hdr" data-start="0" data-duration="{round(end_t + 0.3, 3)}" data-track-index="4">'
            f'<img src="assets/mark-white.svg" alt=""/><span class="h">tobdev.ia</span><span class="d">{esc(guion.get("etiqueta", guion.get("fecha", "")))}</span></div>')
     js = (JS.replace("__ACC__", acc).replace("__D__", str(round(D, 3)))
           .replace("__CALLS__", json.dumps(calls)).replace("__CAPS__", json.dumps(cap_js))
-          .replace("__ENDT__", str(round(end_t, 3))).replace("__SEED__", str(seed % 100000)).replace("__TEMA__", tema))
+          .replace("__ENDT__", str(round(end_t, 3))).replace("__SEED__", str(seed % 100000)).replace("__TEMA__", tema)
+          .replace("__MARCA__", "true" if marca else "false"))
     return f"""<!doctype html>
 <html lang="es" data-tema="{tema}"><head><meta charset="UTF-8"/><meta name="viewport" content="width=1080, height=1920"/>
 <script src="assets/gsap.min.js"></script><style>{fonts}{css}</style></head>
-<body class="tema-{tema}">
+<body class="tema-{tema}{" estilo-marca" if marca else ""}{" fondo-liso" if guion.get("fondo") == "liso" else ""}">
 <div id="root" data-composition-id="main" data-start="0" data-duration="{round(D, 3)}" data-width="1080" data-height="1920">
 <div id="bg" class="clip" data-start="0" data-duration="{round(D, 3)}" data-track-index="0">
   {bg_html(tema)}
@@ -1114,7 +1325,7 @@ linear-gradient(rgba(120,160,255,.05) 1px,transparent 1px),linear-gradient(90deg
 .hdr .d{margin-left:auto;font-family:var(--mono);font-weight:500;font-size:22px;letter-spacing:.18em;color:var(--text-muted)}
 .cap{position:absolute;left:60px;right:60px;top:236px;text-align:center;font-weight:700;font-size:72px;line-height:1.16;letter-spacing:-.02em;opacity:0;
 text-shadow:0 4px 24px rgba(0,0,0,.6)}
-.tema-claro .cap{text-shadow:none}
+.tema-claro .cap,.tema-estudio .cap{text-shadow:none}
 .cap .w{display:inline-block;opacity:0}
 .kw{position:relative;display:inline-block;white-space:nowrap;padding:0 .1em;margin:0 .02em}
 .kb{position:absolute;left:-8px;right:-8px;top:2px;bottom:-4px;border:3px solid var(--acc);border-radius:6px;background:rgba(var(--acc-rgb),.16);opacity:0}
@@ -1461,6 +1672,162 @@ font-size:22px;letter-spacing:.16em;color:#fff;opacity:0}
 .pl-c.hi .pl-p{color:var(--acc)}
 .pl-tag{position:absolute;left:30px;top:-22px;padding:8px 18px;border-radius:999px;background:var(--acc);color:var(--ink);font-weight:700;font-size:22px}
 #prog{position:absolute;left:0;bottom:0;width:100%;height:6px;background:var(--grad);transform-origin:0 50%}
+
+/* ===== v2.5 estilo marca ===== */
+#sgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(14,27,51,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(14,27,51,.055) 1px,transparent 1px);background-size:54px 54px;
+-webkit-mask-image:radial-gradient(ellipse at 50% 45%,#000 35%,transparent 85%);mask-image:radial-gradient(ellipse at 50% 45%,#000 35%,transparent 85%)}
+.tema-estudio #b1{background:radial-gradient(circle,rgba(91,111,228,.10) 0%,rgba(91,111,228,0) 62%)}
+.tema-estudio #vig{background:radial-gradient(ellipse at 50% 45%,transparent 60%,rgba(14,27,51,.10) 100%)}
+.tema-estudio #grain{opacity:.07;mix-blend-mode:multiply}
+.tema-estudio{--shadow:0 34px 80px -34px rgba(14,27,51,.42);--warn:#D98E00}
+.fondo-liso #lines,.fondo-liso .blob{display:none}
+.estilo-marca .cap{font-weight:700;font-size:68px;letter-spacing:-.03em;line-height:1.14}
+.estilo-marca .kb{border:none;background:var(--acc);border-radius:10px;left:-12px;right:-12px;top:6px;bottom:-2px}
+.estilo-marca .kb i{display:none}
+.estilo-marca .kw .w{position:relative}
+.lema{margin-top:22px;font-size:26px;letter-spacing:.42em;color:var(--text-muted);text-transform:uppercase}
+/* sitio: capturas reales en navegador y celular */
+.st-scene{position:absolute;inset:0;perspective:1800px;transform-style:preserve-3d}
+.st-br{position:absolute;left:30px;width:1020px;border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 50px 100px -40px rgba(0,0,0,.55),0 0 0 1px rgba(0,0,0,.08);opacity:0}
+.st-br.lay-duo{top:40px;left:54px;width:960px}.st-br.lay-duo .st-shot{width:960px;height:600px}.st-br.lay-escritorio{top:110px}
+.st-bar{height:58px;display:flex;align-items:center;gap:22px;padding:0 24px;background:#F1F1F3;border-bottom:1px solid #E1E1E6}
+.st-bar .cu-dots i{background:#D5D5DB}
+.st-url{flex:1;display:flex;align-items:center;gap:10px;height:38px;border-radius:19px;background:#fff;color:#5B6070;font-size:22px;padding:0 18px;border:1px solid #E1E1E6;position:relative;overflow:hidden}
+.st-shot{position:relative;width:1020px;height:638px;overflow:hidden;background:#eee}
+.st-img{position:absolute;left:0;top:0;width:100%;height:auto;opacity:0;display:block}
+.st-ph{position:absolute;border-radius:58px;background:#0B0B0F;padding:12px;box-shadow:0 50px 100px -30px rgba(0,0,0,.6),0 0 0 2px rgba(255,255,255,.06) inset;opacity:0}
+.st-ph.lay-duo{left:714px;top:290px;width:318px;height:688px}
+.st-ph.lay-celular{left:332px;top:0px;width:416px;height:900px;border-radius:64px}
+.st-scr{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;background:#fff}
+.st-ph.lay-celular .st-scr{border-radius:52px}
+.st-isl{position:absolute;left:50%;top:26px;width:110px;height:32px;margin-left:-55px;border-radius:16px;background:#0B0B0F}
+.st-ph.lay-celular .st-isl{width:130px;height:36px;top:30px;margin-left:-65px}
+.st-tap{position:absolute;width:0;height:0;opacity:0;z-index:5}
+.st-tap::before{content:"";position:absolute;left:-34px;top:-34px;width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.55);border:4px solid rgba(20,20,30,.55);box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.st-tap i{position:absolute;left:-46px;top:-46px;width:92px;height:92px;border-radius:50%;border:5px solid rgba(255,255,255,.95);box-shadow:0 0 0 3px rgba(20,20,30,.35)}
+.st-chip{position:absolute;display:flex;align-items:center;gap:14px;padding:16px 26px;border-radius:999px;background:#fff;color:#0E1B33;font-weight:700;font-size:30px;
+box-shadow:0 20px 44px -16px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.06);opacity:0;white-space:nowrap;z-index:6}
+.st-dot{width:16px;height:16px;border-radius:50%;background:#22C55E;box-shadow:0 0 0 6px rgba(34,197,94,.18)}
+.st-chip.lay-duo.c0{left:50px;top:590px}.st-chip.lay-duo.c1{left:330px;top:500px}.st-chip.lay-duo.c2{left:50px;top:680px}
+.st-chip.lay-escritorio.c0{left:60px;top:60px}.st-chip.lay-escritorio.c1{right:60px;top:690px}.st-chip.lay-escritorio.c2{left:60px;top:740px}
+.st-chip.lay-celular.c0{left:80px;top:170px}.st-chip.lay-celular.c1{right:80px;top:470px}.st-chip.lay-celular.c2{left:80px;top:740px}
+.st-lab{position:absolute;opacity:0}
+.st-lab.lay-duo{left:40px;top:770px;width:620px}
+.st-lab.lay-escritorio{left:40px;right:40px;top:850px;text-align:center}
+.st-lab.lay-celular{left:0;right:0;top:930px;text-align:center}
+.st-n{font-weight:700;font-size:56px;letter-spacing:-.03em;line-height:1.05}
+.st-r{margin-top:12px;font-size:24px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted)}
+/* carrusel */
+.cr-scene{position:absolute;inset:0;perspective:1800px}
+.cr-fr.st-br{top:60px}
+.cr-scene.m-cel .cr-fr{top:0;height:840px;width:388px;left:346px}
+.cr-foot{position:absolute;left:40px;right:40px;top:760px;height:120px;opacity:0}
+.cr-scene.m-cel .cr-foot{top:870px}
+.cr-labs{position:absolute;left:0;right:220px;top:0;height:120px}
+.cr-lab{position:absolute;left:0;top:0;opacity:0}
+.cr-lab b{display:block;font-size:58px;letter-spacing:-.03em;line-height:1.05}
+.cr-lab span{display:block;margin-top:10px;font-size:24px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+.cr-num{position:absolute;right:0;top:6px;font-size:40px;color:var(--text-muted);display:flex;gap:10px;align-items:baseline}
+.cr-nums{position:relative;display:inline-block;width:56px;height:48px;color:var(--text)}
+.cr-nums span{position:absolute;left:0;top:0;opacity:0}
+.cr-num em{font-style:normal;font-size:30px}
+.cr-us{position:relative;flex:1;height:30px}
+.cr-u{position:absolute;left:0;top:0;opacity:0;white-space:nowrap}
+/* muro */
+.stage.libre{clip-path:none}
+.mu-wall{position:absolute;left:-240px;right:-240px;top:-200px;bottom:-200px;perspective:1600px;overflow:hidden}
+.mu-grid{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;gap:34px;justify-content:center;transform:rotateX(32deg) rotateZ(-16deg) scale(1.08);transform-origin:50% 50%}
+.mu-col{width:460px;display:flex;flex-direction:column;gap:34px}
+.mu-it{width:460px;height:300px;border-radius:20px;overflow:hidden;background:#ddd;box-shadow:0 30px 60px -24px rgba(0,0,0,.55);flex:none}
+.mu-it img{width:100%;height:100%;object-fit:cover;object-position:50% 0}
+.mu-shade{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 52%,rgba(var(--bg-rgb),.96) 22%,rgba(var(--bg-rgb),.72) 48%,rgba(var(--bg-rgb),0) 80%)}
+.mu-txt{position:absolute;left:60px;right:60px;top:0;bottom:0;display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:0 .22em;
+font-weight:700;letter-spacing:-.04em;line-height:1.02;text-align:center}
+/* notificaciones */
+.nt-col{position:absolute;left:60px;right:60px;top:40px;display:flex;flex-direction:column;gap:24px}
+.nt-card{display:flex;gap:26px;align-items:center;padding:26px 30px;border-radius:40px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);opacity:0}
+.tema-noche .nt-card,.tema-grilla .nt-card,.tema-neon .nt-card,.tema-editorial .nt-card{background:rgba(255,255,255,.08);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.nt-ico{width:86px;height:86px;border-radius:22px;background:var(--grad);display:flex;align-items:center;justify-content:center;flex:none}
+.nt-tx{flex:1;min-width:0}
+.nt-top{display:flex;justify-content:space-between;font-size:21px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
+.nt-t{margin-top:6px;font-weight:700;font-size:36px;letter-spacing:-.02em;line-height:1.15}
+.nt-b{margin-top:4px;font-size:29px;color:var(--text-soft);line-height:1.25}
+/* caos */
+.cz-card{position:absolute;left:330px;top:170px;width:420px;height:560px;border-radius:30px;overflow:hidden;background:var(--surface2);box-shadow:var(--shadow);opacity:0}
+.cz-card img{width:100%;height:100%;object-fit:cover}
+.cz-empty{display:flex;align-items:center;justify-content:center}
+.cz-app{position:absolute;opacity:0;z-index:3}
+.cz-n{position:absolute;right:-12px;top:-12px;min-width:46px;height:46px;padding:0 10px;border-radius:23px;background:#EF3B36;color:#fff;font-weight:700;font-size:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px var(--bg)}
+.cz-noti{position:absolute;display:flex;align-items:center;gap:12px;padding:14px 22px;border-radius:18px;background:#fff;color:#0E1B33;font-weight:700;font-size:27px;white-space:nowrap;
+box-shadow:0 18px 40px -16px rgba(0,0,0,.5),0 0 0 1px rgba(0,0,0,.06);opacity:0;z-index:4}
+.cz-noti b{margin-left:6px;padding:4px 12px;border-radius:10px;background:#E8F7EE;color:#167C3E}
+.cz-noti.t-rojo b{background:#FDE8E8;color:#C62828}.cz-noti.t-amarillo b{background:#FFF4D6;color:#9A6B00}
+.cz-dot{width:14px;height:14px;border-radius:50%;background:#EF3B36;flex:none}
+.cz-noti.t-amarillo .cz-dot{background:#F2B200}.cz-noti.t-verde .cz-dot{background:#22C55E}.cz-noti.t-neutro .cz-dot{background:#5B6FE4}
+.cz-cred{position:absolute;left:330px;top:742px;width:420px;text-align:right;font-size:18px;color:var(--text-muted);letter-spacing:.06em;opacity:0}
+/* planilla */
+.pz-win{position:absolute;left:40px;right:40px;top:40px;height:880px;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 50px 100px -40px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.08);opacity:0;color:#1F2937}
+.pz-top{height:70px;background:#1D6F42;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font-family:var(--display);font-weight:700;font-size:28px}
+.pz-wb{display:flex;gap:16px}.pz-wb i{width:18px;height:18px;border-radius:4px;border:2px solid rgba(255,255,255,.7)}
+.pz-fx{height:56px;display:flex;align-items:center;gap:20px;padding:0 22px;border-bottom:1px solid #DADCE0;font-size:24px;color:#5F6368}
+.pz-fx span{font-style:italic;color:#1D6F42;font-weight:700}.pz-fx em{font-style:normal;color:#202124}
+.pz-grid{display:flex;flex-direction:column}
+.pz-row{display:grid;grid-template-columns:64px repeat(6,1fr);height:52px;border-bottom:1px solid #E3E5E8}
+.pz-row.hd{height:44px;background:#F3F4F6}
+.pz-rn,.pz-ch{display:flex;align-items:center;justify-content:center;font-size:20px;color:#6B7280;background:#F3F4F6;border-right:1px solid #E3E5E8}
+.pz-c{border-right:1px solid #E3E5E8;display:flex;align-items:center;padding:0 12px}
+.pz-c i{display:block;height:14px;border-radius:7px;background:#D1D5DB}
+.pz-c.rojo{background:#FDE2E1}.pz-c.rojo i{background:#F19C99}
+.pz-c.amar{background:#FFF3C4}.pz-c.amar i{background:#E9C86A}
+.pz-dlg{position:absolute;left:170px;width:740px;top:300px;padding:40px 44px 34px;border-radius:22px;background:#fff;color:#202124;box-shadow:0 40px 90px -20px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.08);opacity:0;z-index:5}
+.pz-dh{display:flex;align-items:center;gap:20px;font-family:var(--display);font-size:40px;letter-spacing:-.02em}
+.pz-dt{margin-top:20px;font-family:var(--display);font-size:30px;line-height:1.35;color:#3C4043}
+.pz-db{margin-top:34px;display:flex;justify-content:flex-end;gap:18px;font-family:var(--display);font-weight:700;font-size:28px}
+.pz-db span{padding:14px 30px;border-radius:12px;color:#1D6F42}.pz-db .ok{background:#1D6F42;color:#fff}
+/* logo (marca a pantalla completa) */
+.lo-bg{position:absolute;inset:0;background:var(--grad)}
+.lo-bg.f-navy{background:#122A4D}.lo-bg.f-oscuro{background:#0A0E1A}
+.lo-box{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff}
+.lo-mark{width:300px;height:300px}
+.lo-wm{margin-top:8px;font-family:"FreeSans","Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:176px;letter-spacing:-.04em;line-height:1}
+.lo-wm span{opacity:.82}
+.lo-sub{margin-top:34px;font-size:48px;font-weight:700;letter-spacing:-.01em;opacity:.95}
+.lo-lema{margin-top:26px;font-size:26px;letter-spacing:.42em;opacity:.8}
+/* cuenta regresiva */
+.cu2-grid{position:absolute;left:-60px;right:-60px;top:-470px;bottom:-470px;background-image:linear-gradient(rgba(var(--acc-rgb),.12) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--acc-rgb),.12) 1px,transparent 1px);background-size:40px 40px}
+.cu2-card{position:absolute;left:220px;top:120px;width:640px;height:420px;border-radius:34px;background:var(--surface);box-shadow:var(--shadow);border:1px solid var(--border)}
+.cu2-card.plano{background:transparent;box-shadow:none;border:3px dashed rgba(var(--acc-rgb),.75)}
+.cu2-sk{position:absolute;left:60px;top:58px;right:60px}
+.cu2-sk i{display:block;height:24px;width:62%;border-radius:12px;background:var(--line)}.cu2-sk i.s{margin-top:18px;width:40%}
+.cu2-card.plano .cu2-sk i{background:transparent;border:2px dashed rgba(var(--acc-rgb),.6)}
+.cu2-btn{position:absolute;left:130px;top:220px;width:380px;height:110px;border-radius:55px;background:var(--acc);color:var(--on-acc);display:flex;align-items:center;justify-content:center;
+font-weight:700;font-size:40px;letter-spacing:-.01em;box-shadow:0 18px 40px -14px rgba(var(--acc-rgb),.75)}
+.cu2-card.plano .cu2-btn{background:transparent;color:var(--acc);border:3px dashed var(--acc);box-shadow:none}
+.cu2-bt,.cu2-ok{position:absolute;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.cu2-ok{opacity:0}
+.cu2-ann{position:absolute;left:0;top:-52px;font-size:22px;color:var(--acc);letter-spacing:.08em}
+.cu2-cur{position:absolute;left:0;top:0;width:74px;height:74px;z-index:4}
+.cu2-cur svg{filter:drop-shadow(0 8px 14px rgba(0,0,0,.28))}
+.cu2-cann{position:absolute;left:70px;top:58px;font-size:20px;color:var(--acc);white-space:nowrap}
+.cu2-trail{position:absolute;left:0;top:405px;height:4px;width:0;border-radius:2px;background:linear-gradient(90deg,rgba(var(--acc-rgb),0),rgba(var(--acc-rgb),.55));z-index:3}
+.cu2-trail.plano{background:repeating-linear-gradient(90deg,var(--acc) 0 14px,transparent 14px 26px);opacity:.7}
+.cu2-rip{position:absolute;left:540px;top:395px;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;border:6px solid var(--acc);opacity:0;z-index:5}
+.cu2-sps{position:absolute;left:540px;top:395px;width:0;height:0;z-index:5}
+.cu2-sp{position:absolute;left:-4px;top:-4px;width:8px;height:44px;border-radius:4px;background:var(--acc);transform-origin:4px 4px;opacity:0}
+.cu2-sp::after{content:""}
+.cu2-cnt{position:absolute;left:0;right:0;top:640px;text-align:center}
+.cu2-lab{font-size:24px;letter-spacing:.32em;color:var(--text-muted)}
+.cu2-num{margin-top:10px;font-size:150px;font-weight:500;letter-spacing:-.02em;line-height:1;color:var(--text)}
+/* whatsapp en la escena celular */
+.ph.wa{background:#EFEAE2;border-color:#1B1B1F}
+.ph.wa .ph-top{margin-top:0;padding:96px 30px 24px;background:#008069;color:#fff;border-bottom:none}
+.ph.wa .ph-av{background:#DFE5E7}.ph.wa .ph-s{color:rgba(255,255,255,.85)}
+.ph.wa .ph-body{padding:26px 22px}
+.ph.wa .ph-m{font-size:26px;line-height:1.36;color:#111B21;box-shadow:0 2px 2px rgba(0,0,0,.08);position:relative;padding-bottom:40px}
+.ph.wa .ph-m.ia{background:#fff;max-width:92%}.ph.wa .ph-m.me{background:#D9FDD3;color:#111B21;max-width:92%}
+.ph.wa .ph-m b{font-weight:700}
+.ph-h{position:absolute;right:18px;bottom:10px;font-size:18px;color:#667781}
+.ph.wa .ph-typing{background:#fff}
 """
 
 JS = r"""
@@ -1483,8 +1850,8 @@ tl.fromTo("#b3",{x:0,y:0,scale:1},{x:-120,y:-180,scale:1.15,duration:D,ease:"sin
 tl.fromTo("#b4",{x:0,y:0},{x:160,y:120,duration:D,ease:"sine.inOut"},0);
 tl.fromTo("#floor",{backgroundPosition:"0px 0px"},{backgroundPosition:"0px "+Math.round(D*40)+"px",duration:D,ease:"none"},0);
 tl.fromTo("#prog",{scaleX:0},{scaleX:1,duration:D,ease:"none"},0);
-tl.fromTo("#hdr",{opacity:0},{opacity:.85,duration:.4},0.05);
-tl.fromTo("#hdr",{opacity:.85},{opacity:0,duration:.3,immediateRender:false},__ENDT__);
+if ($("#hdr")){ tl.fromTo("#hdr",{opacity:0},{opacity:.85,duration:.4},0.05);
+tl.fromTo("#hdr",{opacity:.85},{opacity:0,duration:.3,immediateRender:false},__ENDT__); }
 
 // cámara: transiciones (una por cambio de escena, elegidas por semilla), deriva y salida de cada escena
 const FULL = "inset(0% 0% 0% 0%)";
@@ -1509,6 +1876,7 @@ const TR = {
   whip:  {in:[{x:420, opacity:0, filter:"blur(22px)"}, {x:0, opacity:1, filter:"blur(0px)"}],
           out:[{x:0, opacity:1, filter:"blur(0px)"}, {x:-420, opacity:0, filter:"blur(22px)"}]},
   corte: {in:[{opacity:0}, {opacity:1}], out:[{opacity:1}, {opacity:0}]},
+  continuo: {in:[{opacity:1}, {opacity:1}], out:[{opacity:1}, {opacity:1}]},
 };
 const DRIFTS = [
   [{scale:1, y:0, x:0, rotation:0}, {scale:1.05, y:-22, x:14, rotation:.5}],
@@ -1523,11 +1891,12 @@ function CAM(c){
   const tin = TR[c.tin] || TR.zoom, tout = TR[c.tout] || TR.zoom;
   const din = c.tin === "corte" ? .08 : (c.tin === "flash" || c.tin === "whip" ? .32 : (c.tin === "wipe" || c.tin === "slide" || c.tin === "push" ? .45 : .5));
   if (!c.first && tin.fx === "flash"){ F("#flash", {opacity:0}, {opacity:.85, duration:.05, ease:"none"}, c.t0-.02); F("#flash", {opacity:.85}, {opacity:0, duration:.28, ease:"power2.out"}, c.t0+.03); }
-  if (!c.first){ F(cam, tin.in[0], Object.assign({duration:din, ease:(c.tin === "slide" || c.tin === "push") ? "power3.out" : E}, tin.in[1]), c.t0); tl.set(cam, {filter:"none", clipPath:"none"}, c.t0+din+.02); }
-  else F(cam, {scale:1.06}, {scale:1, duration:.8, ease:E}, 0);
+  const cin = c.tin === "continuo" && !c.first, cout = c.tout === "continuo" && !c.last;
+  if (!c.first && !cin){ F(cam, tin.in[0], Object.assign({duration:din, ease:(c.tin === "slide" || c.tin === "push") ? "power3.out" : E}, tin.in[1]), c.t0); tl.set(cam, {filter:"none", clipPath:"none"}, c.t0+din+.02); }
+  else if (c.first && !cout) F(cam, {scale:1.06}, {scale:1, duration:.8, ease:E}, 0);
   const d = DRIFTS[(c.k + SEED) % DRIFTS.length];
-  F(dr, d[0], Object.assign({duration:Dd, ease:"none"}, d[1]), c.t0);
-  if (!c.last){
+  if (!cin && !cout) F(dr, d[0], Object.assign({duration:Dd, ease:"none"}, d[1]), c.t0);
+  if (!c.last && !cout){
     const dout = c.tout === "corte" ? .06 : (c.tout === "flash" || c.tout === "whip" ? .22 : .34);
     F(cam, tout.out[0], Object.assign({duration:dout, ease:(c.tout === "slide" || c.tout === "push") ? "power3.in" : "power2.in"}, tout.out[1]), c.t1-dout);
   }
@@ -1847,10 +2216,132 @@ planes(c, p){
   }
   p.hi.forEach(i => F(id+"-c"+i, {y:0}, {y:-18, duration:.5, ease:E}, Math.max(cues[i], c.t0+.9)));
 },
+sitio(c, p){
+  const id = "#"+c.id, Dd = c.t1-c.t0, duo = p.lay === "duo", cel = p.lay === "celular";
+  if ($(id+"-br")){
+    F(id+"-br", {opacity:0, y:110, rotationX:16, scale:.93}, {opacity:1, y:0, rotationX:0, scale:1, duration:.7, ease:E}, c.t0+.02);
+    F(id+"-br", {rotationY:duo?-5:-4}, {rotationY:duo?3:4, duration:Dd, ease:"sine.inOut"}, c.t0);
+  }
+  if ($(id+"-ph")){
+    F(id+"-ph", {opacity:0, x:cel?0:240, y:cel?160:80, rotation:cel?0:8}, {opacity:1, x:0, y:0, rotation:cel?0:3, duration:.75, ease:E}, c.t0+(duo?.28:.02));
+    F(id+"-ph", {rotationY:cel?-12:0}, {rotationY:cel?10:-6, duration:Dd, ease:"sine.inOut"}, c.t0);
+  }
+  const stack = (pre, list) => {
+    const n = list.length; if (!n) return;
+    const cues = stagger(c, list.map(x => x.cue), .55, 0);
+    list.forEach((x, i) => {
+      const a = i ? cues[i] : c.t0, b = i < n-1 ? cues[i+1] : c.t1, el = id+"-"+pre+i;
+      if (i) F(el, {opacity:0, scale:1.03}, {opacity:1, scale:1, duration:.26, ease:"power2.out"}, a-.06); else tl.set(el, {opacity:1}, c.t0);
+      if (i < n-1) tl.set(el, {opacity:0}, b+.25);
+      if (x.scroll > 0) F(el, {y:0}, {y:-x.scroll, duration:Math.max(.6, b-a-.55), ease:"power1.inOut"}, a+.4);
+      if (x.tap){ const tt = Math.max(a+.45, b-.55);
+        F(id+"-t"+i, {opacity:0, scale:.5}, {opacity:1, scale:1, duration:.14, ease:"power2.out"}, tt);
+        F(id+"-t"+i+" i", {scale:.3, opacity:1}, {scale:1.9, opacity:0, duration:.55, ease:"power2.out"}, tt+.1);
+        F(id+"-t"+i, {opacity:1}, {opacity:0, duration:.2}, tt+.5); }
+    });
+  };
+  stack("d", p.desk); stack("c", p.cel);
+  stagger(c, p.chips, .5, 1.1).forEach((t, i) => {
+    const tt = Math.max(t, c.t0+.8);
+    F(id+"-k"+i, {opacity:0, scale:.6, y:24, z:50}, {opacity:1, scale:1, y:0, z:50, duration:.42, ease:"back.out(2)"}, tt);
+    F(id+"-k"+i+" .st-dot", {scale:1}, {scale:1.45, duration:.5, yoyo:true, repeat:Math.max(1, Math.floor((c.t1-tt)/1.0)), ease:"sine.inOut"}, tt+.4);
+  });
+  if ($(id+"-lab")) show(id+"-lab", c.t0+.55, .5, {y:30});
+},
+carrusel(c, p){
+  const id = "#"+c.id, n = p.n, cues = stagger(c, p.cues, .42, 0);
+  F(id+"-fr", {opacity:0, y:90, scale:.92}, {opacity:1, y:0, scale:1, duration:.55, ease:E}, c.t0+.02);
+  F(id+"-fr", {rotationY:-6, rotationX:5}, {rotationY:6, rotationX:0, duration:c.t1-c.t0, ease:"sine.inOut"}, c.t0);
+  show(id+"-foot", c.t0+.25, .4, {y:20});
+  for (let k=0;k<n;k++){
+    const a = k ? cues[k] : c.t0, b = k < n-1 ? cues[k+1] : c.t1, dir = k%2 ? -1 : 1;
+    if (k){ F(id+"-i"+k, {opacity:1, xPercent:100*dir}, {xPercent:0, duration:.3, ease:"power3.out"}, a-.08);
+            F(id+"-i"+(k-1), {xPercent:0}, {xPercent:-40*dir, duration:.3, ease:"power3.out"}, a-.08);
+            tl.set(id+"-i"+(k-1), {opacity:0}, a+.24); }
+    else tl.set(id+"-i0", {opacity:1}, c.t0);
+    F(id+"-i"+k, {scale:1}, {scale:1.06, duration:Math.max(.4, b-a+.3), ease:"none"}, a);
+    const lab = [id+"-l"+k, id+"-n"+k, id+"-u"+k];
+    F(lab, {opacity:0, y:22}, {opacity:1, y:0, duration:.24, ease:E}, a-.04);
+    if (k < n-1) tl.set(lab, {opacity:0}, b-.05);
+  }
+},
+muro(c, p){
+  const id = "#"+c.id, Dd = c.t1-c.t0;
+  [0,1,2].forEach(j => F(id+"-c"+j, {y:j===1?-700:0}, {y:j===1?0:-700, duration:Dd+.6, ease:"none"}, c.t0-.3));
+  const TX = getComputedStyle(document.documentElement).getPropertyValue("--text").trim(), OA = getComputedStyle(document.documentElement).getPropertyValue("--on-acc").trim();
+  p.cues.forEach((t, i) => {
+    const tt = Math.max(t-.04, c.t0+.15+i*.05);
+    F(id+"-w"+i, {opacity:0, scale:1.6, y:30}, {opacity:1, scale:1, y:0, duration:.24, ease:"power4.out"}, tt);
+    if (p.kw[i]){ F(id+"-b"+i, {scaleX:0}, {scaleX:1, duration:.25, ease:"power3.out"}, tt+.08); F(id+"-w"+i+" > span:last-child", {color:TX}, {color:OA, duration:.12}, tt+.16); }
+  });
+},
+notificaciones(c, p){
+  const id = "#"+c.id;
+  stagger(c, p.cues, .45, .5).forEach((t, i) => {
+    F(id+"-k"+i, {opacity:0, y:-70, scale:.9}, {opacity:1, y:0, scale:1, duration:.5, ease:"back.out(1.6)"}, t-.05);
+    F(id+"-k"+i, {x:0}, {x:i%2?-8:8, duration:.07, yoyo:true, repeat:1, ease:"none"}, t+.42);
+  });
+},
+caos(c, p){
+  const id = "#"+c.id;
+  F(id+"-card", {opacity:0, y:70, scale:.9, rotation:-3}, {opacity:1, y:0, scale:1, rotation:0, duration:.6, ease:E}, c.t0+.02);
+  F(id+"-card img", {scale:1.14}, {scale:1.0, duration:c.t1-c.t0, ease:"none"}, c.t0);
+  if ($(id+"-cred")) show(id+"-cred", c.t0+.9, .4, {y:0});
+  stagger(c, p.apps, .14, .3).forEach((t, i) => {
+    F(id+"-a"+i, {opacity:0, scale:.3, rotation:i%2?-28:28}, {opacity:1, scale:1, rotation:i%2?-7:7, duration:.45, ease:"back.out(2.2)"}, t);
+    F(id+"-a"+i, {y:0}, {y:i%2?-16:16, duration:1.1+i*.13, yoyo:true, repeat:Math.max(1, Math.floor((c.t1-t)/1.2)), ease:"sine.inOut"}, t+.45);
+  });
+  const nc = stagger(c, p.notis, .28, 1.0);
+  nc.forEach((t, i) => {
+    F(id+"-n"+i, {opacity:0, scale:.5, y:30}, {opacity:1, scale:1, y:0, duration:.34, ease:"back.out(2.4)"}, t);
+    F("#"+c.id+" .stage", {x:0}, {x:i%2?7:-7, duration:.05, yoyo:true, repeat:1, ease:"none"}, t+.05);
+  });
+  if (nc.length){ const tt = nc[nc.length-1]+.25; if (tt < c.t1-.4) F(id+"-card", {rotation:-1.2}, {rotation:1.2, duration:.11, yoyo:true, repeat:Math.max(1, Math.floor((c.t1-tt)/.22)), ease:"sine.inOut"}, tt); }
+},
+planilla(c, p){
+  const id = "#"+c.id, cue = Math.max(c.t0+1.0, Math.min(p.cue, c.t1-.8));
+  F(id+"-win", {opacity:0, y:90, rotationX:12, scale:.94}, {opacity:1, y:0, rotationX:0, scale:1, duration:.6, ease:E}, c.t0+.02);
+  F(id+"-win", {rotationY:-4}, {rotationY:4, duration:c.t1-c.t0, ease:"sine.inOut"}, c.t0);
+  for (let r=1;r<=14;r++) F(id+"-r"+r, {opacity:0, x:-24}, {opacity:1, x:0, duration:.25, ease:E}, c.t0+.25+r*.035);
+  F(id+"-dlg", {opacity:0, scale:.7, y:30}, {opacity:1, scale:1, y:0, duration:.35, ease:"back.out(2.2)"}, cue);
+  F(id+"-win", {x:0}, {x:12, duration:.05, yoyo:true, repeat:5, ease:"none"}, cue+.05);
+  F(id+"-win", {filter:"brightness(1)"}, {filter:"brightness(.82)", duration:.3}, cue);
+},
+logo(c, p){
+  const id = "#"+c.id;
+  F(id+"-bg", {clipPath:"circle(0% at 50% 55%)"}, {clipPath:"circle(140% at 50% 55%)", duration:.6, ease:"power3.inOut"}, c.t0);
+  F(id+"-mark", {opacity:0, scale:.5, rotation:-14}, {opacity:1, scale:1, rotation:0, duration:.6, ease:"back.out(1.8)"}, c.t0+.3);
+  show(id+"-wm", c.t0+.5, .5, {y:40});
+  if ($(id+"-sub")) show(id+"-sub", c.t0+.85, .5, {y:24});
+  if ($(id+"-lema")) F(id+"-lema", {opacity:0, letterSpacing:"0.8em"}, {opacity:.8, letterSpacing:"0.42em", duration:.8, ease:E}, c.t0+1.05);
+  F(id+"-mark", {y:0}, {y:-12, duration:1.0, yoyo:true, repeat:Math.max(1, Math.floor((c.t1-c.t0)/2)), ease:"sine.inOut"}, c.t0+.9);
+},
+cuenta(c, p){
+  const id = "#"+c.id, Dd = c.t1-c.t0, X0 = -110, X1 = 540, Y = 395;
+  const fresh = c.first || c.tin !== "continuo";
+  if (fresh){ F(id+"-card", {opacity:0, y:50, scale:.95}, {opacity:1, y:0, scale:1, duration:.6, ease:E}, c.t0+.02); }
+  const xa = X0 + (X1-X0)*p.p0, xb = X0 + (X1-X0)*p.p1, tEnd = p.clic ? Math.max(c.t0+.4, Math.min(p.cue, c.t1-.8)) : c.t1;
+  F(id+"-cur", {x:xa-12, y:Y-6}, {x:xb-12, y:Y-6, duration:Math.max(.1, tEnd-c.t0), ease:"none"}, c.t0);
+  F(id+"-tr", {width:Math.max(0, xa)}, {width:Math.max(0, xb), duration:Math.max(.1, tEnd-c.t0), ease:"none"}, c.t0);
+  const o = {v:p.desde}, num = $(id+"-num");
+  const draw = () => { const v = Math.max(0, Math.round(o.v)); num.textContent = String(v).padStart(3, "0"); num.style.color = v <= p.rojo ? "#E5484D" : ""; };
+  F(o, {v:p.desde}, {v:p.hasta, duration:Math.max(.1, tEnd-c.t0), ease:"none", onUpdate:draw}, c.t0);
+  if (p.clic){
+    F(id+"-cur", {scale:1}, {scale:.82, duration:.08, yoyo:true, repeat:1, ease:"power2.out", transformOrigin:"12px 6px"}, tEnd);
+    F(id+"-btn", {scale:1}, {scale:.93, duration:.08, yoyo:true, repeat:1, ease:"power2.out"}, tEnd);
+    F(id+"-rip", {opacity:.9, scale:.2}, {opacity:0, scale:3.2, duration:.7, ease:"power2.out"}, tEnd+.04);
+    for (let k=0;k<12;k++) F(id+"-sp"+k, {opacity:1, y:0, scaleY:.4}, {opacity:0, y:-150, scaleY:1, duration:.5, ease:"power3.out"}, tEnd+.04);
+    F("#flash", {opacity:0}, {opacity:.55, duration:.04, ease:"none"}, tEnd+.02); F("#flash", {opacity:.55}, {opacity:0, duration:.3, ease:"power2.out"}, tEnd+.06);
+    F("#"+c.id+" .stage", {x:0, y:0}, {x:9, y:-6, duration:.05, yoyo:true, repeat:3, ease:"none"}, tEnd+.03);
+    if ($(id+"-ok")){ F(id+"-bt", {opacity:1, y:0}, {opacity:0, y:-30, duration:.2}, tEnd+.25); F(id+"-ok", {opacity:0, y:30}, {opacity:1, y:0, duration:.25, ease:E}, tEnd+.3); }
+    F(o, {v:p.hasta}, {v:0, duration:.01, onUpdate:draw}, tEnd);
+  }
+},
 cierre(c, p){
   const id = "#"+c.id;
   F(id+"-mark", {scale:.8, opacity:0}, {scale:1, opacity:1, duration:.7, ease:E}, c.t0+.2);
   show(id+"-wm", c.t0+.45, .55, {y:26});
+  if ($(id+"-lema")) F(id+"-lema", {opacity:0, letterSpacing:"0.8em"}, {opacity:1, letterSpacing:"0.42em", duration:.8, ease:E}, c.t0+.7);
   show(id+"-sub", c.t0+.8, .5, {y:20});
   F(id+"-cta", {opacity:0, scale:.85}, {opacity:1, scale:1, duration:.5, ease:E}, c.t0+1.2);
   show(id+"-src", c.t0+1.5, .5, {y:10});
@@ -1858,22 +2349,30 @@ cierre(c, p){
 };
 
 const CALLS = __CALLS__;
-CALLS.forEach(c => { CAM(c); (SC[c.p.tipo] || (()=>{}))(c, c.p); if (c.p.tipo !== "presentador" && c.p.tipo !== "impacto") PUNCH(c, c.kw); });
+const NOPUNCH = {presentador:1, impacto:1, cuenta:1, logo:1, muro:1, caos:1};
+CALLS.forEach(c => { CAM(c); (SC[c.p.tipo] || (()=>{}))(c, c.p); if (!NOPUNCH[c.p.tipo]) PUNCH(c, c.kw); });
 
 // subtítulos palabra por palabra: la palabra que suena entra con un pop; las ya dichas quedan en el tono suave del tema
 const CAPS = __CAPS__;
-const DONE = getComputedStyle(document.documentElement).getPropertyValue("--cap-done").trim() || "#C6CFE0";
+const MARCA = __MARCA__;
 const TXT = getComputedStyle(document.documentElement).getPropertyValue("--text").trim() || "#FFFFFF";
+const DONE = MARCA ? TXT : (getComputedStyle(document.documentElement).getPropertyValue("--cap-done").trim() || "#C6CFE0");
+const ONACC = getComputedStyle(document.documentElement).getPropertyValue("--on-acc").trim() || "#FFFFFF";
 CAPS.forEach(g => {
   const el = "#g"+g.g;
   F(el, {opacity:0}, {opacity:1, duration:.01}, g.t0);
   F(el, {opacity:1}, {opacity:0, duration:.1}, g.t1-.1);
   const on = g.low ? "#FFFFFF" : TXT, done = g.low ? "rgba(255,255,255,.78)" : DONE;
   g.w.forEach(([w, t0, t1, kw]) => {
-    F("#"+w, {opacity:0, y:16, scale:1.08, color:on}, {opacity:1, y:0, scale:1, duration:.14, ease:"power2.out"}, t0);
-    if (!kw) F("#"+w, {color:on}, {color:done, duration:.25}, t1+.05);
+    if (MARCA && !g.low) F("#"+w, {opacity:0, y:22, filter:"blur(8px)", color:on}, {opacity:1, y:0, filter:"blur(0px)", duration:.26, ease:"power2.out"}, t0);
+    else F("#"+w, {opacity:0, y:16, scale:1.08, color:on}, {opacity:1, y:0, scale:1, duration:.14, ease:"power2.out"}, t0);
+    if (!kw && !MARCA) F("#"+w, {color:on}, {color:done, duration:.25}, t1+.05);
   });
-  g.k.forEach(([k, t]) => F("#"+k+" .kb", {opacity:0, scale:.7}, {opacity:1, scale:1, duration:.22, ease:"back.out(2)"}, t));
+  g.k.forEach(([k, t]) => {
+    if (MARCA && !g.low){ F("#"+k+" .kb", {opacity:1, scaleX:0}, {opacity:1, scaleX:1, duration:.24, ease:"power3.out", transformOrigin:"0 50%"}, t+.04);
+      F("#"+k+" .w", {color:TXT}, {color:ONACC, duration:.1}, t+.14); }
+    else F("#"+k+" .kb", {opacity:0, scale:.7}, {opacity:1, scale:1, duration:.22, ease:"back.out(2)"}, t);
+  });
 });
 
 window.__timelines = window.__timelines || {};
@@ -1889,7 +2388,7 @@ def mix_audio(work, voice, D, beats, groups, guion=None):
     vw = os.path.join(work, "voz.wav")
     sf.write(vw, voice[: int((D + 0.2) * SR)], SR)
     scenes = [b["t0"] for b in beats]
-    cards, hits = [], []
+    cards, hits, ticks = [], [], []
     for b in beats:
         e = b["escena"]
         if e["tipo"] == "impacto":
@@ -1898,6 +2397,17 @@ def mix_audio(work, voice, D, beats, groups, guion=None):
             hits += scene_cues(b, [e.get("en", "")], b["t0"], b["t1"])
         if e["tipo"] == "marcas":
             hits += scene_cues(b, [x.get("en", "") for x in (e.get("logos") or [])][:4], b["t0"], b["t1"])
+        if e["tipo"] == "cuenta":
+            if e.get("clic"):
+                hits += scene_cues(b, [e.get("en", "")], b["t0"], b["t1"])
+            tk = b["t0"] + 0.25
+            while tk < b["t1"] - 0.1:
+                ticks.append(round(tk, 3)); tk += 0.5
+        if e["tipo"] in ("notificaciones", "caos"):
+            its = e.get("items") or e.get("notis") or []
+            cards += scene_cues(b, [x.get("en", "") for x in its][:8], b["t0"], b["t1"])
+        if e["tipo"] == "planilla":
+            hits += scene_cues(b, [(e.get("error") or {}).get("en", "")], b["t0"], b["t1"])
         if e["tipo"] in ("chips", "lista", "flujo", "pasos", "planes", "calendario"):
             items = e.get("items") or e.get("entradas") or e.get("pasos") or e.get("planes") or e.get("marcas") or []
             cards += scene_cues(b, [x.get("en", x.get("texto", x.get("titulo", x.get("nombre", "")))) for x in items][:4], b["t0"], b["t1"])
@@ -1905,7 +2415,7 @@ def mix_audio(work, voice, D, beats, groups, guion=None):
     estilo = (mus.get("estilo") if isinstance(mus, dict) else mus) or "tech"
     mw = os.path.join(work, "music.wav")
     subprocess.run([sys.executable, os.path.join(HERE, "music.py"), mw, str(round(D + 0.2, 3)),
-                    json.dumps({"scenes": scenes, "cards": cards, "hits": hits, "estilo": estilo, "semilla": seed_of(guion) if guion.get("beats") else 7})],
+                    json.dumps({"scenes": scenes, "cards": cards, "hits": hits, "ticks": ticks, "estilo": estilo, "semilla": seed_of(guion) if guion.get("beats") else 7})],
                    check=True, stdout=subprocess.DEVNULL)
     out = os.path.join(work, "assets", "audio.mp3")
     fc = ("[0:a]aresample=44100,highpass=f=70,equalizer=f=3200:t=q:w=1.2:g=2.5,acompressor=threshold=-20dB:ratio=3:attack=5:release=90,volume=2.0,"
@@ -1931,7 +2441,8 @@ REQUIRED = {"terminal": "lineas", "linea_tiempo": "hitos", "chips": "items", "li
             "numero": "valor", "particulas": "valor", "comparacion": "despues", "grafico": "barras", "celular": "mensajes",
             "alerta": "filas", "reloj": "despues", "prompt": "texto", "cursores": "despues", "capas": "items",
             "codigo": "lineas", "pasos": "pasos", "anillo": "valor", "titular": "titulo", "cita": "autor", "tabla": "filas",
-            "calendario": "marcas", "planes": "planes", "presentador": "video"}
+            "calendario": "marcas", "planes": "planes", "presentador": "video", "carrusel": "items", "muro": "imagenes",
+            "notificaciones": "items"}
 ENGLISH = {"claude", "chatgpt", "openai", "google", "microsoft", "gemini", "whatsapp", "iphone", "slides", "app", "apps",
            "prompt", "prompts", "code", "copilot", "meta", "apple", "android", "windows", "excel", "powerpoint", "notion",
            "canva", "youtube", "instagram", "tiktok", "linkedin", "email", "online", "software", "startup", "freelance",
@@ -1979,6 +2490,10 @@ def validar(guion, historial=None):
         for r in refs:
             if r and not logo_key(r):
                 err.append(f"beat {i}: no hay logo para '{r}' (ver plantilla/logos/marcas.json o sumalo)")
+        if t == "sitio" and not (e.get("escritorio") or e.get("celular")):
+            err.append(f"beat {i}: la escena 'sitio' necesita 'escritorio' y/o 'celular' (capturas)")
+        if t == "caos" and not e.get("apps"):
+            warn.append(f"beat {i}: 'caos' sin 'apps': se ve vacío")
         if t == "marcas" and not e.get("logos"):
             err.append(f"beat {i}: la escena 'marcas' necesita 'logos'")
         if t == "presentador":
@@ -2102,6 +2617,61 @@ def prepare_presentador(guion, beats, work, guion_dir):
         e["_trim0"] = float(guion.get("_trim0", 0))
 
 
+def media_refs(e):
+    """Rutas de imágenes que usa una escena del estilo marca."""
+    t = e.get("tipo")
+    if t == "sitio":
+        return [x["img"] for x in _imgs(e.get("escritorio")) + _imgs(e.get("celular"))]
+    if t == "carrusel":
+        return [x.get("img") for x in (e.get("items") or []) if x.get("img")]
+    if t == "muro":
+        return [x if isinstance(x, str) else x.get("img") for x in (e.get("imagenes") or [])]
+    if t == "caos":
+        return [e["foto"]] if e.get("foto") else []
+    return []
+
+
+def prepare_media(guion, beats, work, guion_dir):
+    """Copia (o baja) las capturas y fotos de las escenas del estilo marca a assets/img; deja e['_m'] (ruta → src) y e['_dims'] (ancho, alto)."""
+    import hashlib
+    from PIL import Image
+    dst_dir = os.path.join(work, "assets", "img")
+    for i, b in enumerate(beats, 1):
+        e = b["escena"]
+        refs = media_refs(e)
+        if not refs:
+            continue
+        os.makedirs(dst_dir, exist_ok=True)
+        e["_m"], e["_dims"] = {}, {}
+        for k, ref in enumerate(refs):
+            if ref in e["_m"]:
+                continue
+            if str(ref).startswith("http"):
+                h = hashlib.sha256(ref.encode()).hexdigest()[:16]
+                src = os.path.join(EL_CACHE, "img-" + h)
+                if not os.path.exists(src):
+                    os.makedirs(EL_CACHE, exist_ok=True)
+                    r = subprocess.run(["curl", "-sSL", "--max-time", "60", "-A", "tobdev-media/1.0 (reel)", "-o", src + ".part", ref], capture_output=True, text=True)
+                    if r.returncode != 0 or not os.path.exists(src + ".part") or os.path.getsize(src + ".part") < 1000:
+                        print(f"ERROR beat {i}: no se pudo bajar {ref}")
+                        sys.exit(2)
+                    os.replace(src + ".part", src)
+            else:
+                src = ref if os.path.isabs(ref) else os.path.join(guion_dir, ref)
+            if not os.path.exists(src):
+                print(f"ERROR beat {i}: no existe la imagen {src}")
+                sys.exit(2)
+            ext = image_ext(src)
+            if not ext:
+                print(f"ERROR beat {i}: {src} no es una imagen")
+                sys.exit(2)
+            name = f"m{i}-{k}.{ext}"
+            shutil.copy(src, os.path.join(dst_dir, name))
+            e["_m"][ref] = "assets/img/" + name
+            with Image.open(src) as im:
+                e["_dims"][ref] = im.size
+
+
 def prepare_images(guion, beats, work, guion_dir):
     """Copia (o baja) las imágenes de las escenas `imagen` a assets/img y deja la ruta en escena['_src'].
     Falla con ERROR si no se pudo conseguir el archivo o no es una imagen: mejor cambiar la escena que publicar un cuadro vacío."""
@@ -2185,6 +2755,10 @@ def main():
             ip = loc if os.path.isabs(loc) else os.path.join(guion_dir, loc)
             if os.path.exists(ip):
                 raw = raw + open(ip, "rb").read()
+        for ref in media_refs(e):
+            ip = ref if os.path.isabs(str(ref)) else os.path.join(guion_dir, str(ref))
+            if os.path.exists(ip):
+                raw = raw + f"{ip}:{os.path.getsize(ip)}:{os.path.getmtime(ip)}".encode()
     key = hashlib.sha256(raw + open(os.path.abspath(__file__), "rb").read()).hexdigest()[:12]
     work = os.environ.get("REEL_WORK") or os.path.join(tempfile.gettempdir(), "reel2-" + key)
     ready = all(os.path.exists(os.path.join(work, f)) for f in ("index.html", "assets/audio.mp3", "tiempos.json")) \
@@ -2220,6 +2794,7 @@ def main():
         shutil.copy(os.path.join(HERE, "gsap.min.js"), os.path.join(work, "assets", "gsap.min.js"))
         prepare_images(guion, beats, work, guion_dir)
         prepare_presentador(guion, beats, work, guion_dir)
+        prepare_media(guion, beats, work, guion_dir)
         open(os.path.join(work, "index.html"), "w").write(build_html(guion, beats, groups, D))
         open(os.path.join(work, "meta.json"), "w").write('{"id":"reel","name":"reel"}')
         mix_audio(work, voice, D, beats, groups, guion)

@@ -178,6 +178,12 @@ STYLES = {
                           [([45, 52, 57, 60], 33, [57, 60, 64, 69]), ([50, 57, 62, 65], 38, [62, 65, 69, 74]),
                            ([48, 55, 60, 64], 36, [60, 64, 67, 72]), ([43, 50, 55, 59], 31, [55, 59, 62, 67])]],
                     arp=[0, 1, 0, 2, 0, 3, 0, 2]),
+    "suspenso": dict(bar=2.4, kick=(), hats=False, pad=0.12, pluck=0.0, decay=0.3, cutoff=1500, tr=-3,
+                    prog=[[([45, 52, 57, 60], 33, [57, 60, 64, 69]), ([45, 52, 57, 60], 33, [57, 60, 64, 69]),
+                           ([44, 51, 56, 59], 32, [56, 59, 63, 68]), ([46, 53, 58, 61], 34, [58, 61, 65, 70])],
+                          [([43, 50, 55, 58], 31, [55, 58, 62, 67]), ([43, 50, 55, 58], 31, [55, 58, 62, 67]),
+                           ([44, 51, 56, 59], 32, [56, 59, 63, 68]), ([41, 48, 53, 56], 29, [53, 56, 60, 65])]],
+                    arp=[0, 1, 2, 3, 2, 1, 2, 3]),
 }
 ST = STYLES.get(CUES.get("estilo", "tech"), STYLES["tech"])
 SEED = int(CUES.get("semilla", 7))
@@ -194,7 +200,8 @@ while t < END - 1e-6:
     for k in range(8):
         tk = t + k * BAR / 8
         if tk >= END: break
-        pluck(arp[ARP[k]] + TR, tk, gain=ST["pluck"], pan=-0.35 if k % 2 else 0.35, decay=ST["decay"])
+        if ST["pluck"] > 0:
+            pluck(arp[ARP[k]] + TR, tk, gain=ST["pluck"], pan=-0.35 if k % 2 else 0.35, decay=ST["decay"])
     for b in range(4):
         tb = t + b * BEAT
         if tb >= END: break
@@ -211,6 +218,7 @@ for s in scenes[1:]: whoosh(s - 0.15, 0.45, gain=0.07)
 chime([79, 84], 0.3, gain=0.07)
 for c in CUES.get("cards", []): pop(c, f=880, gain=0.08)
 for h in CUES.get("hits", []): thump(h, gain=0.32); tick(h + 0.005, f=2400, gain=0.05)
+for k, tk in enumerate(CUES.get("ticks", [])): tick(tk, f=1800 if k % 2 else 2300, gain=0.06)
 if len(scenes) > 2: chime([84, 88], scenes[2] + 0.1, gain=0.06)
 chime([72, 76, 79, 84], END + 0.2, gain=0.07, gap=0.11)
 pop(END + 1.5, f=820, gain=0.09)

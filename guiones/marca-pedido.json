@@ -1,0 +1,174 @@
+{
+ "etiqueta": "ASÍ LLEGA UN PEDIDO",
+ "estilo": "marca",
+ "tema": "noche",
+ "acento": "#11BFD6",
+ "musica": "retro",
+ "fuente": "",
+ "transiciones": [
+  "zoom",
+  "rise",
+  "corte",
+  "corte",
+  "corte",
+  "swing",
+  "iris",
+  "zoom"
+ ],
+ "beats": [
+  {
+   "texto": "Este pedido llegó *completo*: qué quiere, cuánto paga, y adónde va.",
+   "escena": {
+    "tipo": "celular",
+    "estilo": "whatsapp",
+    "app": "Tob",
+    "estado": "en línea",
+    "icono": "usuario",
+    "mensajes": [
+     {
+      "de": "ia",
+      "texto": "*NUEVO PEDIDO — El Gordo Burger*\n\n*Pedido:*\n• 1x Promo para 2 — $23.500\n• 1x Triple Q Criollita (burger del mes) — $13.500\n\n*TOTAL: $37.000*\n\n*Nombre:* Tob\n*Entrega en:* Av. Mate de Luna 1800\n*Pago:* Transferencia\n\n¡Gracias!",
+      "hora": "22:14",
+      "en": "pedido"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Lo armó un cliente, solo, en la página que le hice a El Gordo {Burger|búrguer}.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "celular",
+    "nombre": "El Gordo Burger",
+    "rubro": "Hamburguesería · Tucumán",
+    "celular": [
+     {
+      "img": "../portfolio/capturas/el-gordo-burger/celular.jpg",
+      "scroll": 0
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Elige las *{burgers|búrguers}*, el tamaño, y las suma al pedido.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "celular",
+    "celular": [
+     {
+      "img": "../portfolio/flujos/el-gordo-burger/01-menu.jpg"
+     },
+     {
+      "img": "../portfolio/flujos/el-gordo-burger/02-antes.jpg",
+      "toque": [
+       0.759,
+       0.5
+      ],
+      "en": "burgers"
+     },
+     {
+      "img": "../portfolio/flujos/el-gordo-burger/03-agregado.jpg",
+      "en": "suma"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Pone su nombre, la dirección, y cómo *paga*.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "celular",
+    "chips": [
+     {
+      "texto": "Total: $37.000",
+      "en": "paga"
+     }
+    ],
+    "celular": [
+     {
+      "img": "../portfolio/flujos/el-gordo-burger/05-carrito.jpg"
+     },
+     {
+      "img": "../portfolio/flujos/el-gordo-burger/06-datos.jpg",
+      "en": "dirección"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Toca *enviar*, y el pedido sale por {WhatsApp|guasap}, listo para preparar.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "celular",
+    "celular": [
+     {
+      "img": "../portfolio/flujos/el-gordo-burger/07-enviar.jpg",
+      "toque": [
+       0.5,
+       0.948
+      ]
+     }
+    ],
+    "chips": [
+     {
+      "texto": "Listo para preparar",
+      "en": "listo"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Sin audios eternos, sin cuentas mal hechas, y sin direcciones a medias.",
+   "escena": {
+    "tipo": "comparacion",
+    "antes": {
+     "titulo": "Pedido por chat",
+     "items": [
+      "Audios eternos",
+      "Total a mano",
+      "Dirección a medias"
+     ],
+     "icono": "alerta",
+     "en": "audios"
+    },
+    "despues": {
+     "titulo": "Pedido por la página",
+     "items": [
+      "Todo por escrito",
+      "Total calculado",
+      "Dirección y pago"
+     ],
+     "icono": "check",
+     "en": "direcciones"
+    }
+   }
+  },
+  {
+   "texto": "Lo mismo hice para una panadería, y se puede hacer para *tu negocio*.",
+   "escena": {
+    "tipo": "sitio",
+    "url": "casa-pan.pages.dev",
+    "nombre": "Casa Pan",
+    "rubro": "Panadería y café",
+    "escritorio": "../portfolio/capturas/casa-pan/escritorio-completa.jpg",
+    "celular": "../portfolio/capturas/casa-pan/celular.jpg",
+    "scroll": 0.3,
+    "chips": [
+     {
+      "texto": "Carrito → WhatsApp",
+      "en": "panadería"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Escribime *pedido*, y te cuento cómo sería en el tuyo.",
+   "escena": {
+    "tipo": "cierre",
+    "sub": "Páginas que venden por WhatsApp",
+    "cta": "Escribime “PEDIDO”",
+    "lema": "PÁGINAS · SISTEMAS · IA"
+   }
+  }
+ ]
+}

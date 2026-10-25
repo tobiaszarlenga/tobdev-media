@@ -10,11 +10,12 @@ Objetivo: **que la cuenta crezca en seguidores y tenga movimiento** (vistas, gua
 | Martes | `noticia` | fecha (`20 OCT`) | Lo más relevante de IA de las últimas 48 h para negocios o para gente que trabaja con IA. |
 | Miércoles | `historia` | `HISTORIA #N` | Historia y curiosidades de la tecnología y la IA que llamen la atención. |
 | Jueves | `noticia` | fecha | Igual que el martes. |
-| Viernes | `negocio` | `IA Y PLATA #N` | Cómo ganar plata o ahorrar con IA: servicios que se pueden vender, casos reales, detrás de escena de tobdev. |
+| Viernes | `negocio` / `marca` (una semana cada uno) | `IA Y PLATA #N` / `TOBDEV #N` | `negocio`: cómo ganar plata o ahorrar con IA (servicios que se pueden vender, casos reales, detrás de escena de tobdev). `marca`: video de marca con **trabajos reales de Tob** (páginas y sistemas de `portfolio/`), estilo Tricode / Motion Theory. |
 
 Reglas del calendario:
 - **Martes y jueves sin noticia buena** (verificable, de las últimas 48 h, útil, no repetida): se usa el pilar `uso` (`IA EN TU NEGOCIO #N`): una tarea concreta de un negocio que se resuelve con IA y cómo hacerlo.
 - **Noticia muy grande cualquier día** (lanzamiento de un modelo o producto que usa mucha gente, de Anthropic, OpenAI, Google, Microsoft, Meta o Apple): puede reemplazar el pilar del día. Máximo 3 noticias por semana.
+- **Viernes**: si el último viernes de `historial.json` fue `negocio`, toca `marca`, y al revés.
 - No repetir el mismo pilar dos días seguidos, salvo noticia muy grande.
 - `N` es el número dentro de la serie: contá en `historial.json` cuántos hay de ese pilar y sumá 1. Las series numeradas hacen que la gente siga la cuenta para ver la próxima.
 
@@ -31,6 +32,7 @@ Reglas del calendario:
 - **Historia**: fechas, nombres y cifras confirmados en al menos 2 fuentes serias (Wikipedia + museo, universidad, paper original o medio reconocido). Si las fuentes no coinciden, contá solo lo que coincide o elegí otro tema. Nada de anécdotas dudosas presentadas como hechos: si es una leyenda, se dice que es una leyenda.
 - **Negocio / plata**: ejemplos realistas y concretos. **Nunca prometer ingresos ni inventar cifras** ("ganá USD 5.000 por mes"). Si se da un número, tiene fuente. Nada de esquemas, cripto, apuestas ni "ingresos pasivos". Lo que se muestra se tiene que poder hacer de verdad. Los casos de tobdev son reales (pipeline de landings, este reel automático); no inventar clientes ni resultados.
 - **Noticias**: igual que siempre: fuente primaria o medio serio, leída con WebFetch, nada de rumores.
+- **Marca**: solo proyectos de `portfolio/sitios.json` y solo lo que dice su `descripcion` (qué hace la página o el sistema). Nada de resultados, ventas, clientes ni cifras que no estén ahí. Los datos que se ven en los sistemas son de demostración. No se nombra ni se critica a la competencia ni al proveedor anterior de un cliente.
 - **Uso**: tareas reales de un negocio (turnos, presupuestos, WhatsApp, reseñas, stock); las herramientas que se nombran tienen que existir y hacer eso. Sin precios salvo que estén verificados hoy.
 
 ## Lo que hace crecer la cuenta
@@ -47,6 +49,7 @@ Reglas del calendario:
   - `historia`: comentar ("¿Lo sabías? Contámelo en los comentarios").
   - `negocio`: compartir ("Mandáselo a quien siempre dice que quiere emprender").
   - `noticia` y `uso`: comentar u opinar ("¿Lo usarías en tu negocio?").
+  - `marca`: escribir una palabra clave ("Escribime SISTEMA, y vemos el tuyo"); la misma palabra va en el botón del cierre (`cta`) y en el caption. Nunca prometer trabajo gratis ("te hago una demo gratis"): sí "te cuento cómo sería" o "vemos el tuyo".
   - Nunca prometer mandar algo por mensaje directo si comentan: no hay nada que lo mande.
 - **Caption**: primera línea = el gancho (≤90 caracteres). Después 2–4 líneas que amplían (valor que no está en el video, así lo guardan). Cerrar con la pregunta o el llamado a la acción del pilar, la fuente si hay, "Seguí a @tobdev.ia" y 4–6 hashtags del pilar.
 - **Hashtags por pilar** (más 1–2 del tema):
@@ -54,3 +57,4 @@ Reglas del calendario:
   - `noticia` / `uso`: #inteligenciaartificial #IA #automatizacion #pymes
   - `historia`: #historiadelatecnologia #inteligenciaartificial #curiosidades #tecnologia
   - `negocio`: #emprender #inteligenciaartificial #negociosdigitales #freelance
+  - `marca`: #paginasweb #sistemasamedida #pymes #tucuman #emprendedores

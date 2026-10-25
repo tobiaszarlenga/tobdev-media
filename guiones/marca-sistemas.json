@@ -1,0 +1,316 @@
+{
+ "etiqueta": "SISTEMAS A MEDIDA",
+ "estilo": "marca",
+ "tema": "estudio",
+ "acento": "#5B6FE4",
+ "musica": "tech",
+ "fuente": "",
+ "transiciones": [
+  "zoom",
+  "whip",
+  "flash",
+  "rise",
+  "slide",
+  "flash",
+  "push",
+  "iris",
+  "swing",
+  "rise",
+  "zoom"
+ ],
+ "beats": [
+  {
+   "texto": "Tu negocio no debería depender de *seis apps* y una planilla rota.",
+   "escena": {
+    "tipo": "caos",
+    "foto": "../portfolio/fotos/estres-laptop.jpg",
+    "credito": "Foto: Vitaly Gariev · Unsplash",
+    "apps": [
+     {
+      "logo": "whatsapp",
+      "n": 23,
+      "en": "negocio"
+     },
+     {
+      "logo": "instagram",
+      "n": 8,
+      "en": "debería"
+     },
+     {
+      "logo": "gmail",
+      "n": 5,
+      "en": "depender"
+     },
+     {
+      "logo": "googledrive",
+      "en": "seis"
+     },
+     {
+      "logo": "mercadopago",
+      "n": 3,
+      "en": "apps"
+     },
+     {
+      "icono": "lista",
+      "color": "#1D6F42",
+      "n": "!",
+      "en": "planilla"
+     }
+    ],
+    "notis": [
+     {
+      "texto": "¿Tenés turno mañana?",
+      "en": "seis"
+     },
+     {
+      "texto": "Seña recibida",
+      "valor": "$48.900",
+      "tono": "verde",
+      "en": "apps"
+     },
+     {
+      "texto": "Pedido #214 sin anotar",
+      "tono": "rojo",
+      "en": "planilla"
+     },
+     {
+      "texto": "¿Me pasás el precio?",
+      "tono": "amarillo",
+      "en": "rota"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Pedidos por {WhatsApp|guasap}, turnos anotados a mano, y un {Excel|éxel} que se llama final, versión *siete*.",
+   "escena": {
+    "tipo": "planilla",
+    "archivo": "pedidos_FINAL_v7_ahora_si.xlsx",
+    "error": {
+     "titulo": "No se pudo guardar",
+     "texto": "pedidos_FINAL_v7_ahora_si.xlsx está abierto en otra computadora.",
+     "en": "siete"
+    }
+   }
+  },
+  {
+   "texto": "Por eso, en {TobDev|tob dev}, hago sistemas a medida.",
+   "escena": {
+    "tipo": "logo",
+    "fondo": "degrade",
+    "sub": "Sistemas y páginas a medida",
+    "lema": "PÁGINAS · SISTEMAS · IA"
+   }
+  },
+  {
+   "texto": "Como la plataforma de la Liga Infantil de Yerba Buena: {fixture|fíkstur}, resultados y *posiciones*, al día.",
+   "escena": {
+    "tipo": "sitio",
+    "url": "ligainfantilyb.com",
+    "nombre": "Liga Infantil YB",
+    "rubro": "Plataforma web · Next.js",
+    "escritorio": [
+     {
+      "img": "../portfolio/capturas/liga-infantil-yb/escritorio.jpg"
+     },
+     {
+      "img": "../portfolio/capturas/liga-infantil-yb/posiciones.jpg",
+      "en": "posiciones"
+     }
+    ],
+    "celular": "../portfolio/capturas/liga-infantil-yb/celular.jpg",
+    "chips": [
+     {
+      "texto": "Fixture por cancha",
+      "en": "fixture"
+     },
+     {
+      "texto": "Posiciones en vivo",
+      "en": "posiciones"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "O el Certificador de Obras: reemplaza el {Excel|éxel} de una constructora, y se carga *por voz*, sin señal.",
+   "escena": {
+    "tipo": "sitio",
+    "url": "certificador · obra demo",
+    "nombre": "Certificador de Obras",
+    "rubro": "Sistema · Constructoras",
+    "escritorio": [
+     {
+      "img": "../portfolio/capturas/certificador/reporte.jpg"
+     },
+     {
+      "img": "../portfolio/capturas/certificador/certificado.jpg",
+      "en": "constructora"
+     }
+    ],
+    "celular": "../portfolio/capturas/certificador/celular-medir.jpg",
+    "chips": [
+     {
+      "texto": "Carga por voz",
+      "en": "voz"
+     },
+     {
+      "texto": "Funciona sin señal",
+      "en": "señal"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "¿Y páginas *web*?",
+   "escena": {
+    "tipo": "impacto",
+    "por_linea": 2
+   }
+  },
+  {
+   "texto": "Panaderías, hamburgueserías, ortopedias, laboratorios, ropa, torneos y estudios creativos.",
+   "escena": {
+    "tipo": "carrusel",
+    "items": [
+     {
+      "img": "../portfolio/capturas/casa-pan/escritorio.jpg",
+      "nombre": "Casa Pan",
+      "rubro": "Panadería y café",
+      "url": "casa-pan.pages.dev",
+      "en": "panaderías"
+     },
+     {
+      "img": "../portfolio/capturas/el-gordo-burger/escritorio.jpg",
+      "nombre": "El Gordo Burger",
+      "rubro": "Hamburguesería",
+      "url": "el-gordo-burger.pages.dev",
+      "en": "hamburgueserías"
+     },
+     {
+      "img": "../portfolio/capturas/ferulas-tuc/escritorio.jpg",
+      "nombre": "Férulas Tuc",
+      "rubro": "Ortopedia",
+      "url": "ferulas-tuc.pages.dev",
+      "en": "ortopedias"
+     },
+     {
+      "img": "../portfolio/capturas/infinity-labs/escritorio.jpg",
+      "nombre": "Infinity Labs",
+      "rubro": "Laboratorio",
+      "url": "infinity-labs-d8r.pages.dev",
+      "en": "laboratorios"
+     },
+     {
+      "img": "../portfolio/capturas/d12tinto/escritorio.jpg",
+      "nombre": "D12tinto",
+      "rubro": "Indumentaria",
+      "url": "d12tinto-indumentaria.pages.dev",
+      "en": "ropa"
+     },
+     {
+      "img": "../portfolio/capturas/torneo-jogo/escritorio.jpg",
+      "nombre": "Torneo JOGO",
+      "rubro": "Fútbol 5",
+      "url": "torneo-jogo.pages.dev",
+      "en": "torneos"
+     },
+     {
+      "img": "../portfolio/capturas/1000-toros-rojos/escritorio.jpg",
+      "nombre": "1000 Toros Rojos",
+      "rubro": "Estudio creativo",
+      "url": "1000torosrojos-site.vercel.app",
+      "en": "estudios"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Literalmente, *cualquier rubro*.",
+   "escena": {
+    "tipo": "muro",
+    "imagenes": [
+     "../portfolio/capturas/malala/escritorio.jpg",
+     "../portfolio/capturas/liga-infantil-yb/escritorio.jpg",
+     "../portfolio/capturas/casa-pan/escritorio.jpg",
+     "../portfolio/capturas/torneo-jogo/escritorio.jpg",
+     "../portfolio/capturas/certificador/reporte.jpg",
+     "../portfolio/capturas/infinity-labs/escritorio.jpg",
+     "../portfolio/capturas/el-gordo-burger/escritorio.jpg",
+     "../portfolio/capturas/ferulas-tuc/escritorio.jpg",
+     "../portfolio/capturas/d12tinto/escritorio.jpg",
+     "../portfolio/capturas/liga-infantil-yb/posiciones.jpg",
+     "../portfolio/capturas/1000-toros-rojos/caso-escritorio.jpg",
+     "../portfolio/capturas/certificador/certificado.jpg"
+    ]
+   }
+  },
+  {
+   "texto": "Diseñado con tu estilo, y programado para *crecer* con vos.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "celular",
+    "celular": [
+     {
+      "img": "../portfolio/capturas/malala/celular-completa.jpg",
+      "scroll": 0.22
+     },
+     {
+      "img": "../portfolio/capturas/torneo-jogo/celular-completa.jpg",
+      "scroll": 0.22,
+      "en": "estilo"
+     },
+     {
+      "img": "../portfolio/capturas/infinity-labs/celular-completa.jpg",
+      "scroll": 0.25,
+      "en": "programado"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Vos ocupate de tu negocio. Del sistema, me ocupo *yo*.",
+   "escena": {
+    "tipo": "notificaciones",
+    "items": [
+     {
+      "logo": "whatsapp",
+      "app": "WhatsApp",
+      "titulo": "Pedido nuevo",
+      "texto": "2 burgers dobles · $37.000",
+      "en": "ocupate"
+     },
+     {
+      "logo": "mercadopago",
+      "app": "Mercado Pago",
+      "titulo": "Recibiste $23.500",
+      "texto": "Transferencia de Lucía M.",
+      "en": "negocio"
+     },
+     {
+      "icono": "reloj",
+      "app": "Tu sistema",
+      "titulo": "Turno confirmado",
+      "texto": "Sábado 19:00 · 4 personas",
+      "en": "sistema"
+     },
+     {
+      "icono": "check",
+      "app": "Tu sistema",
+      "titulo": "Stock actualizado",
+      "texto": "Quedan 3 buzos talle M",
+      "en": "ocupo"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Escribime *sistema*, y vemos el tuyo.",
+   "escena": {
+    "tipo": "cierre",
+    "sub": "Sistemas y páginas a medida",
+    "cta": "Escribime “SISTEMA”",
+    "lema": "PÁGINAS · SISTEMAS · IA"
+   }
+  }
+ ]
+}

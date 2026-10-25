@@ -42,6 +42,20 @@ Ideas para los días sin noticia y para cada pilar. **Antes de usar cualquiera, 
 - [ ] Cómo conseguir el primer cliente: mostrarle una demo hecha con sus datos públicos (sin usar datos privados)
 - [ ] Freelance con IA: hacer en una tarde lo que antes llevaba una semana, y qué hacer con ese tiempo
 
+## marca (viernes, una semana sí y una no) — trabajos reales de TobDev
+
+Formatos y escenas en `plantilla/ESCENAS.md` → "Estilo marca". Proyectos y lo que se puede decir de cada uno: `portfolio/sitios.json`. Rotá formato y proyecto protagonista (no el mismo dos veces seguidas).
+
+- [x] Problema → marca → trabajos: "Tu negocio no debería depender de seis apps y una planilla rota" (`guiones/marca-sistemas.json`, lo subió Tob a mano) (2026-10-25)
+- [x] Suspenso: "Este cursor está a punto de hacer clic" (`guiones/marca-clic.json`, lo subió Tob a mano) (2026-10-25)
+- [x] Caso real: "Este pedido llegó completo" con El Gordo Burger (`guiones/marca-pedido.json`, lo subió Tob a mano) (2026-10-25)
+- [ ] Caso real: Liga Infantil YB, los veedores cargan el resultado y la tabla de posiciones se arma sola (sitio duo con escritorio → posiciones)
+- [ ] Caso real: Certificador de Obras, el medidor dicta "revoque al 70" desde el celular y se carga aunque no haya señal (sitio con `celular-medir`, chips "Carga por voz" / "Funciona sin señal")
+- [ ] Suspenso: un dedo a punto de tocar "Inscribí tu equipo" (Torneo JOGO) y la inscripción que llega por WhatsApp
+- [ ] Problema → trabajos: "Tu negocio vive en Instagram y nadie encuentra el precio" → carrusel de páginas con carta, catálogo y botón de WhatsApp (Casa Pan, El Gordo Burger, D12tinto, Malala)
+- [ ] Problema → marca: "Tu obra se sigue en un Excel que solo entiende una persona" → Certificador (planilla → logo → sitio)
+- [ ] Rubros: "¿Tenés una ortopedia, un laboratorio o una marca de ropa?" → un sitio por rubro con scroll (Férulas Tuc, Infinity Labs, D12tinto)
+
 ## uso (martes o jueves sin noticia) — IA en tu negocio
 
 - [ ] Contestar consultas de WhatsApp fuera de horario
