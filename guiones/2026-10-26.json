@@ -4,10 +4,10 @@
  "acento": "#D97757",
  "tema": "grilla",
  "musica": "retro",
- "voz_archivo": "/tmp/voz-2026-10-26.mp3",
+ "voz_archivo": "/tmp/voz-2026-10-26-v2.mp3",
  "beats": [
   {
-   "texto": "Antes de que {Claude Code|clod coud} toque *una sola línea*, pedile un plan.",
+   "texto": "Antes de que {Claude Code|Claude Code} toque *una sola línea*, pedile un plan.",
    "escena": {
     "tipo": "marcas",
     "logos": [
@@ -128,7 +128,7 @@
    }
   },
   {
-   "texto": "¿Algo no te cierra? Con {Ctrl+G|control ye} abrís el plan en tu editor, y lo *corregís vos*.",
+   "texto": "¿Algo no te cierra? Con {Ctrl+G|control ge} abrís el plan en tu editor, y lo *corregís vos*.",
    "escena": {
     "tipo": "cursores",
     "personas": [
@@ -174,7 +174,7 @@
    }
   },
   {
-   "texto": "Seguí a {@tobdev.ia|tob dev} para más tips de {Claude|clod}.",
+   "texto": "Seguí a {@tobdev.ia|tob dev} para más tips de {Claude|Claude}.",
    "escena": {
     "tipo": "cierre",
     "sub": "Un tip de Claude por semana",

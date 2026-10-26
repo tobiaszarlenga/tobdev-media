@@ -222,7 +222,7 @@
    "serie": "TIP #2",
    "titulo": "Modo plan: que Claude Code arme el plan antes de tocar código",
    "url_fuente": "https://code.claude.com/docs/en/permission-modes",
-   "video": "videos/2026-10-26.mp4",
+   "video": "videos/2026-10-26-v2.mp4",
    "guion": "guiones/2026-10-26.json",
    "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=5444611427917188826",
    "acento": "#D97757",
@@ -240,7 +240,8 @@
     "frase",
     "cierre"
    ],
-   "voz": "elevenlabs"
+   "voz": "elevenlabs",
+   "nota": "Voz rehecha a pedido de Tob: Claude Code en inglés y Ctrl+G como \"control ge\"."
   }
  ]
 }

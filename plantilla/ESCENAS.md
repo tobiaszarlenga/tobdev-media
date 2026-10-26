@@ -40,7 +40,7 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 
 - `*palabras*` → palabras clave: recuadro de selección en el color de acento. **Máximo 1 o 2 por beat**; si todo está destacado, nada lo está.
 - `{Texto|pronunciación}` → se ve "Texto" y la voz dice "pronunciación". Obligatorio para siglas, marcas y palabras en inglés:
-  `{ChatGPT|chat yi pi ti}`, `{OpenAI|open ei ai}`, `{IA|inteligencia artificial}` (**nunca** `i a`: la voz de ElevenLabs lo junta y suena "i"), `{PDF|pe de efe}`, `{Google|gugol}`, `{Microsoft|maicrosoft}`, `{Gemini|yémini}`, `{Claude|clod}`, `{WhatsApp|guasap}`, `{iPhone|ai fon}`, `{app|ap}`, `{@tobdev.ia|tob dev}` (en pantalla se ve el usuario completo). Los números escribilos en palabras dentro de la pronunciación si son largos: `{2.000 millones|dos mil millones}`.
+  `{ChatGPT|chat yi pi ti}`, `{OpenAI|open ei ai}`, `{IA|inteligencia artificial}` (**nunca** `i a`: la voz de ElevenLabs lo junta y suena "i"), `{PDF|pe de efe}`, `{Google|gugol}`, `{Microsoft|maicrosoft}`, `{Gemini|yémini}`, `{Claude|Claude}` y `{Claude Code|Claude Code}` (**en inglés, tal cual**: con ElevenLabs las grafías tipo "clod coud" suenan "cloud cud"; pedido de Tob 26/10), `{WhatsApp|guasap}`, `{iPhone|ai fon}`, `{app|ap}`, atajos con letra en castellano: `{Ctrl+G|control ge}` (pedido de Tob 26/10), `{@tobdev.ia|tob dev}` (en pantalla se ve el usuario completo). Los números escribilos en palabras dentro de la pronunciación si son largos: `{2.000 millones|dos mil millones}`.
 - La puntuación manda las pausas: coma = pausa corta, punto = pausa larga. Frases cortas.
 
 ## Reglas del guion
