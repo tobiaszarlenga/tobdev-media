@@ -1,0 +1,185 @@
+{
+ "etiqueta": "TIP #2",
+ "fuente": "Documentación oficial de Claude Code",
+ "acento": "#D97757",
+ "tema": "grilla",
+ "musica": "retro",
+ "voz_archivo": "/tmp/voz-2026-10-26.mp3",
+ "beats": [
+  {
+   "texto": "Antes de que {Claude Code|clod coud} toque *una sola línea*, pedile un plan.",
+   "escena": {
+    "tipo": "marcas",
+    "logos": [
+     {
+      "marca": "claude",
+      "texto": "Claude Code",
+      "estado": "Modo plan",
+      "ok": true,
+      "en": "plan"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Se llama *modo plan*. Lee tus archivos, explora el proyecto y propone cambios, pero no edita nada.",
+   "escena": {
+    "tipo": "chips",
+    "estilo": "etiqueta",
+    "items": [
+     {
+      "texto": "Lee tus archivos",
+      "icono": "lupa",
+      "en": "Lee"
+     },
+     {
+      "texto": "Explora el proyecto",
+      "icono": "globo",
+      "en": "explora"
+     },
+     {
+      "texto": "Propone cambios",
+      "icono": "lista",
+      "en": "propone"
+     },
+     {
+      "texto": "No edita nada",
+      "icono": "candado",
+      "en": "edita"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Lo activás con {Shift+Tab|shift tab}, hasta que abajo diga {plan mode on|plan moud on}.",
+   "escena": {
+    "tipo": "terminal",
+    "titulo": "claude — ~/peluqueria-web",
+    "lineas": [
+     {
+      "tipo": "cmd",
+      "texto": "shift+tab",
+      "en": "activás"
+     },
+     {
+      "tipo": "out",
+      "texto": "accept edits on",
+      "en": "hasta"
+     },
+     {
+      "tipo": "ok",
+      "texto": "plan mode on",
+      "en": "diga"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Le pedís el cambio como siempre, por ejemplo, sumar *turnos {online|onlain}*.",
+   "escena": {
+    "tipo": "prompt",
+    "texto": "Sumá turnos online a la web de la peluquería",
+    "etiqueta": "Modo plan",
+    "estado": "Planeando…"
+   }
+  },
+  {
+   "texto": "Y te devuelve un plan, *paso por paso*, antes de tocar el código.",
+   "escena": {
+    "tipo": "pasos",
+    "pasos": [
+     {
+      "titulo": "Revisar cómo está armada la web",
+      "sub": "Solo lectura",
+      "en": "devuelve"
+     },
+     {
+      "titulo": "Crear la página de *turnos*",
+      "sub": "turnos.html",
+      "en": "paso"
+     },
+     {
+      "titulo": "Conectar el formulario",
+      "sub": "Sin tocar nada todavía",
+      "en": "antes"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Cuando está listo, elegís: aprobarlo, aprobar cada cambio a mano, o *seguir planeando*.",
+   "escena": {
+    "tipo": "lista",
+    "titulo": "¿Cómo seguimos?",
+    "items": [
+     {
+      "texto": "Sí, y usar auto mode",
+      "en": "aprobarlo"
+     },
+     {
+      "texto": "Sí, aprobar cada edición a mano",
+      "en": "cada"
+     },
+     {
+      "texto": "No, seguir planeando",
+      "en": "seguir"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "¿Algo no te cierra? Con {Ctrl+G|control ye} abrís el plan en tu editor, y lo *corregís vos*.",
+   "escena": {
+    "tipo": "cursores",
+    "personas": [
+     "Vos",
+     "Claude"
+    ],
+    "comentario": "@Claude los turnos se confirman por WhatsApp",
+    "en_comentario": "abrís",
+    "antes": "Paso 3: confirmar por mail",
+    "despues": "Paso 3: confirmar por WhatsApp",
+    "en_cambio": "corregís",
+    "aplicado": "Plan corregido"
+   }
+  },
+  {
+   "texto": "Corregir un plan es mucho más fácil que *deshacer cambios* en veinte archivos.",
+   "escena": {
+    "tipo": "comparacion",
+    "antes": {
+     "titulo": "Sin plan",
+     "items": [
+      "Cambios en 20 archivos",
+      "Revisás y deshacés"
+     ],
+     "en": "deshacer",
+     "icono": "alerta"
+    },
+    "despues": {
+     "titulo": "Con plan",
+     "items": [
+      "Corregís un texto",
+      "Recién después edita"
+     ],
+     "en": "Corregir",
+     "icono": "check"
+    }
+   }
+  },
+  {
+   "texto": "Guardalo para tu próximo *cambio grande*.",
+   "escena": {
+    "tipo": "frase"
+   }
+  },
+  {
+   "texto": "Seguí a {@tobdev.ia|tob dev} para más tips de {Claude|clod}.",
+   "escena": {
+    "tipo": "cierre",
+    "sub": "Un tip de Claude por semana",
+    "lema": "PÁGINAS · SISTEMAS · IA"
+   }
+  }
+ ]
+}
