@@ -5,7 +5,7 @@ Ideas para los días sin noticia y para cada pilar. **Antes de usar cualquiera, 
 ## tip (lunes) — Claude, Claude Code, API
 
 - [x] CLAUDE.md y `/init`: dejarle escrito cómo es tu proyecto para no explicarlo en cada sesión (2026-10-19)
-- [ ] Modo plan: que primero arme el plan y recién después toque código (verificar atajo y nombre en la doc)
+- [x] Modo plan: que primero arme el plan y recién después toque código (2026-10-26)
 - [ ] `/clear` y `/compact`: no llenar el contexto con conversaciones viejas (verificar qué hace cada uno)
 - [ ] Volver atrás: deshacer lo que hizo Claude Code en una sesión (verificar atajo o comando de rewind/checkpoints)
 - [ ] Pegarle una captura de pantalla para que entienda el error o el diseño (verificar cómo se pega en la terminal)
