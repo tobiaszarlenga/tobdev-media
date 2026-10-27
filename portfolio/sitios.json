@@ -1,5 +1,5 @@
 {
- "_nota": "Proyectos reales de Tob ya publicados en su portfolio (tobiaszarlenga.github.io). Las capturas son de páginas públicas; los sistemas, con datos de demostración. toque_cta = posición [x, y] (0 a 1) del botón principal en la captura 'celular'.",
+ "_nota": "Proyectos de Tob. Solo se usan en videos los que tienen \"permiso\": true (clientes que aceptan aparecer o proyectos propios). Las demos para prospectos llevan fotos y marca del negocio: mostrarlas sin su autorización es publicidad engañosa y usa fotos ajenas. toque_cta = posición [x, y] (0 a 1) del botón principal en la captura 'celular'.",
  "sitios": [
   {
    "id": "liga-infantil-yb",
@@ -18,7 +18,8 @@
     "Fixture por cancha",
     "Posiciones en vivo",
     "Resultados de los veedores"
-   ]
+   ],
+   "permiso": true
   },
   {
    "id": "certificador",
@@ -38,7 +39,8 @@
     "Carga por voz",
     "Funciona sin señal",
     "Certificado en PDF"
-   ]
+   ],
+   "permiso": true
   },
   {
    "id": "casa-pan",
@@ -60,7 +62,9 @@
    ],
    "chips": [
     "Carrito → WhatsApp"
-   ]
+   ],
+   "permiso": false,
+   "permiso_nota": "No es cliente de Tob: demo hecha para mostrarle. No usar en videos hasta tener su autorización por escrito."
   },
   {
    "id": "el-gordo-burger",
@@ -80,7 +84,9 @@
     0.5,
     0.539
    ],
-   "flujo": "portfolio/flujos/el-gordo-burger"
+   "flujo": "portfolio/flujos/el-gordo-burger",
+   "permiso": false,
+   "permiso_nota": "No es cliente de Tob: demo hecha para mostrarle. No usar en videos hasta tener su autorización por escrito."
   },
   {
    "id": "ferulas-tuc",
@@ -99,7 +105,9 @@
    "toque_cta": [
     0.5,
     0.557
-   ]
+   ],
+   "permiso": null,
+   "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
   },
   {
    "id": "infinity-labs",
@@ -118,7 +126,9 @@
    "toque_cta": [
     0.5,
     0.677
-   ]
+   ],
+   "permiso": null,
+   "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
   },
   {
    "id": "malala",
@@ -133,7 +143,9 @@
     "escritorio_completa": "portfolio/capturas/malala/escritorio-completa.jpg",
     "celular": "portfolio/capturas/malala/celular.jpg",
     "celular_completa": "portfolio/capturas/malala/celular-completa.jpg"
-   }
+   },
+   "permiso": null,
+   "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
   },
   {
    "id": "torneo-jogo",
@@ -152,7 +164,9 @@
    "toque_cta": [
     0.5,
     0.593
-   ]
+   ],
+   "permiso": null,
+   "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
   },
   {
    "id": "d12tinto",
@@ -171,7 +185,9 @@
    "toque_cta": [
     0.5,
     0.81
-   ]
+   ],
+   "permiso": null,
+   "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
   },
   {
    "id": "1000-toros-rojos",
@@ -188,7 +204,9 @@
     "celular_completa": "portfolio/capturas/1000-toros-rojos/celular-completa.jpg",
     "caso_escritorio": "portfolio/capturas/1000-toros-rojos/caso-escritorio.jpg"
    },
-   "nota": "las capturas salieron sin los videos e imágenes del CDN (bloqueado desde la nube): usar la portada tipográfica y el caso"
+   "nota": "las capturas salieron sin los videos e imágenes del CDN (bloqueado desde la nube): usar la portada tipográfica y el caso",
+   "permiso": null,
+   "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
   }
  ],
  "fotos": [

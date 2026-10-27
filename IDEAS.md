@@ -44,7 +44,7 @@ Ideas para los días sin noticia y para cada pilar. **Antes de usar cualquiera, 
 
 ## marca (viernes, una semana sí y una no) — trabajos reales de TobDev
 
-Formatos y escenas en `plantilla/ESCENAS.md` → "Estilo marca". Proyectos y lo que se puede decir de cada uno: `portfolio/sitios.json`. Rotá formato y proyecto protagonista (no el mismo dos veces seguidas).
+Formatos y escenas en `plantilla/ESCENAS.md` → "Estilo marca". Proyectos y lo que se puede decir de cada uno: `portfolio/sitios.json`. Rotá formato y proyecto protagonista (no el mismo dos veces seguidas). **Solo proyectos con `"permiso": true` en `sitios.json`**: si una idea nombra uno que no lo tiene, salteala.
 
 - [x] Problema → marca → trabajos: "Tu negocio no debería depender de seis apps y una planilla rota" (`guiones/marca-sistemas.json`, lo subió Tob a mano) (2026-10-25)
 - [x] Suspenso: "Este cursor está a punto de hacer clic" (`guiones/marca-clic.json`, lo subió Tob a mano) (2026-10-25)

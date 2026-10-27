@@ -1,5 +1,7 @@
 # Portfolio de TobDev para los videos
 
+**Antes de usar un proyecto, mirá `permiso` en `sitios.json`: solo `true` puede aparecer en un video.** Casa Pan y El Gordo Burger no son clientes (son demos): no se usan sin su autorización por escrito.
+
 Capturas reales de proyectos de Tob para los videos del pilar `marca` (y para cualquier reel que muestre su trabajo). Todo lo que hay acá ya está publicado en su portfolio (tobiaszarlenga.github.io): páginas públicas y sistemas con **datos de demostración**. Nada de datos privados de clientes.
 
 - `sitios.json`: un registro por proyecto, con nombre, rubro, ubicación, URL, tipo (`pagina`, `sistema` o `plataforma`), **descripción** (lo único que se puede afirmar en el video: no inventar resultados, cifras ni clientes), las capturas y, en las páginas, `toque_cta`: posición `[x, y]` (0 a 1) del botón principal en la captura `celular`, para animar un toque.
