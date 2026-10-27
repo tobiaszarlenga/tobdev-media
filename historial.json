@@ -242,6 +242,33 @@
    ],
    "voz": "elevenlabs",
    "nota": "Voz rehecha a pedido de Tob: Claude Code en inglés y Ctrl+G como \"control ge\"."
+  },
+  {
+   "fecha": "2026-10-27",
+   "pilar": "noticia",
+   "serie": "27 OCT",
+   "titulo": "Anthropic presenta el S-1 para salir a la bolsa (Nasdaq: ANT)",
+   "url_fuente": "https://www.anthropic.com/news/s1-sec",
+   "video": "videos/2026-10-27.mp4",
+   "guion": "guiones/2026-10-27.json",
+   "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=6386732309767997632",
+   "acento": "#F59E0B",
+   "tema": "noche",
+   "musica": "urgente",
+   "escenas": [
+    "impacto",
+    "calendario",
+    "titular",
+    "alerta",
+    "chips",
+    "cita",
+    "frase",
+    "prompt",
+    "capas",
+    "flujo",
+    "cierre"
+   ],
+   "voz": "elevenlabs"
   }
  ]
 }
