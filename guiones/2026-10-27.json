@@ -1,0 +1,159 @@
+{
+ "etiqueta": "27 OCT",
+ "fuente": "Anthropic · Newsroom",
+ "acento": "#F59E0B",
+ "tema": "noche",
+ "musica": "urgente",
+ "voz_archivo": "/tmp/voz-2026-10-27.mp3",
+ "beats": [
+  {
+   "texto": "La empresa que hace {Claude|Claude} quiere salir a la *bolsa*.",
+   "escena": {
+    "tipo": "impacto",
+    "logo": "anthropic",
+    "por_linea": 2
+   }
+  },
+  {
+   "texto": "El lunes veintiséis de octubre, {Anthropic|Anthropic} presentó el pedido formal ante la {SEC|ese e ce}, el regulador de la bolsa en Estados Unidos.",
+   "escena": {
+    "tipo": "calendario",
+    "mes": "Octubre",
+    "anio": 2026,
+    "inicio": 3,
+    "cantidad": 31,
+    "marcas": [
+     {
+      "dia": 26,
+      "texto": "Presenta el S-1",
+      "en": "veintiséis"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Es el formulario {S-1|ese uno}, el primer paso para su *oferta pública inicial*.",
+   "escena": {
+    "tipo": "titular",
+    "titulo": "Anthropic presenta el *S-1* para salir a la bolsa",
+    "bajada": "Oferta pública inicial de acciones Clase A",
+    "medio": "Anthropic · Newsroom",
+    "fecha": "26 OCT 2026",
+    "logo": "anthropic",
+    "en": "oferta"
+   }
+  },
+  {
+   "texto": "Va a cotizar en {Nasdaq|násdac} con el símbolo {ANT|a ene te}. Lo que todavía no definió: cuántas acciones, ni a qué precio.",
+   "escena": {
+    "tipo": "alerta",
+    "titulo": "Lo que dice el anuncio",
+    "filas": [
+     [
+      "Bolsa",
+      "Nasdaq"
+     ],
+     [
+      "Símbolo",
+      "ANT"
+     ],
+     [
+      "Acciones",
+      "Sin definir"
+     ],
+     [
+      "Precio",
+      "Sin definir"
+     ]
+    ],
+    "marcar": 3,
+    "en": "todavía"
+   }
+  },
+  {
+   "texto": "Los bancos que figuran en la operación son {Goldman Sachs|góldman saks} y {Morgan Stanley|mórgan stánli}.",
+   "escena": {
+    "tipo": "chips",
+    "estilo": "etiqueta",
+    "items": [
+     {
+      "texto": "Goldman Sachs",
+      "icono": "dinero",
+      "en": "góldman"
+     },
+     {
+      "texto": "Morgan Stanley",
+      "icono": "dinero",
+      "en": "mórgan"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y se presenta como corporación de *beneficio público*, con esta misión.",
+   "escena": {
+    "tipo": "cita",
+    "texto": "Que el mundo atraviese de forma segura la transición hacia la IA transformadora.",
+    "autor": "Anthropic, PBC",
+    "cargo": "Misión declarada · Anuncio del 26/10/2026",
+    "en": "misión",
+    "en_autor": "misión"
+   }
+  },
+  {
+   "texto": "¿Y para tu negocio?",
+   "escena": {
+    "tipo": "frase"
+   }
+  },
+  {
+   "texto": "Si usás {Claude|Claude} para trabajar, el anuncio no habla de ningún cambio en el servicio.",
+   "escena": {
+    "tipo": "prompt",
+    "texto": "¿Cambia algo si uso Claude en mi negocio?",
+    "etiqueta": "Tu pregunta",
+    "estado": "El anuncio no menciona cambios"
+   }
+  },
+  {
+   "texto": "Lo que sí: si cotiza, va a tener que publicar sus *números* todos los trimestres.",
+   "escena": {
+    "tipo": "capas",
+    "items": [
+     "Informe trimestral",
+     "Informe anual",
+     "Riesgos del negocio",
+     "Resultados"
+    ],
+    "en": "números"
+   }
+  },
+  {
+   "texto": "Más información pública para elegir con qué proveedor de {IA|inteligencia artificial} trabajar. ¿Lo tendrías en cuenta? Contámelo en los comentarios.",
+   "escena": {
+    "tipo": "flujo",
+    "entradas": [
+     {
+      "texto": "Informes públicos",
+      "icono": "archivo",
+      "en": "información"
+     },
+     {
+      "texto": "Riesgos declarados",
+      "icono": "alerta",
+      "en": "pública"
+     }
+    ],
+    "salida": "Elegir proveedor de IA",
+    "en": "elegir"
+   }
+  },
+  {
+   "texto": "Seguí a {@tobdev.ia|tob dev} para entender la {IA|inteligencia artificial} sin vueltas.",
+   "escena": {
+    "tipo": "cierre",
+    "sub": "Noticias de IA para tu negocio"
+   }
+  }
+ ]
+}
