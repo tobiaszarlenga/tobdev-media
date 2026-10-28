@@ -269,6 +269,33 @@
     "cierre"
    ],
    "voz": "elevenlabs"
+  },
+  {
+   "fecha": "2026-10-28",
+   "pilar": "historia",
+   "serie": "HISTORIA #2",
+   "titulo": "1947: el primer bug registrado fue una polilla real en el Harvard Mark II",
+   "url_fuente": "https://americanhistory.si.edu/collections/object/nmah_334663",
+   "video": "videos/2026-10-28.mp4",
+   "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=2149506119838353257",
+   "acento": "#FF6B6B",
+   "tema": "editorial",
+   "musica": "suave",
+   "escenas": [
+    "titular",
+    "calendario",
+    "alerta",
+    "capas",
+    "impacto",
+    "codigo",
+    "cita",
+    "linea_tiempo",
+    "comparacion",
+    "navegador",
+    "frase",
+    "cierre"
+   ],
+   "voz": "elevenlabs"
   }
  ]
 }
