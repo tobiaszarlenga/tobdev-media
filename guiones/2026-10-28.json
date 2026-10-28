@@ -1,0 +1,182 @@
+{
+  "etiqueta": "HISTORIA #2",
+  "fuente": "Smithsonian · Computer History Museum",
+  "acento": "#FF6B6B",
+  "tema": "editorial",
+  "musica": "suave",
+  "voz_archivo": "/tmp/voz-2026-10-28.mp3",
+  "beats": [
+    {
+      "texto": "El primer *{bug|bag}* registrado en una computadora fue un *bicho* de verdad.",
+      "escena": {
+        "tipo": "titular",
+        "titulo": "Encuentran un *insecto* dentro de una computadora",
+        "bajada": "Pasó en Harvard, y quedó anotado en el cuaderno de la máquina",
+        "medio": "Historia de la computación",
+        "fecha": "9 SEP 1947",
+        "etiqueta": "1947",
+        "en": "bicho"
+      }
+    },
+    {
+      "texto": "{9 de septiembre de 1947|nueve de septiembre de mil novecientos cuarenta y siete}.",
+      "escena": {
+        "tipo": "calendario",
+        "mes": "Septiembre",
+        "anio": 1947,
+        "inicio": 0,
+        "cantidad": 30,
+        "marcas": [
+          {
+            "dia": 9,
+            "texto": "El bug",
+            "en": "septiembre"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "La computadora {Mark II|mark tu}, en {Harvard|járvard}, tiene una *falla*.",
+      "escena": {
+        "tipo": "alerta",
+        "titulo": "Mark II · Harvard",
+        "filas": [
+          [
+            "Estado",
+            "Falla"
+          ],
+          [
+            "Fecha",
+            "09/09/1947"
+          ],
+          [
+            "Causa",
+            "Desconocida"
+          ]
+        ],
+        "marcar": 0,
+        "en": "falla"
+      }
+    },
+    {
+      "texto": "Revisan la máquina por dentro, y encuentran al culpable.",
+      "escena": {
+        "tipo": "capas",
+        "items": [
+          "Panel A",
+          "Panel B",
+          "Panel C",
+          "Panel F"
+        ],
+        "en": "culpable"
+      }
+    },
+    {
+      "texto": "Una *polilla* de verdad.",
+      "escena": {
+        "tipo": "impacto",
+        "por_linea": 2
+      }
+    },
+    {
+      "texto": "La pegan con cinta en el cuaderno de registro, y anotan:",
+      "escena": {
+        "tipo": "codigo",
+        "archivo": "registro_mark_ii_1947.txt",
+        "lineas": [
+          {
+            "texto": "# Cuaderno de operación · Mark II",
+            "en": "pegan"
+          },
+          {
+            "texto": "9/9/1947",
+            "en": "cinta"
+          },
+          {
+            "texto": "[ polilla pegada con cinta ]",
+            "en": "cuaderno"
+          },
+          {
+            "texto": "First actual case of bug being found.",
+            "en": "anotan",
+            "marcar": true
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Primer caso *real* de un {bug|bag} encontrado.",
+      "escena": {
+        "tipo": "cita",
+        "texto": "First actual case of bug being found.",
+        "autor": "Cuaderno del Mark II",
+        "cargo": "Harvard · 1947"
+      }
+    },
+    {
+      "texto": "Pero la palabra no nació ahí: {Edison|édison} ya les decía {bugs|bags} a las fallas, en el siglo diecinueve.",
+      "escena": {
+        "tipo": "linea_tiempo",
+        "hitos": [
+          {
+            "anio": "1800s",
+            "texto": "Edison llama *bugs* a las fallas",
+            "en": "Edison"
+          },
+          {
+            "anio": "1947",
+            "texto": "Aparece un *bug* de verdad: la polilla",
+            "en": "fallas"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Por eso la nota dice *real*: esta vez, el {bug|bag} era un insecto.",
+      "escena": {
+        "tipo": "comparacion",
+        "antes": {
+          "titulo": "Bug, antes de 1947",
+          "items": [
+            "Una falla en la máquina"
+          ],
+          "icono": "alerta"
+        },
+        "despues": {
+          "titulo": "Bug, 9/9/1947",
+          "items": [
+            "Un insecto de verdad"
+          ],
+          "icono": "lupa",
+          "en": "insecto"
+        }
+      }
+    },
+    {
+      "texto": "Ese cuaderno, con la polilla pegada, hoy está en el museo {Smithsonian|smitsonian}.",
+      "escena": {
+        "tipo": "navegador",
+        "url": "museo.ejemplo/coleccion/cuaderno-1947",
+        "pestanas": [
+          "Colección",
+          "Cuaderno con el bug"
+        ],
+        "titulo": "Cuaderno con el bug · 1947",
+        "en": "museo"
+      }
+    },
+    {
+      "texto": "¿Lo sabías? Contámelo en los comentarios.",
+      "escena": {
+        "tipo": "frase"
+      }
+    },
+    {
+      "texto": "Seguí a {@tobdev.ia|tob dev} para más historias de la tecnología.",
+      "escena": {
+        "tipo": "cierre",
+        "sub": "Historia de la tecnología"
+      }
+    }
+  ]
+}
