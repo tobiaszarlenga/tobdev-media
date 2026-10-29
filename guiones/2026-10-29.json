@@ -1,0 +1,236 @@
+{
+ "etiqueta": "29 OCT",
+ "fuente": "Apple Newsroom · 27/10/2026",
+ "acento": "#0071E3",
+ "tema": "claro",
+ "musica": "tech",
+ "transiciones": [
+  "flash",
+  "whip",
+  "push",
+  "zoom",
+  "slide",
+  "whip",
+  "iris",
+  "flash",
+  "rise",
+  "whip",
+  "zoom"
+ ],
+ "beats": [
+  {
+   "texto": "{Apple|ápol} va a dejar que *agentes de afuera* editen tus documentos.",
+   "escena": {
+    "tipo": "impacto",
+    "logo": "apple"
+   }
+  },
+  {
+   "texto": "Lo anunció el veintisiete de octubre: {Keynote|kínout}, {Pages|péiyes} y {Numbers|námbers} suman un *asistente*.",
+   "escena": {
+    "tipo": "titular",
+    "logo": "apple",
+    "titulo": "Keynote, Pages y Numbers suman un *asistente de IA*",
+    "bajada": "Y abren las apps a agentes externos con MCP",
+    "medio": "Apple Newsroom",
+    "fecha": "27 OCT 2026",
+    "etiqueta": "NOTICIA",
+    "en": "asistente"
+   }
+  },
+  {
+   "texto": "Está hecho con modelos de {Apple|ápol} y de {OpenAI|open ei ai}.",
+   "escena": {
+    "tipo": "marcas",
+    "union": "y",
+    "logos": [
+     {
+      "marca": "apple",
+      "texto": "Apple",
+      "en": "Apple"
+     },
+     {
+      "marca": "openai",
+      "texto": "OpenAI",
+      "en": "OpenAI"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Redacta textos, diseña y anima diapositivas, y *ordena tus datos*.",
+   "escena": {
+    "tipo": "tabla",
+    "titulo": "Qué hace en cada app",
+    "columnas": [
+     "App",
+     "El asistente"
+    ],
+    "filas": [
+     [
+      "Pages",
+      "Redacta y reordena textos"
+     ],
+     [
+      "Keynote",
+      "Diseña y anima diapositivas"
+     ],
+     [
+      "Numbers",
+      "Calcula y organiza datos"
+     ]
+    ],
+    "marcar": 2,
+    "en": "ordena"
+   }
+  },
+  {
+   "texto": "En {Numbers|námbers}, hasta te *recomienda el gráfico* que conviene.",
+   "escena": {
+    "tipo": "grafico",
+    "titulo": "Ventas por mes · ejemplo",
+    "barras": [
+     {
+      "label": "JUL",
+      "valor": 42,
+      "texto": "42"
+     },
+     {
+      "label": "AGO",
+      "valor": 55,
+      "texto": "55"
+     },
+     {
+      "label": "SEP",
+      "valor": 61,
+      "texto": "61"
+     },
+     {
+      "label": "OCT",
+      "valor": 78,
+      "texto": "78"
+     }
+    ],
+    "marcar": 3,
+    "en": "gráfico"
+   }
+  },
+  {
+   "texto": "Pero lo más grande es otra cosa: con {MCP|eme ce pe}, un agente de afuera puede *leer y editar* esos archivos.",
+   "escena": {
+    "tipo": "codigo",
+    "archivo": "ejemplo · agente → Numbers",
+    "lineas": [
+     {
+      "texto": "# agente externo, vía MCP",
+      "en": "MCP"
+     },
+     {
+      "texto": "leer(\"presupuestos.numbers\")",
+      "en": "leer"
+     },
+     {
+      "texto": "editar(fila=12, precio=48500)",
+      "en": "editar",
+      "marcar": true
+     },
+     {
+      "texto": "# listo: tabla actualizada",
+      "en": "archivos"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Ojo: está en *beta*, solo en inglés de Estados Unidos, y llega en noviembre.",
+   "escena": {
+    "tipo": "alerta",
+    "titulo": "Antes de entusiasmarte",
+    "filas": [
+     [
+      "Estado",
+      "Beta"
+     ],
+     [
+      "Idioma",
+      "Solo inglés (EE. UU.)"
+     ],
+     [
+      "Sistema",
+      "iOS, iPadOS o macOS 27"
+     ],
+     [
+      "Llega",
+      "Noviembre"
+     ]
+    ],
+    "marcar": 1,
+    "en": "inglés"
+   }
+  },
+  {
+   "texto": "Y es para suscriptores de {Creator Studio|criéitor stúdio}: *doce con noventa y nueve* dólares por mes.",
+   "escena": {
+    "tipo": "planes",
+    "planes": [
+     {
+      "nombre": "Mensual",
+      "precio": "US$ 12,99",
+      "detalle": "por mes",
+      "destacado": true,
+      "tag": "Creator Studio",
+      "en": "dólares"
+     },
+     {
+      "nombre": "Anual",
+      "precio": "US$ 129",
+      "detalle": "por año",
+      "en": "mes"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "¿Y para tu negocio?",
+   "escena": {
+    "tipo": "frase"
+   }
+  },
+  {
+   "texto": "Presupuestos, planillas y presentaciones que un agente podría *actualizar solo*.",
+   "escena": {
+    "tipo": "notificaciones",
+    "items": [
+     {
+      "icono": "archivo",
+      "app": "Numbers",
+      "titulo": "Presupuesto actualizado",
+      "texto": "Constructora Demo · 14 ítems",
+      "en": "Presupuestos"
+     },
+     {
+      "icono": "grafico",
+      "app": "Numbers",
+      "titulo": "Planilla de ventas al día",
+      "texto": "Octubre cerrado",
+      "en": "planillas"
+     },
+     {
+      "icono": "play",
+      "app": "Keynote",
+      "titulo": "Presentación lista",
+      "texto": "12 diapositivas",
+      "en": "presentaciones"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "¿Dejarías que un agente toque tus archivos? *Contámelo* en los comentarios, y seguí a {@tobdev.ia|tob dev}.",
+   "escena": {
+    "tipo": "cierre"
+   }
+  }
+ ],
+ "voz_archivo": "/tmp/voz-2026-10-29.mp3"
+}
