@@ -56,6 +56,16 @@ Formatos y escenas en `plantilla/ESCENAS.md` → "Estilo marca". Proyectos y lo 
 - [ ] Problema → marca: "Tu obra se sigue en un Excel que solo entiende una persona" → Certificador (planilla → logo → sitio)
 - [ ] Rubros: "¿Tenés una ortopedia, un laboratorio o una marca de ropa?" → un sitio por rubro con scroll (Férulas Tuc, Infinity Labs, D12tinto)
 
+## ensayo (miércoles por medio) — ideas con nombre propio, formato ensayo (ver CONTENIDO.md)
+
+- [x] El valle inquietante (Mori, 1970) y el riesgo de usar la IA para todo (MIT "Your Brain on ChatGPT"; Microsoft Research, CHI 2025) (2026-10-29, `guiones/2026-10-29-valle.json`, lo sube Tob a mano)
+- [ ] Efecto ELIZA (1966): por qué le atribuimos entendimiento a un programa que solo devuelve patrones, y qué pasa cuando le contamos la vida a un chatbot (verificar: Weizenbaum, y un estudio reciente sobre vínculos con chatbots)
+- [ ] Sesgo de automatización: cuando la máquina sugiere, dejamos de mirar (verificar: estudios en aviación o medicina; ejemplo de GPS)
+- [ ] La paradoja de la automatización (Bainbridge, 1983): cuanto más automatizás, más importante es el humano que queda (verificar)
+- [ ] Ley de Goodhart: cuando la métrica se vuelve el objetivo, deja de servir (y qué pasa con los textos "optimizados" por IA) (verificar)
+- [ ] Efecto Google (Sparrow, 2011): recordamos dónde está la información, no la información; ¿qué pasa ahora con la IA? (verificar)
+- [ ] Sesgo de fluidez: lo que suena bien nos parece verdadero, y la IA siempre suena bien (verificar: estudios de fluidez de procesamiento)
+
 ## uso (martes o jueves sin noticia) — IA en tu negocio
 
 - [x] Contestar consultas de WhatsApp fuera de horario (2026-10-29, `guiones/2026-10-29-turnos-whatsapp.json`, lo sube Tob a mano)

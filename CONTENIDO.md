@@ -17,7 +17,17 @@ Reglas del calendario:
 - **Noticia muy grande cualquier día** (lanzamiento de un modelo o producto que usa mucha gente, de Anthropic, OpenAI, Google, Microsoft, Meta o Apple): puede reemplazar el pilar del día. Máximo 3 noticias por semana.
 - **Viernes**: buscá en `historial.json` el último reel con pilar `negocio` o `marca`: si fue `negocio`, toca `marca`; si fue `marca`, toca `negocio`.
 - No repetir el mismo pilar dos días seguidos, salvo noticia muy grande.
+- **Miércoles por medio, formato `ensayo`** (pedido de Tob, 29/10): los miércoles alternan `historia` y `ensayo`. Mirá en `historial.json` el último miércoles: si fue `historia`, hoy toca `ensayo`; si fue `ensayo`, toca `historia`. El `ensayo` es un reel más profesional y pausado sobre una idea de fondo (psicología, cómo pensamos con la tecnología, efectos de usar la IA para todo), con ilustraciones generadas y escenas que no se repiten. Serie `PARA TODOS #N`. Ver "Formato ensayo" abajo.
 - `N` es el número dentro de la serie: contá en `historial.json` cuántos hay de ese pilar y sumá 1. Las series numeradas hacen que la gente siga la cuenta para ver la próxima.
+
+## Formato ensayo (reels "de vez en cuando", más profesionales)
+
+Referencia: `guiones/2026-10-29-valle.json` (el valle inquietante; a Tob le encantó). Lo que lo define:
+- **Tema**: una idea con nombre propio que explique algo que la gente siente (valle inquietante, efecto ELIZA, sesgo de automatización, paradoja de la automatización, ley de Goodhart) atada a cómo usamos la IA hoy, con 1 o 2 estudios serios leídos con WebFetch (paper, universidad, laboratorio). Sin cifras que no estén en la fuente: si no se pudo leer el número exacto, se cuenta el hallazgo sin el número.
+- **Look**: tema `galeria` (o `editorial` / `cine` si `galeria` salió en los últimos 2 ensayos), acento sobrio (oxblood `#8B1E2D`, verde profundo `#1F6F6B`, azul tinta `#1F3A93`), música `suave` o `suspenso`, transiciones suaves (`rise`, `wipe`, `iris`, `swing`, `zoom`; nada de `flash`/`whip`), 45–60 s, 8–9 beats.
+- **Escenas**: solo las de la familia v2.7 (`retrato`, `curva`, `espectro`, `diff`, `cerebro`, `balanza`, `firma`) y las que no aparecieron en los últimos 5 reels. **Prohibidas en este formato**: `frase`, `alerta`, `capas`, `impacto`, `lista`, `chips`, `pasos` (son las que Tob siente repetidas). Si la idea pide una escena que no existe, se crea (`TAREA.md`, paso 4).
+- **Ilustraciones**: 2 a 4 imágenes generadas con el conector completo de ElevenLabs (`mcp__elevenlabs_personalizado__creative_generate_image`, modelo `bytedance-seedream-5-pro`, `generations_count` 1, ~820 créditos ≈ US$ 0,16 cada una; pedir `estimate_only` primero y no pasar de 4 por reel). Estilo fotográfico sobrio, sin logos, sin texto y sin personas reales (un rostro androide o una mano ficticios están bien). Salen 16:9 aunque pidas 9:16: bajarlas del `content_url`, recortarlas con PIL al encuadre que pide la escena y guardarlas en `guiones/img/<fecha>-<nombre>.jpg` (calidad 88, menos de 150 KB cada una). Crédito en pantalla y en el caption: "Ilustración generada con IA".
+- **Gancho**: una frase que nombre la sensación ("Hay un punto exacto en el que algo casi humano te genera rechazo"), sobre un `retrato` o un `espectro`. Cierre con la regla práctica ("que la IA haga el trabajo pesado; el criterio, la voz y la firma, tuyos") y pregunta para comentar.
 
 ## Cómo elegir el tema de cada pilar
 
