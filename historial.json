@@ -420,6 +420,29 @@
         "frase",
         "cierre"
       ]
+    },
+    {
+      "fecha": "2026-10-29",
+      "pilar": "para_todos",
+      "serie": "PARA TODOS #4",
+      "titulo": "El valle inquietante y el riesgo de usar la IA para todo (lo sube Tob a mano)",
+      "url_fuente": "https://spectrum.ieee.org/the-uncanny-valley",
+      "video": "videos/2026-10-29-valle.mp4",
+      "metricool": "manual",
+      "acento": "#8B1E2D",
+      "tema": "galeria",
+      "musica": "suspenso",
+      "escenas": [
+        "retrato",
+        "curva",
+        "espectro",
+        "diff",
+        "cerebro",
+        "balanza",
+        "firma",
+        "cierre"
+      ],
+      "voz": "elevenlabs"
     }
   ]
 }

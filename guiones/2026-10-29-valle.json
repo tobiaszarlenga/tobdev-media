@@ -1,0 +1,176 @@
+{
+ "etiqueta": "PARA TODOS #4",
+ "fuente": "Mori, Energy 1970 · MIT Media Lab 2025 · Microsoft Research, CHI 2025",
+ "acento": "#8B1E2D",
+ "tema": "galeria",
+ "musica": "suspenso",
+ "transiciones": [
+  "rise",
+  "wipe",
+  "zoom",
+  "swing",
+  "iris",
+  "rise",
+  "wipe",
+  "zoom"
+ ],
+ "beats": [
+  {
+   "texto": "Hay un punto exacto en el que algo *casi humano* te genera rechazo.",
+   "escena": {
+    "tipo": "retrato",
+    "archivo": "img/valle-androide.jpg",
+    "credito": "Ilustración generada con IA",
+    "parecido": {
+     "texto": "Parecido humano",
+     "valor": 92,
+     "en": "punto"
+    },
+    "afinidad": {
+     "texto": "Afinidad",
+     "desde": 74,
+     "valor": 18,
+     "en": "rechazo"
+    }
+   }
+  },
+  {
+   "texto": "Se llama *valle inquietante*. Lo describió Masahiro Mori en mil novecientos setenta.",
+   "escena": {
+    "tipo": "curva",
+    "en": "inquietante",
+    "en_movimiento": "setenta",
+    "movimiento": "— — con movimiento, el valle se hunde más",
+    "puntos": [
+     {
+      "texto": "robot industrial",
+      "pos": 0.2,
+      "en": "llama"
+     },
+     {
+      "texto": "robot de juguete",
+      "pos": 0.45,
+      "en": "valle"
+     },
+     {
+      "texto": "mano protésica",
+      "pos": 0.67,
+      "en": "describió"
+     },
+     {
+      "texto": "persona",
+      "pos": 0.985,
+      "en": "Mori"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Un robot de juguete cae bien. Una mano que parece real pero no lo es, *inquieta*. Y la de verdad, tranquiliza.",
+   "escena": {
+    "tipo": "espectro",
+    "medidor": "Afinidad",
+    "items": [
+     {
+      "archivo": "img/valle-robot.jpg",
+      "texto": "Robot de juguete",
+      "afinidad": 72,
+      "en": "robot"
+     },
+     {
+      "archivo": "img/valle-protesis.jpg",
+      "texto": "Mano protésica",
+      "afinidad": 14,
+      "en": "inquieta"
+     },
+     {
+      "archivo": "img/valle-mano.jpg",
+      "texto": "Mano real",
+      "afinidad": 96,
+      "en": "verdad"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Hoy pasa con la {IA|inteligencia artificial}: un mail que suena *casi* como vos, pero no del todo.",
+   "escena": {
+    "tipo": "diff",
+    "titulo_a": "Vos",
+    "titulo_b": "Casi vos",
+    "lineas": [
+     {
+      "a": "Hola Marce, ¿cómo va la obra?",
+      "b": "Estimado Marcelo, espero que este mensaje lo encuentre bien.",
+      "en": "mail"
+     },
+     {
+      "a": "Te paso el presupuesto del lote 12.",
+      "b": "Adjunto a continuación el presupuesto correspondiente al lote 12.",
+      "en": "casi"
+     },
+     {
+      "a": "Cualquier cosa me escribís.",
+      "b": "Quedo a su entera disposición ante cualquier consulta.",
+      "en": "todo"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y el riesgo no es que se note. En un estudio del {MIT|em ai ti} con cincuenta y cuatro personas, los que escribieron con {ChatGPT|chat yi pi ti} mostraron la conectividad cerebral *más baja*, y les costó citar su propio texto.",
+   "escena": {
+    "tipo": "cerebro",
+    "a": {
+     "titulo": "Sin IA"
+    },
+    "b": {
+     "titulo": "Con ChatGPT"
+    },
+    "densidad": [
+     1.0,
+     0.3
+    ],
+    "en": "MIT",
+    "etiqueta": "conectividad cerebral *más baja* · EEG · 54 personas"
+   }
+  },
+  {
+   "texto": "Y en una encuesta de {Microsoft|maicrosoft} a trescientos diecinueve trabajadores: cuanta más *confianza* en la {IA|inteligencia artificial}, menos pensamiento crítico.",
+   "escena": {
+    "tipo": "balanza",
+    "a": {
+     "texto": "Confianza en la IA",
+     "flecha": "↑"
+    },
+    "b": {
+     "texto": "Pensamiento crítico",
+     "flecha": "↓"
+    },
+    "en": "confianza",
+    "nota": "319 trabajadores · Microsoft Research · CHI 2025"
+   }
+  },
+  {
+   "texto": "Entonces: que la {IA|inteligencia artificial} haga el trabajo pesado. El criterio, la voz y la *firma*, tuyos.",
+   "escena": {
+    "tipo": "firma",
+    "titulo": "Presupuesto · Obra Lote 12",
+    "lineas": [
+     "Redactado con IA en dos minutos",
+     "Leído y corregido por vos"
+    ],
+    "etiqueta": "Revisado por",
+    "nombre": "vos",
+    "en": "firma"
+   }
+  },
+  {
+   "texto": "¿Usás la {IA|inteligencia artificial} para todo? *Contámelo* en los comentarios, y seguí a {@tobdev.ia|tob dev}.",
+   "escena": {
+    "tipo": "cierre"
+   }
+  }
+ ],
+ "voz_archivo": "/tmp/voz-valle.mp3"
+}

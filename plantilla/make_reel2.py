@@ -37,7 +37,9 @@ SCENE_TYPES = {"terminal", "linea_tiempo", "prompt", "capas", "flujo", "cursores
                "sitio", "carrusel", "muro", "notificaciones", "caos", "planilla", "logo", "cuenta",
                # v2.6 (looks nuevos: glitch, bandeja de correo, carta redactada, ranking con logos, documento triturado,
                # interruptor, censura, visor de cámara, onda de audio)
-               "glitch", "bandeja", "carta", "ranking", "triturar", "interruptor", "censura", "visor", "onda"}
+               "glitch", "bandeja", "carta", "ranking", "triturar", "interruptor", "censura", "visor", "onda",
+               # v2.7 (galería: retrato con medidores, curva del valle, espectro de imágenes, diff, cerebros, balanza, firma)
+               "retrato", "curva", "espectro", "diff", "cerebro", "balanza", "firma"}
 LEAD = 0.12  # silencio al principio de la pista de voz
 NOCAPS = {"frase", "cierre", "impacto", "muro", "logo", "glitch"}          # escenas que ya muestran el texto: sin subtítulos arriba
 PUNCT_PAUSE = {",": 0.10, ";": 0.16, ":": 0.18, ".": 0.24, "?": 0.26, "!": 0.24, "…": 0.26}
@@ -72,6 +74,10 @@ THEMES = {
     "cine": dict(bg="#050505", surface="rgba(22,22,22,.94)", surface2="#1B1B1B", surface3="#262626", ink="#050505", text="#F6F2E9",
                  soft="#DAD4C8", muted="#8F8A80", border="rgba(255,255,255,.14)", line="rgba(255,255,255,.12)", capdone="#CFC9BD",
                  display='"FreeSans","Helvetica Neue",Arial,sans-serif', radius="14px", mark="none", glow=".22"),
+    # v2.7
+    "galeria": dict(bg="#F1ECE4", surface="#FBF9F5", surface2="#E9E3D8", surface3="#DDD6C9", ink="#0A0E1A", text="#161412",
+                    soft="#3F3A34", muted="#867E73", border="rgba(22,20,18,.14)", line="rgba(22,20,18,.16)", capdone="#5C5650",
+                    display='"Lora","Georgia",serif', radius="6px", mark="brightness(0)", glow=".12"),
 }
 TRANSITIONS = ["zoom", "rise", "wipe", "slide", "iris", "flip", "push", "swing", "flash", "whip", "corte", "continuo"]
 MUSIC_STYLES = ["tech", "suave", "urgente", "retro", "suspenso"]
@@ -664,6 +670,95 @@ def scene_html(sid, b, D):
     e = b["escena"]; t = e["tipo"]; p = sid
     if t in ("sitio", "carrusel", "muro", "notificaciones", "caos", "planilla", "logo", "cuenta"):
         return scene_html_marca(sid, b, D)
+    if t == "retrato":
+        src = e.get("_src", "")
+        cred = f'<div class="rt-cred mono">{esc(e["credito"])}</div>' if e.get("credito") else ""
+        m1, m2 = e.get("parecido") or {}, e.get("afinidad") or {}
+        return (f'<div class="rt-wrap"><img class="rt-img" id="{p}-img" src="{src}" alt=""/><div class="rt-shade"></div>'
+                f'<div class="rt-panel"><div class="rt-row"><span class="mono rt-l">{esc(m1.get("texto", "Parecido humano"))}</span>'
+                f'<div class="rt-track"><div class="rt-fill" id="{p}-f1"></div></div><span class="mono rt-v" id="{p}-v1">0%</span></div>'
+                f'<div class="rt-row"><span class="mono rt-l">{esc(m2.get("texto", "Afinidad"))}</span>'
+                f'<div class="rt-track"><div class="rt-fill" id="{p}-f2"></div></div><span class="mono rt-v" id="{p}-v2">0%</span></div></div>{cred}</div>')
+    if t == "curva":
+        pts = (e.get("puntos") or [])[:6]
+        labs = "".join(f'<div class="cv-lab" id="{p}-lb{i}" data-pos="{float(x.get("pos", .5))}"><i></i><span>{esc(x.get("texto", ""))}</span></div>' for i, x in enumerate(pts))
+        ejes = e.get("ejes") or {}
+        return (f'<div class="cv-wrap"><svg class="cv-svg" viewBox="0 0 1000 760" id="{p}-svg">'
+                f'<defs><clipPath id="{p}-clipdip"><rect id="{p}-diprect" x="600" y="0" width="0" height="760"/></clipPath></defs>'
+                f'<line x1="60" y1="700" x2="960" y2="700" class="cv-ax"/><line x1="60" y1="700" x2="60" y2="60" class="cv-ax"/>'
+                f'<path id="{p}-area" class="cv-area" clip-path="url(#{p}-clipdip)" d="M60 700 C 250 650, 400 420, 560 330 C 640 290, 690 330, 720 560 C 740 700, 770 690, 800 520 C 850 300, 900 160, 960 120 L 960 700 Z"/>'
+                f'<path id="{p}-path" class="cv-path" pathLength="1000" d="M60 700 C 250 650, 400 420, 560 330 C 640 290, 690 330, 720 560 C 740 700, 770 690, 800 520 C 850 300, 900 160, 960 120"/>'
+                f'<path id="{p}-path2" class="cv-path2" pathLength="1000" d="M60 700 C 250 660, 400 440, 560 350 C 640 310, 690 380, 720 640 C 740 740, 770 720, 800 560 C 850 320, 900 170, 960 110"/>'
+                f'<circle id="{p}-dot" class="cv-dot" cx="60" cy="700" r="11"/></svg>'
+                f'<div class="cv-x mono">{esc(ejes.get("x", "parecido humano"))} →</div><div class="cv-y mono">{esc(ejes.get("y", "afinidad"))} ↑</div>'
+                f'{labs}<div class="cv-valle" id="{p}-valle"><span>{esc(e.get("valle", "valle inquietante"))}</span></div>'
+                f'<div class="cv-mov mono" id="{p}-mov">{esc(e.get("movimiento", "— — con movimiento"))}</div></div>')
+    if t == "espectro":
+        it = (e.get("items") or [])[:3]
+        cells = "".join(f'<div class="sp-cell" id="{p}-c{i}"><div class="sp-ph"><img src="{x.get("_src", "")}" alt=""/></div><div class="sp-cap">{esc(x.get("texto", ""))}</div></div>' for i, x in enumerate(it))
+        return (f'<div class="sp-strip">{cells}</div><div class="sp-rail"><div class="sp-knob" id="{p}-knob"></div></div>'
+                f'<div class="sp-meter glass"><div class="eyebrow">{esc(e.get("medidor", "Afinidad"))}</div><div class="sp-num" id="{p}-num">0%</div>'
+                f'<div class="sp-track"><div class="sp-fill" id="{p}-fill"></div></div></div>')
+    if t == "diff":
+        import difflib
+        lns = (e.get("lineas") or [])[:4]
+        def _mark(a, b):
+            wa, wb = a.split(), b.split()
+            sm = difflib.SequenceMatcher(None, [w.lower() for w in wa], [w.lower() for w in wb])
+            out, k = [], 0
+            for op, i1, i2, j1, j2 in sm.get_opcodes():
+                seg = " ".join(wb[j1:j2])
+                if op == "equal":
+                    out.append(esc(seg))
+                elif seg:
+                    out.append(f'<span class="df-chg"><i class="df-bar"></i>{esc(seg)}</span>'); k += 1
+            return " ".join(out), k
+        rows_a, rows_b = [], []
+        for i, x in enumerate(lns):
+            rows_a.append(f'<div class="df-ln" id="{p}-a{i}">{esc(x.get("a", ""))}</div>')
+            h, _ = _mark(x.get("a", ""), x.get("b", ""))
+            rows_b.append(f'<div class="df-ln" id="{p}-b{i}">{h}</div>')
+        return (f'<div class="df-cols"><div class="df-col glass"><div class="eyebrow">{esc(e.get("titulo_a", "Vos"))}</div>{"".join(rows_a)}</div>'
+                f'<div class="df-col glass b"><div class="eyebrow">{esc(e.get("titulo_b", "Casi vos"))}</div>{"".join(rows_b)}</div></div>')
+    if t == "cerebro":
+        import random, math
+        rnd = random.Random(e.get("semilla", 7))
+        def _head(k, tit):
+            nodes = []
+            while len(nodes) < 22:
+                x, y = rnd.uniform(70, 300), rnd.uniform(60, 260)
+                if ((x - 185) / 125) ** 2 + ((y - 160) / 105) ** 2 <= 1:
+                    nodes.append((x, y))
+            edges = []
+            for i, (x, y) in enumerate(nodes):
+                d = sorted(((math.hypot(x - nx, y - ny), j) for j, (nx, ny) in enumerate(nodes) if j != i))[:2]
+                for _, j in d:
+                    if (j, i) not in edges and (i, j) not in edges:
+                        edges.append((i, j))
+            lines = "".join(f'<line class="cb-e" id="{p}-{k}e{n}" x1="{nodes[i][0]:.0f}" y1="{nodes[i][1]:.0f}" x2="{nodes[j][0]:.0f}" y2="{nodes[j][1]:.0f}" pathLength="100"/>' for n, (i, j) in enumerate(edges))
+            dots = "".join(f'<circle class="cb-n" cx="{x:.0f}" cy="{y:.0f}" r="5"/>' for x, y in nodes)
+            return (f'<div class="cb-head" id="{p}-{k}"><svg viewBox="0 0 370 400"><path class="cb-sil" d="M190 18 C 280 18, 340 90, 335 175 C 332 225, 352 238, 340 258 L 318 268 L 322 312 C 322 345, 284 360, 240 348 L 190 365 L 135 365 L 125 310 C 65 290, 22 230, 22 160 C 22 85, 95 18, 190 18 Z"/>'
+                    f'{lines}{dots}</svg><div class="cb-t">{esc(tit)}</div></div>'), len(edges)
+        ha, na = _head("a", (e.get("a") or {}).get("titulo", "Sin IA"))
+        hb, nb = _head("b", (e.get("b") or {}).get("titulo", "Con ChatGPT"))
+        e["_na"], e["_nb"] = na, nb
+        num = f'<div class="cb-num"><span id="{p}-n">0</span><span class="cb-suf">{esc(e.get("sufijo", "%"))}</span></div>' if e.get("valor") is not None else ""
+        lab = f'<div class="cb-l{"" if e.get("valor") is not None else " solo"}" id="{p}-l">{kw_text(e.get("etiqueta", ""))}</div>' if e.get("etiqueta") else ""
+        return f'<div class="cb-row">{ha}{hb}</div>{num}{lab}'
+    if t == "balanza":
+        a, b_ = e.get("a") or {}, e.get("b") or {}
+        nota = f'<div class="bz-nota mono" id="{p}-nota">{esc(e["nota"])}</div>' if e.get("nota") else ""
+        return (f'<div class="bz-wrap"><div class="bz-beam" id="{p}-beam"><div class="bz-pan l" id="{p}-pl"><div class="bz-chain"></div><div class="bz-plate glass"><span class="bz-arrow" id="{p}-ar1">{esc(a.get("flecha", "↑"))}</span>{esc(a.get("texto", ""))}</div></div>'
+                f'<div class="bz-pan r" id="{p}-pr"><div class="bz-chain"></div><div class="bz-plate glass"><span class="bz-arrow" id="{p}-ar2">{esc(b_.get("flecha", "↓"))}</span>{esc(b_.get("texto", ""))}</div></div><div class="bz-bar"></div></div>'
+                f'<div class="bz-pivot"></div><div class="bz-base"></div>{nota}</div>')
+    if t == "firma":
+        lns = (e.get("lineas") or [])[:3]
+        rows = "".join(f'<div class="fm-ln" id="{p}-l{i}">{esc(x)}</div>' for i, x in enumerate(lns))
+        return (f'<div class="fm-doc glass"><div class="fm-top"><div class="eyebrow">{esc(e.get("titulo", "Documento"))}</div></div>{rows}'
+                f'<div class="fm-sk"><i style="width:82%"></i><i style="width:64%"></i><i style="width:71%"></i></div>'
+                f'<div class="fm-sign"><div class="mono fm-lab">{esc(e.get("etiqueta", "Revisado por"))}</div>'
+                f'<svg class="fm-svg" viewBox="0 0 520 140"><path id="{p}-sig" pathLength="1000" d="M14 96 C 40 40, 70 30, 72 70 C 74 110, 40 120, 60 92 C 90 50, 150 30, 170 60 C 190 90, 150 120, 140 96 C 130 70, 200 40, 250 66 C 290 88, 230 112, 240 90 C 255 60, 330 30, 370 64 C 400 90, 350 120, 360 96 C 372 68, 430 44, 480 60 C 500 68, 505 80, 498 88"/></svg>'
+                f'<div class="fm-line"></div><div class="fm-name" id="{p}-name">{esc(e.get("nombre", "vos"))}</div></div></div>')
     if t == "glitch":
         words = b["words"]
         ln, lines = [], []
@@ -1175,6 +1270,35 @@ def scene_params(b, t0, t1):
         p["cues"] = scene_cues(b, [x.get("en", "") for x in lg], t0, t1)
         p["n"] = len(lg)
         p["pills"] = [bool(x.get("estado")) for x in lg]
+    elif t == "retrato":
+        m1, m2 = e.get("parecido") or {}, e.get("afinidad") or {}
+        p["c1"] = scene_cues(b, [m1.get("en", "")], t0, t1)[0]; p["v1"] = float(m1.get("valor", 92))
+        p["c2"] = scene_cues(b, [m2.get("en", "")], t0, t1)[0]; p["v2"] = float(m2.get("valor", 18)); p["v2a"] = float(m2.get("desde", 72))
+    elif t == "curva":
+        pts = (e.get("puntos") or [])[:6]
+        p["cues"] = scene_cues(b, [x.get("en", "") for x in pts], t0, t1); p["n"] = len(pts)
+        p["pos"] = [float(x.get("pos", .5)) for x in pts]
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+        p["mov"] = scene_cues(b, [e.get("en_movimiento", "")], t0, t1)[0] if e.get("en_movimiento") else -1
+    elif t == "espectro":
+        it = (e.get("items") or [])[:3]
+        p["cues"] = scene_cues(b, [x.get("en", "") for x in it], t0, t1); p["n"] = len(it)
+        p["vals"] = [float(x.get("afinidad", 50)) for x in it]
+    elif t == "diff":
+        lns = (e.get("lineas") or [])[:4]
+        p["cues"] = scene_cues(b, [x.get("en", "") for x in lns], t0, t1); p["n"] = len(lns)
+    elif t == "cerebro":
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+        p["na"], p["nb"] = e.get("_na", 0), e.get("_nb", 0)
+        p["da"], p["db"] = [float(x) for x in (e.get("densidad") or [1.0, 0.35])][:2]
+        p["val"] = float(e["valor"]) if e.get("valor") is not None else None
+        p["cv"] = scene_cues(b, [e.get("en_valor", "")], t0, t1)[0]
+    elif t == "balanza":
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+        p["ang"] = float(e.get("angulo", -11))
+    elif t == "firma":
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+        p["n"] = len((e.get("lineas") or [])[:3])
     elif t == "glitch":
         p["cues"] = [round(w["t0"], 3) for w in b["words"]]
         p["kw"] = [w["kw"] is not None for w in b["words"]]
@@ -1375,6 +1499,8 @@ def bg_html(tema):
         return ('<div id="ring2"></div><div id="dots"></div><div id="ring"></div><div id="grain"></div>')
     if tema == "cine":
         return ('<div class="blob" id="b3"></div><div id="cine-light"></div><div id="vig"></div><div id="grain"></div><div id="lb-t"></div><div id="lb-b"></div>')
+    if tema == "galeria":
+        return ('<div id="paper"></div><div class="blob" id="b3"></div><div id="hair-t"></div><div id="hair-b"></div><div id="grain"></div>')
     return ('<div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div><div class="blob" id="b4"></div>'
             '<div id="floor"></div><div id="vig"></div><div id="grain"></div>')
 
@@ -2166,6 +2292,100 @@ font-weight:700;font-size:40px;letter-spacing:-.01em;box-shadow:0 18px 40px -14p
 .on-chip.no{border-color:var(--acc)}
 .on-stamp{position:absolute;left:0;right:0;top:300px;text-align:center;opacity:0}
 .on-stamp span{display:inline-block;padding:14px 34px;border:6px solid var(--acc);color:var(--acc);font-weight:700;font-size:54px;letter-spacing:.14em;text-transform:uppercase;background:rgba(var(--bg-rgb),.82);border-radius:10px}
+
+/* ===== v2.7: tema galeria ===== */
+.tema-galeria{--shadow:0 26px 60px -30px rgba(40,30,20,.38);--warn:#B8860B}
+#paper{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(255,255,255,.55),transparent 60%)}
+#hair-t,#hair-b{position:absolute;left:70px;right:70px;height:2px;background:rgba(22,20,18,.14)}
+#hair-t{top:214px}#hair-b{top:1500px}
+.tema-galeria .cap{font-weight:600;letter-spacing:-.01em;text-shadow:none;font-size:66px;line-height:1.14}
+.tema-galeria .eyebrow{letter-spacing:.3em}
+.tema-galeria .hdr .d{color:var(--acc)}
+.tema-galeria #grain{opacity:.1;mix-blend-mode:multiply}
+.tema-galeria .kb{background:rgba(var(--acc-rgb),.10)}
+/* retrato */
+.rt-wrap{position:absolute;left:40px;right:40px;top:0;bottom:0;border-radius:var(--radius);overflow:hidden;background:var(--surface2);box-shadow:var(--shadow)}
+.rt-img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 40%}
+.rt-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 45%,rgba(0,0,0,.72) 100%)}
+.rt-panel{position:absolute;left:40px;right:40px;bottom:44px;display:flex;flex-direction:column;gap:26px}
+.rt-row{display:flex;align-items:center;gap:22px;color:#fff}
+.rt-l{width:300px;flex:none;font-size:24px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.85)}
+.rt-track{flex:1;height:14px;border-radius:7px;background:rgba(255,255,255,.22);overflow:hidden}
+.rt-fill{height:100%;width:100%;background:#fff;transform:scaleX(0);transform-origin:0 50%;border-radius:7px}
+.rt-v{width:110px;text-align:right;font-weight:700;font-size:40px}
+.rt-cred{position:absolute;right:28px;top:24px;font-size:20px;color:rgba(255,255,255,.7);letter-spacing:.06em}
+/* curva */
+.cv-wrap{position:absolute;left:40px;right:40px;top:40px;height:900px}
+.cv-svg{position:absolute;left:0;top:0;width:1000px;height:760px}
+.cv-ax{stroke:var(--line);stroke-width:3}
+.cv-path{fill:none;stroke:var(--text);stroke-width:7;stroke-linecap:round;stroke-dasharray:1000;stroke-dashoffset:1000}
+.cv-path2{fill:none;stroke:var(--acc);stroke-width:5;stroke-linecap:round;stroke-dasharray:14 16;opacity:0}
+.cv-area{fill:rgba(var(--acc-rgb),.16)}
+.cv-dot{fill:var(--acc);stroke:var(--bg);stroke-width:4}
+.cv-x{position:absolute;left:0;right:0;top:716px;text-align:center;font-size:24px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted)}
+.cv-y{position:absolute;left:-250px;top:380px;width:600px;text-align:center;transform:rotate(-90deg);font-size:24px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted)}
+.cv-lab{position:absolute;display:flex;align-items:center;gap:12px;font-size:27px;font-weight:600;white-space:nowrap;opacity:0;transform:translate(-50%,-50%)}
+.cv-lab i{width:14px;height:14px;border-radius:50%;background:var(--text)}
+.cv-lab span{padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.cv-valle{position:absolute;left:0;right:0;top:770px;text-align:center;opacity:0}
+.cv-valle span{display:inline-block;padding:12px 30px;border:2px solid var(--acc);color:var(--acc);font-family:var(--mono);font-size:30px;letter-spacing:.2em;text-transform:uppercase;border-radius:var(--radius)}
+.cv-mov{position:absolute;right:0;top:40px;font-size:24px;letter-spacing:.12em;color:var(--acc);opacity:0}
+/* espectro */
+.sp-strip{position:absolute;left:40px;right:40px;top:30px;display:flex;gap:24px}
+.sp-cell{flex:1;display:flex;flex-direction:column;gap:16px;align-items:center}
+.sp-ph{width:100%;height:440px;border-radius:var(--radius);overflow:hidden;background:var(--surface2);box-shadow:var(--shadow)}
+.sp-ph img{width:100%;height:100%;object-fit:cover}
+.sp-cap{font-size:28px;font-weight:600;text-align:center;line-height:1.15}
+.sp-rail{position:absolute;left:60px;right:60px;top:580px;height:6px;border-radius:3px;background:var(--line)}
+.sp-knob{position:absolute;left:0;top:-19px;width:44px;height:44px;margin-left:-22px;border-radius:50%;background:var(--acc);box-shadow:0 10px 30px rgba(0,0,0,.35);border:4px solid var(--bg)}
+.sp-meter{position:absolute;left:40px;right:40px;top:650px;padding:30px 40px;display:flex;align-items:center;gap:30px}
+.sp-num{font-weight:700;font-size:92px;letter-spacing:-.04em;width:260px;text-align:right;line-height:1}
+.sp-track{flex:1;height:22px;border-radius:11px;background:var(--surface3);overflow:hidden}
+.sp-fill{height:100%;width:100%;background:var(--text);transform:scaleX(0);transform-origin:0 50%;border-radius:11px}
+/* diff */
+.df-cols{position:absolute;left:40px;right:40px;top:60px;display:flex;gap:22px;align-items:flex-start}
+.df-col{flex:1;padding:30px 30px 20px;min-height:560px}
+.df-col .eyebrow{margin-bottom:18px}
+.df-col.b .eyebrow{color:var(--acc)}
+.df-ln{font-size:30px;line-height:1.45;padding:14px 0;border-top:1px solid var(--line);opacity:0}
+.df-chg{position:relative;display:inline;font-weight:700;color:var(--acc)}
+.df-bar{position:absolute;left:-.1em;right:-.1em;bottom:-.02em;height:.22em;background:rgba(var(--acc-rgb),.22);transform:scaleX(0);transform-origin:0 50%;z-index:-1}
+/* cerebro */
+.cb-row{position:absolute;left:40px;right:40px;top:40px;display:flex;gap:30px;justify-content:center}
+.cb-head{flex:1;max-width:485px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.cb-head svg{width:100%;height:auto}
+.cb-sil{fill:var(--surface2);stroke:var(--line);stroke-width:3}
+.cb-e{stroke:var(--text-muted);stroke-width:2.5;opacity:.18;stroke-dasharray:100;stroke-dashoffset:100}
+.cb-n{fill:var(--text-muted);opacity:.5}
+.cb-t{font-size:30px;font-weight:600;letter-spacing:-.01em}
+.cb-num{position:absolute;left:0;right:0;top:600px;text-align:center;font-weight:700;font-size:190px;letter-spacing:-.05em;line-height:1}
+.cb-suf{color:var(--acc)}
+.cb-l{position:absolute;left:90px;right:90px;top:810px;text-align:center;font-size:40px;line-height:1.2;color:var(--text-soft);opacity:0}
+.cb-l.solo{top:640px;font-size:46px}
+/* balanza */
+.bz-wrap{position:absolute;left:40px;right:40px;top:0;bottom:0}
+.bz-beam{position:absolute;left:90px;right:90px;top:360px;height:0;transform-origin:50% 50%}
+.bz-bar{position:absolute;left:0;right:0;top:-8px;height:16px;border-radius:8px;background:var(--text)}
+.bz-pan{position:absolute;top:0;width:360px;display:flex;flex-direction:column;align-items:center}
+.bz-pan.l{left:-40px}.bz-pan.r{right:-40px}
+.bz-chain{width:3px;height:120px;background:var(--text-muted)}
+.bz-plate{width:100%;padding:28px 24px;text-align:center;font-size:30px;font-weight:600;line-height:1.2;display:flex;flex-direction:column;align-items:center;gap:10px}
+.bz-arrow{font-size:72px;line-height:1;color:var(--acc);opacity:0}
+.bz-pivot{position:absolute;left:50%;top:360px;width:0;height:0;margin-left:-60px;border-left:60px solid transparent;border-right:60px solid transparent;border-bottom:150px solid var(--surface3)}
+.bz-base{position:absolute;left:50%;top:508px;width:460px;margin-left:-230px;height:16px;border-radius:8px;background:var(--text-soft)}
+.bz-nota{position:absolute;left:0;right:0;top:720px;text-align:center;font-size:24px;letter-spacing:.12em;color:var(--text-muted);opacity:0;line-height:1.5}
+/* firma */
+.fm-doc{position:absolute;left:90px;right:90px;top:40px;padding:40px 48px 44px}
+.fm-top{margin-bottom:20px}
+.fm-ln{font-size:34px;line-height:1.4;padding:10px 0;opacity:0}
+.fm-sk{margin:22px 0 40px;display:flex;flex-direction:column;gap:14px}
+.fm-sk i{display:block;height:16px;border-radius:8px;background:var(--surface3)}
+.fm-sign{position:relative;padding-top:10px}
+.fm-lab{font-size:22px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted)}
+.fm-svg{display:block;width:520px;height:140px;margin-top:6px}
+.fm-svg path{fill:none;stroke:var(--acc);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1000;stroke-dashoffset:1000}
+.fm-line{height:2px;background:var(--line);width:560px;margin-top:-10px}
+.fm-name{margin-top:12px;font-size:30px;font-weight:600;opacity:0}
 """
 
 JS = r"""
@@ -2461,6 +2681,94 @@ marcas(c, p){
   if ($(id+"-mid")) F(id+"-mid", {opacity:0, scale:2.2}, {opacity:1, scale:1, duration:.35, ease:"power3.out"}, (cues[0]+(cues[1]||cues[0]))/2);
   if ($(id+"-tit")) show(id+"-tit", c.t0+.2, .4, {y:-20});
   F(id+"-burst", {opacity:.9, scale:1}, {opacity:0, scale:16, duration:.7, ease:"power2.out"}, cues[0]);
+},
+retrato(c, p){
+  const id = "#"+c.id, Dd = c.t1-c.t0;
+  F(id+"-img", {scale:1}, {scale:1.09, duration:Dd, ease:"none"}, c.t0);
+  const c1 = early(c, p.c1, .9), c2 = Math.max(c1+1.0, Math.min(p.c2, c.t1-.8));
+  const o1 = {v:0}, o2 = {v:0};
+  F(id+"-f1", {scaleX:0}, {scaleX:p.v1/100, duration:1.1, ease:"power2.out"}, c1);
+  F(o1, {v:0}, {v:p.v1, duration:1.1, ease:"power2.out", onUpdate:()=>{ $(id+"-v1").textContent = Math.round(o1.v)+"%"; }}, c1);
+  F(id+"-f2", {scaleX:0}, {scaleX:p.v2a/100, duration:.9, ease:"power2.out"}, c1+.35);
+  F(o2, {v:0}, {v:p.v2a, duration:.9, ease:"power2.out", onUpdate:()=>{ $(id+"-v2").textContent = Math.round(o2.v)+"%"; }}, c1+.35);
+  F(id+"-f2", {scaleX:p.v2a/100, backgroundColor:"#FFFFFF"}, {scaleX:p.v2/100, backgroundColor:ACC, duration:.5, ease:"power3.in"}, c2);
+  F(o2, {v:p.v2a}, {v:p.v2, duration:.5, ease:"power3.in", onUpdate:()=>{ $(id+"-v2").textContent = Math.round(o2.v)+"%"; }}, c2);
+  F(id+"-v2", {color:"#FFFFFF"}, {color:ACC, duration:.3}, c2+.3);
+  F("#"+c.id+" .stage", {x:0}, {x:-6, duration:.05, yoyo:true, repeat:3, ease:"none"}, c2+.4);
+},
+curva(c, p){
+  const id = "#"+c.id, path = $(id+"-path"), L = path.getTotalLength(), dot = $(id+"-dot");
+  const draw = Math.min(2.4, (c.t1-c.t0)*.5), o = {k:0};
+  const svg = $(id+"-svg"), sx = 1000/svg.getBoundingClientRect().width || 1;
+  F(id+"-path", {strokeDashoffset:1000}, {strokeDashoffset:0, duration:draw, ease:"power1.inOut"}, c.t0+.2);
+  F(o, {k:0}, {k:1, duration:draw, ease:"power1.inOut", onUpdate:()=>{ const q = path.getPointAtLength(o.k*L); dot.setAttribute("cx", q.x); dot.setAttribute("cy", q.y); }}, c.t0+.2);
+  for (let i=0;i<p.n;i++){
+    const q = path.getPointAtLength(p.pos[i]*L), el = $(id+"-lb"+i);
+    el.style.left = (q.x*1.0)+"px"; el.style.top = (q.y - 54)+"px";
+    const t = Math.max(c.t0+.2+draw*p.pos[i], Math.min(p.cues[i], c.t1-.4));
+    F(el, {opacity:0, y:16}, {opacity:1, y:0, duration:.35, ease:E}, t);
+  }
+  const tv = Math.max(c.t0+draw+.3, Math.min(p.cue, c.t1-.9));
+  F(id+"-diprect", {attr:{width:0}}, {attr:{width:220}, duration:.6, ease:"power2.out"}, tv);
+  F(id+"-valle", {opacity:0, y:12}, {opacity:1, y:0, duration:.4, ease:E}, tv+.1);
+  if (p.mov >= 0){ const tm = Math.max(tv+.6, Math.min(p.mov, c.t1-.7));
+    F(id+"-path2", {opacity:0, strokeDashoffset:1000}, {opacity:1, strokeDashoffset:0, duration:.9, ease:"power1.inOut"}, tm);
+    F(id+"-mov", {opacity:0, x:20}, {opacity:1, x:0, duration:.35}, tm+.3); }
+},
+espectro(c, p){
+  const id = "#"+c.id, cues = stagger(c, p.cues, .9, .5), W = 960, xs = [];
+  for (let i=0;i<p.n;i++) xs.push((W/p.n)*(i+.5));
+  const o = {v:0};
+  for (let i=0;i<p.n;i++){
+    const t = cues[i];
+    F(id+"-knob", {left:(i ? xs[i-1] : xs[0])+"px"}, {left:xs[i]+"px", duration:i ? .5 : .01, ease:"power2.inOut"}, i ? t : c.t0);
+    F(id+"-c"+i, {scale:1, opacity:.55}, {scale:1.04, opacity:1, duration:.4, ease:E}, t);
+    if (i) F(id+"-c"+(i-1), {scale:1.04, opacity:1}, {scale:1, opacity:.55, duration:.4}, t);
+    const prev = i ? p.vals[i-1] : 0, low = p.vals[i] < 35;
+    F(id+"-fill", {scaleX:prev/100}, {scaleX:p.vals[i]/100, duration:.6, ease:"power3.out"}, t+.2);
+    F(o, {v:prev}, {v:p.vals[i], duration:.6, ease:"power3.out", onUpdate:()=>{ $(id+"-num").textContent = Math.round(o.v)+"%"; }}, t+.2);
+    F(id+"-num", {color:TXTC}, {color:low ? ACC : TXTC, duration:.3}, t+.3);
+    F(id+"-fill", {backgroundColor:TXTC}, {backgroundColor:low ? ACC : TXTC, duration:.3}, t+.3);
+    if (low) F("#"+c.id+" .stage", {x:0}, {x:5, duration:.05, yoyo:true, repeat:3, ease:"none"}, t+.5);
+  }
+  tl.set(id+"-c0", {opacity:1, scale:1.04}, c.t0);
+  for (let i=1;i<p.n;i++) tl.set(id+"-c"+i, {opacity:.55}, c.t0);
+},
+diff(c, p){
+  const id = "#"+c.id, cues = stagger(c, p.cues, .5, .4);
+  for (let i=0;i<p.n;i++){
+    F(id+"-a"+i, {opacity:0, x:-20}, {opacity:1, x:0, duration:.3, ease:E}, cues[i]);
+    F(id+"-b"+i, {opacity:0, x:20}, {opacity:1, x:0, duration:.3, ease:E}, cues[i]+.15);
+    $$(id+"-b"+i+" .df-bar").forEach((bar, j) => F(bar, {scaleX:0}, {scaleX:1, duration:.3, ease:"power3.out"}, cues[i]+.5+j*.12));
+  }
+},
+cerebro(c, p){
+  const id = "#"+c.id, rnd = seeded(3+SEED);
+  show(id+"-a", c.t0+.1, .4, {y:20}); show(id+"-b", c.t0+.25, .4, {y:20});
+  const ta = c.t0+.5, tb = Math.max(ta+1.2, Math.min(p.cue, c.t1-1.2));
+  for (let n=0;n<p.na;n++){ if (rnd() <= p.da) F(id+"-ae"+n, {strokeDashoffset:100, opacity:.18}, {strokeDashoffset:0, opacity:.95, stroke:ACC, duration:.5, ease:"power2.out"}, ta+n*.06); }
+  for (let n=0;n<p.nb;n++){ if (rnd() <= p.db) F(id+"-be"+n, {strokeDashoffset:100, opacity:.18}, {strokeDashoffset:0, opacity:.95, stroke:ACC, duration:.5, ease:"power2.out"}, tb+n*.06); }
+  F(id+"-a svg", {scale:1}, {scale:1.03, duration:.6, yoyo:true, repeat:1, ease:"sine.inOut"}, ta+.3);
+  if (p.val !== null){ const o = {v:0}, land = Math.max(tb+.8, Math.min(p.cv, c.t1-.5));
+    F(o, {v:0}, {v:p.val, duration:Math.max(.6, land-tb), ease:"power3.out", onUpdate:()=>{ $(id+"-n").textContent = fmt(o.v, 0, true); }}, tb);
+  }
+  if ($(id+"-l")) show(id+"-l", tb+.4, .4, {y:14});
+},
+balanza(c, p){
+  const id = "#"+c.id, cue = Math.max(c.t0+1.0, Math.min(p.cue, c.t1-1.0));
+  show(id+"-beam", c.t0+.1, .5, {y:-30});
+  F(id+"-beam", {rotation:0}, {rotation:p.ang, duration:.9, ease:"power2.inOut"}, cue);
+  F(id+"-pl", {rotation:0}, {rotation:-p.ang, duration:.9, ease:"power2.inOut", transformOrigin:"50% 0"}, cue);
+  F(id+"-pr", {rotation:0}, {rotation:-p.ang, duration:.9, ease:"power2.inOut", transformOrigin:"50% 0"}, cue);
+  F(id+"-beam", {rotation:p.ang}, {rotation:p.ang*.85, duration:.5, yoyo:true, repeat:1, ease:"sine.inOut"}, cue+.9);
+  pop(id+"-ar1", cue+.5); pop(id+"-ar2", cue+.7);
+  if ($(id+"-nota")) show(id+"-nota", cue+1.2, .4, {y:10});
+},
+firma(c, p){
+  const id = "#"+c.id, cue = Math.max(c.t0+.9, Math.min(p.cue, c.t1-1.4));
+  for (let i=0;i<p.n;i++) show(id+"-l"+i, c.t0+.2+i*.18, .35, {x:-16});
+  F(id+"-sig", {strokeDashoffset:1000}, {strokeDashoffset:0, duration:1.3, ease:"power1.inOut"}, cue);
+  show(id+"-name", cue+1.2, .4, {y:10});
 },
 glitch(c, p){
   const id = "#"+c.id;
@@ -2927,7 +3235,8 @@ REQUIRED = {"terminal": "lineas", "linea_tiempo": "hitos", "chips": "items", "li
             "calendario": "marcas", "planes": "planes", "presentador": "video", "carrusel": "items", "muro": "imagenes",
             "notificaciones": "items",
             "bandeja": "items", "carta": "texto", "ranking": "filas", "triturar": "lineas", "interruptor": "titulo",
-            "censura": "lineas", "visor": "etiquetas", "onda": "etiquetas"}
+            "censura": "lineas", "visor": "etiquetas", "onda": "etiquetas",
+            "curva": "puntos", "espectro": "items", "diff": "lineas", "firma": "lineas"}
 ENGLISH = {"claude", "chatgpt", "openai", "google", "microsoft", "gemini", "whatsapp", "iphone", "slides", "app", "apps",
            "prompt", "prompts", "code", "copilot", "meta", "apple", "android", "windows", "excel", "powerpoint", "notion",
            "canva", "youtube", "instagram", "tiktok", "linkedin", "email", "online", "software", "startup", "freelance",
@@ -2986,7 +3295,7 @@ def validar(guion, historial=None):
                 warn.append(f"beat {i}: 'presentador' sin voz_archivo: los labios no van a coincidir con la voz")
             if i != 1:
                 warn.append(f"beat {i}: 'presentador' está probado como beat 1 (gancho)")
-        if t == "imagen":
+        if t in ("imagen", "retrato"):
             if not (e.get("archivo") or e.get("url")):
                 err.append(f"beat {i}: la escena 'imagen' necesita 'archivo' (ruta local) o 'url' (https)")
             elif not e.get("credito"):
@@ -3162,10 +3471,14 @@ def prepare_images(guion, beats, work, guion_dir):
     Falla con ERROR si no se pudo conseguir el archivo o no es una imagen: mejor cambiar la escena que publicar un cuadro vacío."""
     import hashlib
     dst_dir = os.path.join(work, "assets", "img")
+    slots = []
     for i, b in enumerate(beats, 1):
         e = b["escena"]
-        if e["tipo"] != "imagen":
-            continue
+        if e["tipo"] in ("imagen", "retrato"):
+            slots.append((i, e, ""))
+        elif e["tipo"] == "espectro":
+            slots += [(i, x, f"-{k}") for k, x in enumerate((e.get("items") or [])[:3])]
+    for i, e, suf in slots:
         os.makedirs(dst_dir, exist_ok=True)
         src = None
         if e.get("archivo"):
@@ -3189,7 +3502,7 @@ def prepare_images(guion, beats, work, guion_dir):
         if not ext:
             print(f"ERROR beat {i}: {src} no es una imagen (jpg, png, webp o gif)")
             sys.exit(2)
-        name = f"img{i}.{ext}"
+        name = f"img{i}{suf}.{ext}"
         shutil.copy(src, os.path.join(dst_dir, name))
         e["_src"] = "assets/img/" + name
 
