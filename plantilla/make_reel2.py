@@ -759,8 +759,13 @@ def scene_html(sid, b, D):
         els = []
         for i, x in enumerate(tags):
             px, py = int(float(x.get("x", .5)) * W), int(float(x.get("y", .4)) * H)
-            left = px > W * .55
-            style = f'right:{W - px + 70}px;top:{py - 30}px' if left else f'left:{px + 70}px;top:{py - 30}px'
+            tw = int(len(x.get("texto", "")) * 15.8 + 86)  # ancho estimado de la etiqueta (mono 26px + punto + relleno)
+            if px + 70 + tw <= W - 20:
+                style = f'left:{px + 70}px;top:{py - 30}px'
+            elif px - 70 - tw >= 20:
+                style = f'right:{W - px + 70}px;top:{py - 30}px'
+            else:
+                style = f'left:{max(20, min(W - 20 - tw, px - tw // 2))}px;top:{py + 70}px'
             els.append(f'<div class="vs-box" id="{p}-bx{i}" style="left:{px}px;top:{py}px"></div>'
                        f'<div class="vs-tag{" ok" if x.get("ok") else ""}" id="{p}-tg{i}" style="{style}"><i></i>{esc(x.get("texto", ""))}</div>')
         pts = [(450, 175), (300, 300), (600, 300), (330, 350), (390, 352), (515, 352), (575, 350), (450, 420), (412, 455), (488, 455),
