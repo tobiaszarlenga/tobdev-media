@@ -1,0 +1,184 @@
+{
+ "etiqueta": "PARA TODOS #2",
+ "fuente": "OpenAI, Anthropic y Google · centros de ayuda",
+ "acento": "#F5FF4A",
+ "tema": "poster",
+ "musica": "retro",
+ "transiciones": [
+  "push",
+  "wipe",
+  "flash",
+  "slide",
+  "push",
+  "wipe",
+  "flash",
+  "zoom",
+  "slide",
+  "push"
+ ],
+ "beats": [
+  {
+   "texto": "Lo que le pegás a {ChatGPT|chat yi pi ti}, *entrena* a {ChatGPT|chat yi pi ti}.",
+   "escena": {
+    "tipo": "glitch",
+    "por_linea": 3
+   }
+  },
+  {
+   "texto": "Pegás la lista de clientes para que te arme un mail, y esa lista puede pasar a ser parte del *modelo*.",
+   "escena": {
+    "tipo": "triturar",
+    "archivo": "clientes_2026.xlsx",
+    "en": "pasar",
+    "destino": "Entrenamiento del modelo",
+    "lineas": [
+     "Sofía Pérez · 381 555-0199 · debe $42.000",
+     "Constructora Demo · CUIT 30-00000000-0",
+     "Martín Gómez · martin@ejemplo.com",
+     "Obra Lote 12 · presupuesto $8.900.000"
+    ]
+   }
+  },
+  {
+   "texto": "Pasa en {ChatGPT|chat yi pi ti} y en {Gemini|yémini} si no lo apagás, y en {Claude|Claude} si lo *activás*.",
+   "escena": {
+    "tipo": "marcas",
+    "logos": [
+     {
+      "marca": "openai",
+      "texto": "ChatGPT",
+      "en": "ChatGPT"
+     },
+     {
+      "marca": "gemini",
+      "texto": "Gemini",
+      "en": "Gemini"
+     },
+     {
+      "marca": "claude",
+      "texto": "Claude",
+      "en": "Claude"
+     }
+    ],
+    "titulo": "Cuentas personales"
+   }
+  },
+  {
+   "texto": "Nombres, teléfonos, montos, contratos: eso *no va* en un chat personal.",
+   "escena": {
+    "tipo": "censura",
+    "titulo": "Lo que nunca pegás",
+    "archivo": "clientes_2026.xlsx",
+    "sello": "NO LO PEGUES",
+    "en": "chat",
+    "lineas": [
+     {
+      "texto": "[[Sofía Pérez]] · [[381 555-0199]] · debe $42.000",
+      "en": "Nombres"
+     },
+     {
+      "texto": "Constructora Demo · CUIT [[30-00000000-0]]",
+      "en": "teléfonos"
+     },
+     {
+      "texto": "[[Martín Gómez]] · presupuesto [[$8.900.000]]",
+      "en": "montos"
+     },
+     {
+      "texto": "Contrato de obra · [[Lote 12 · firmado]]",
+      "en": "contratos"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "El interruptor existe. En {ChatGPT|chat yi pi ti}: ajustes, controles de datos, *mejorar el modelo para todos*. Apagalo.",
+   "escena": {
+    "tipo": "interruptor",
+    "ruta": "ChatGPT › Ajustes › Controles de datos",
+    "titulo": "Mejorar el modelo para todos",
+    "sub": "Permitir que tu contenido se use para entrenar los modelos",
+    "en": "Apagalo",
+    "nota": "Guardado"
+   }
+  },
+  {
+   "texto": "En {Claude|Claude} lo elegís vos, en privacidad: si lo activás, guardan tus chats *cinco años*. En {Gemini|yémini}: la actividad de las {apps|aps}.",
+   "escena": {
+    "tipo": "pasos",
+    "pasos": [
+     {
+      "titulo": "Claude · *Privacidad*",
+      "sub": "Mejora del modelo: la elegís vos · 5 años si la activás",
+      "en": "Claude"
+     },
+     {
+      "titulo": "Gemini · Actividad",
+      "sub": "\"Actividad en las apps de Gemini\" → conservar: apagado",
+      "en": "Gemini"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y ojo: en {Gemini|yémini}, una parte de los chats la leen *personas*, y lo revisado se guarda hasta tres años.",
+   "escena": {
+    "tipo": "alerta",
+    "titulo": "Lo que dice Google",
+    "marcar": 0,
+    "en": "personas",
+    "filas": [
+     [
+      "Revisores humanos",
+      "leen una parte"
+     ],
+     [
+      "Lo revisado",
+      "hasta 3 años"
+     ],
+     [
+      "Chats temporales",
+      "no entrenan"
+     ]
+    ]
+   }
+  },
+  {
+   "texto": "¿Y en tu negocio?",
+   "escena": {
+    "tipo": "frase"
+   }
+  },
+  {
+   "texto": "Si vas a cargar datos de clientes, usá una cuenta de empresa o la {API|a pe i}: {OpenAI|open ei ai} y {Anthropic|ántropic} *no entrenan* con eso.",
+   "escena": {
+    "tipo": "comparacion",
+    "antes": {
+     "titulo": "Cuenta personal",
+     "items": [
+      "Puede entrenar el modelo",
+      "Lo apagás a mano"
+     ],
+     "en": "datos",
+     "icono": "usuario"
+    },
+    "despues": {
+     "titulo": "Empresa o API",
+     "items": [
+      "No entrena (OpenAI, Anthropic)",
+      "Contrato y controles"
+     ],
+     "en": "entrenan",
+     "icono": "escudo"
+    }
+   }
+  },
+  {
+   "texto": "Guardalo, y mandáselo al que pega todo en {ChatGPT|chat yi pi ti}. Seguí a {@tobdev.ia|tob dev}.",
+   "escena": {
+    "tipo": "cierre"
+   }
+  }
+ ],
+ "voz_archivo": "/tmp/voz-datos.mp3"
+}

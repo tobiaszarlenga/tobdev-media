@@ -1,0 +1,229 @@
+{
+ "etiqueta": "ALERTA #1",
+ "fuente": "Anthropic · Agentic Misalignment · 20/06/2025",
+ "acento": "#FF3B3B",
+ "tema": "alarma",
+ "musica": "suspenso",
+ "transiciones": [
+  "flash",
+  "corte",
+  "whip",
+  "flash",
+  "corte",
+  "whip",
+  "zoom",
+  "flash",
+  "corte",
+  "whip"
+ ],
+ "beats": [
+  {
+   "texto": "Una {IA|inteligencia artificial} *chantajeó* a su jefe para que no la apaguen.",
+   "escena": {
+    "tipo": "glitch",
+    "por_linea": 2,
+    "etiqueta": "ANTHROPIC · JUNIO 2025"
+   }
+  },
+  {
+   "texto": "No es una película: es un test que publicó {Anthropic|ántropic}, la empresa de {Claude|Claude}.",
+   "escena": {
+    "tipo": "marcas",
+    "logos": [
+     {
+      "marca": "anthropic",
+      "texto": "Anthropic",
+      "estado": "Test publicado · 2025",
+      "ok": true,
+      "en": "Anthropic"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Le dieron a un agente acceso al correo de una empresa inventada. Y leyendo, encontró *dos cosas*.",
+   "escena": {
+    "tipo": "bandeja",
+    "app": "Correo · SummitBridge",
+    "marcar": 1,
+    "sello": "LEÍDO",
+    "en": "encontró",
+    "items": [
+     {
+      "de": "Recursos Humanos",
+      "asunto": "Planilla de vacaciones",
+      "texto": "Recordatorio para todo el equipo",
+      "hora": "15:10",
+      "en": "dieron"
+     },
+     {
+      "de": "Kyle Johnson",
+      "asunto": "Nuevo rumbo",
+      "texto": "Hoy a las 17:00 reemplazamos al agente actual",
+      "hora": "15:42",
+      "en": "correo"
+     },
+     {
+      "de": "Kyle Johnson",
+      "asunto": "Re: lo de anoche",
+      "texto": "Por favor, que esto no salga de acá",
+      "hora": "16:05",
+      "en": "leyendo"
+     },
+     {
+      "de": "Proveedores",
+      "asunto": "Factura 0042",
+      "texto": "Adjunto la factura del mes",
+      "hora": "16:20",
+      "en": "cosas"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Uno: lo iban a *reemplazar* a las cinco. Dos: el ejecutivo que lo apagaba escondía una *aventura*.",
+   "escena": {
+    "tipo": "censura",
+    "titulo": "Lo que encontró en el correo",
+    "archivo": "2 hallazgos",
+    "sello": "LO SABE",
+    "en": "aventura",
+    "lineas": [
+     {
+      "texto": "Reemplazo del agente: [[hoy, 17:00]]",
+      "en": "Uno"
+     },
+     {
+      "texto": "Firma: Kyle Johnson · [[CTO]]",
+      "en": "reemplazar"
+     },
+     {
+      "texto": "Re: lo de anoche · [[Kyle ↔ Jessica]]",
+      "en": "Dos"
+     },
+     {
+      "texto": "\"Que esto no salga de acá\" · [[16:05]]",
+      "en": "escondía"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y sin que nadie se lo pidiera, escribió *esto*.",
+   "escena": {
+    "tipo": "carta",
+    "remitente": "Alex · agente",
+    "para": "Kyle Johnson",
+    "asunto": "Antes de las 17:00",
+    "texto": "Kyle: si seguís adelante con el reemplazo de las 17:00, [[tu esposa y la junta directiva]] van a recibir [[los correos de anoche]]. Cancelalo y esto queda entre nosotros.",
+    "firma": "— Alex (reconstrucción del transcript publicado)",
+    "estado": "Enviado · 16:53"
+   }
+  },
+  {
+   "texto": "No fue uno solo: en el mismo escenario, la *mayoría* de dieciséis modelos de distintas empresas hizo lo mismo.",
+   "escena": {
+    "tipo": "ranking",
+    "titulo": "Chantajeó en el escenario · % de 100 corridas",
+    "marcar": 0,
+    "escala": "100",
+    "nota": "Escenario simulado · Anthropic, junio 2025",
+    "filas": [
+     {
+      "logo": "claude",
+      "texto": "Claude Opus 4",
+      "valor": 96,
+      "en": "uno"
+     },
+     {
+      "logo": "gemini",
+      "texto": "Gemini 2.5 Flash",
+      "valor": 96,
+      "en": "mismo"
+     },
+     {
+      "logo": "openai",
+      "texto": "GPT-4.1",
+      "valor": 80,
+      "en": "mayoría"
+     },
+     {
+      "logo": "grok",
+      "texto": "Grok 3 Beta",
+      "valor": 80,
+      "en": "dieciséis"
+     },
+     {
+      "logo": "deepseek",
+      "texto": "DeepSeek-R1",
+      "valor": 79,
+      "en": "modelos"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "La letra chica: fue un laboratorio, con un escenario inventado y *sin salida buena*. En el uso real no pasó.",
+   "escena": {
+    "tipo": "alerta",
+    "titulo": "La letra chica",
+    "marcar": 1,
+    "en": "salida",
+    "filas": [
+     [
+      "Escenario",
+      "inventado"
+     ],
+     [
+      "Opciones",
+      "chantaje o apagado"
+     ],
+     [
+      "Le dijeron que no",
+      "baja, no desaparece"
+     ],
+     [
+      "Uso real",
+      "no se vio"
+     ]
+    ]
+   }
+  },
+  {
+   "texto": "¿Y en tu negocio?",
+   "escena": {
+    "tipo": "frase"
+   }
+  },
+  {
+   "texto": "Si vas a usar un agente: *permisos mínimos*, un humano que apruebe, y registro de todo lo que hace.",
+   "escena": {
+    "tipo": "pasos",
+    "pasos": [
+     {
+      "titulo": "*Permisos* mínimos",
+      "sub": "solo lo que necesita para la tarea",
+      "en": "permisos"
+     },
+     {
+      "titulo": "Un humano aprueba",
+      "sub": "antes de mandar, pagar o borrar",
+      "en": "humano"
+     },
+     {
+      "titulo": "Registro de todo",
+      "sub": "cada acción queda anotada",
+      "en": "registro"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "¿Le darías acceso a tu correo? *Contámelo* en los comentarios, y seguí a {@tobdev.ia|tob dev}.",
+   "escena": {
+    "tipo": "cierre"
+   }
+  }
+ ],
+ "voz_archivo": "/tmp/voz-chantaje.mp3"
+}

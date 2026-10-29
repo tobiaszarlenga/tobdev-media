@@ -1,0 +1,180 @@
+{
+ "etiqueta": "PARA TODOS #3",
+ "fuente": "MIT Media Lab · FBI (IC3, 12/2024)",
+ "acento": "#FF2D55",
+ "tema": "cine",
+ "musica": "suave",
+ "transiciones": [
+  "corte",
+  "flash",
+  "iris",
+  "whip",
+  "flash",
+  "zoom",
+  "corte",
+  "iris",
+  "whip"
+ ],
+ "beats": [
+  {
+   "texto": "Este video *no existe*. Y tu tía ya lo compartió.",
+   "escena": {
+    "tipo": "visor",
+    "sello": "GENERADO CON IA",
+    "en": "compartió",
+    "etiquetas": [
+     {
+      "texto": "Parpadeo: raro",
+      "x": 0.42,
+      "y": 0.37,
+      "en": "video"
+     },
+     {
+      "texto": "Labios fuera de sincro",
+      "x": 0.5,
+      "y": 0.56,
+      "en": "existe"
+     },
+     {
+      "texto": "Piel demasiado lisa",
+      "x": 0.33,
+      "y": 0.24,
+      "en": "tía"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y cada vez cuesta *más* darse cuenta.",
+   "escena": {
+    "tipo": "glitch",
+    "por_linea": 2
+   }
+  },
+  {
+   "texto": "Mirá la voz: el *tono*, y palabras que esa persona nunca usaría.",
+   "escena": {
+    "tipo": "onda",
+    "titulo": "Audio del video",
+    "duracion": "0:14",
+    "sello": "SOSPECHOSA",
+    "en": "usaría",
+    "marcar": [
+     0.48,
+     0.7
+    ],
+    "etiquetas": [
+     {
+      "texto": "Tono que no es el suyo",
+      "en": "voz"
+     },
+     {
+      "texto": "Palabras que no usa",
+      "en": "palabras"
+     },
+     {
+      "texto": "Pide plata urgente",
+      "en": "nunca"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y los detalles: las *manos*, el reflejo de los anteojos, las sombras que no cierran.",
+   "escena": {
+    "tipo": "chips",
+    "estilo": "etiqueta",
+    "items": [
+     {
+      "texto": "Manos y dedos",
+      "icono": "usuario",
+      "en": "manos"
+     },
+     {
+      "texto": "Reflejo de los anteojos",
+      "icono": "lupa",
+      "en": "reflejo"
+     },
+     {
+      "texto": "Sombras que no cierran",
+      "icono": "alerta",
+      "en": "sombras"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Pero ojo: *ningún* detalle solo te lo confirma.",
+   "escena": {
+    "tipo": "glitch",
+    "por_linea": 3
+   }
+  },
+  {
+   "texto": "Entonces, antes de creer: *¿quién* lo publicó? ¿Lo tiene un medio serio? ¿Lo dice la fuente original?",
+   "escena": {
+    "tipo": "pasos",
+    "pasos": [
+     {
+      "titulo": "*¿Quién* lo publicó?",
+      "sub": "cuenta nueva, sin historial: sospechá",
+      "en": "quién"
+     },
+     {
+      "titulo": "¿Lo tiene un medio serio?",
+      "sub": "buscalo por el título",
+      "en": "medio"
+     },
+     {
+      "titulo": "¿Lo dice la fuente original?",
+      "sub": "la cuenta oficial de la persona",
+      "en": "fuente"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y si un audio de alguien conocido te pide plata: cortá, y *llamalo vos* al número de siempre.",
+   "escena": {
+    "tipo": "celular",
+    "estilo": "whatsapp",
+    "app": "Mamá",
+    "icono": "usuario",
+    "estado": "en línea",
+    "mensajes": [
+     {
+      "de": "ia",
+      "audio": "0:21",
+      "hora": "22:41",
+      "en": "audio"
+     },
+     {
+      "de": "ia",
+      "texto": "Necesito que transfieras ahora, después te explico",
+      "hora": "22:41",
+      "en": "plata"
+     },
+     {
+      "de": "yo",
+      "texto": "Te llamo yo al número de siempre",
+      "hora": "22:43",
+      "en": "llamalo"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "La regla: verificá la *fuente*, no el video.",
+   "escena": {
+    "tipo": "frase"
+   }
+  },
+  {
+   "texto": "¿Te pasó de caer en uno? *Contámelo* en los comentarios, y seguí a {@tobdev.ia|tob dev}.",
+   "escena": {
+    "tipo": "cierre"
+   }
+  }
+ ],
+ "voz_archivo": "/tmp/voz-deepfake.mp3"
+}

@@ -346,6 +346,80 @@
         "cierre"
       ],
       "voz": "elevenlabs"
+    },
+    {
+      "fecha": "2026-10-29",
+      "metricool": "manual",
+      "voz": "elevenlabs",
+      "pilar": "para_todos",
+      "serie": "ALERTA #1",
+      "titulo": "Una IA chantajeó a su jefe: el test Agentic Misalignment de Anthropic (lo sube Tob a mano)",
+      "url_fuente": "https://www.anthropic.com/research/agentic-misalignment",
+      "video": "videos/2026-10-29-chantaje.mp4",
+      "acento": "#FF3B3B",
+      "tema": "alarma",
+      "musica": "suspenso",
+      "escenas": [
+        "glitch",
+        "marcas",
+        "bandeja",
+        "censura",
+        "carta",
+        "ranking",
+        "alerta",
+        "frase",
+        "pasos",
+        "cierre"
+      ]
+    },
+    {
+      "fecha": "2026-10-29",
+      "metricool": "manual",
+      "voz": "elevenlabs",
+      "pilar": "para_todos",
+      "serie": "PARA TODOS #2",
+      "titulo": "Lo que le pegás a ChatGPT entrena a ChatGPT: cómo apagarlo en ChatGPT, Claude y Gemini (lo sube Tob a mano)",
+      "url_fuente": "https://help.openai.com/en/articles/7730893-data-controls-faq",
+      "video": "videos/2026-10-29-datos.mp4",
+      "acento": "#F5FF4A",
+      "tema": "poster",
+      "musica": "retro",
+      "escenas": [
+        "glitch",
+        "triturar",
+        "marcas",
+        "censura",
+        "interruptor",
+        "pasos",
+        "alerta",
+        "frase",
+        "comparacion",
+        "cierre"
+      ]
+    },
+    {
+      "fecha": "2026-10-29",
+      "metricool": "manual",
+      "voz": "elevenlabs",
+      "pilar": "para_todos",
+      "serie": "PARA TODOS #3",
+      "titulo": "Cómo saber si un video es falso: señales del MIT y consejos del FBI (lo sube Tob a mano)",
+      "url_fuente": "https://www.ic3.gov/PSA/2024/PSA241203",
+      "video": "videos/2026-10-29-deepfake.mp4",
+      "acento": "#FF2D55",
+      "tema": "cine",
+      "musica": "suave",
+      "escenas": [
+        "visor",
+        "glitch",
+        "onda",
+        "chips",
+        "glitch",
+        "pasos",
+        "celular",
+        "frase",
+        "cierre"
+      ]
     }
   ]
 }
