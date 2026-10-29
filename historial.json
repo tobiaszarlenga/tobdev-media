@@ -322,6 +322,30 @@
         "cierre"
       ],
       "voz": "elevenlabs"
+    },
+    {
+      "fecha": "2026-10-29",
+      "pilar": "uso",
+      "serie": "IA EN TU NEGOCIO #1",
+      "titulo": "Tus clientes escriben a las once: un asistente de IA en WhatsApp toma los turnos (lo sube Tob a mano)",
+      "url_fuente": "",
+      "video": "guiones/2026-10-29-turnos-whatsapp.json",
+      "metricool": "manual",
+      "acento": "#25D366",
+      "tema": "noche",
+      "musica": "urgente",
+      "escenas": [
+        "celular",
+        "impacto",
+        "reloj",
+        "frase",
+        "celular",
+        "pasos",
+        "notificaciones",
+        "alerta",
+        "cierre"
+      ],
+      "voz": "elevenlabs"
     }
   ]
 }

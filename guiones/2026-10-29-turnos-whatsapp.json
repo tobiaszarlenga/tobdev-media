@@ -1,0 +1,181 @@
+{
+ "etiqueta": "IA EN TU NEGOCIO #1",
+ "acento": "#25D366",
+ "tema": "noche",
+ "musica": "urgente",
+ "transiciones": [
+  "flash",
+  "whip",
+  "zoom",
+  "whip",
+  "push",
+  "slide",
+  "flash",
+  "iris"
+ ],
+ "beats": [
+  {
+   "texto": "Tu negocio cierra a las ocho. Tus clientes escriben a las *once*.",
+   "escena": {
+    "tipo": "celular",
+    "estilo": "whatsapp",
+    "app": "Peluquería Demo",
+    "icono": "usuario",
+    "estado": "últ. vez hoy 19:58",
+    "mensajes": [
+     {
+      "de": "ia",
+      "texto": "Hola! ¿Tienen turno para mañana a la tarde?",
+      "hora": "23:14",
+      "en": "clientes"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y *nadie* contesta.",
+   "escena": {
+    "tipo": "impacto",
+    "por_linea": 1
+   }
+  },
+  {
+   "texto": "A la mañana respondés. Pero ese cliente *ya reservó* en otro lado.",
+   "escena": {
+    "tipo": "reloj",
+    "antes": "23:14 · te escribe",
+    "despues": "09:02 · respondés",
+    "en": "respondés"
+   }
+  },
+  {
+   "texto": "¿Y si contestara solo?",
+   "escena": {
+    "tipo": "frase"
+   }
+  },
+  {
+   "texto": "Un asistente con {IA|inteligencia artificial} en tu {WhatsApp|guasap} responde *al instante*, con tus horarios y tus precios.",
+   "escena": {
+    "tipo": "celular",
+    "estilo": "whatsapp",
+    "app": "Peluquería Demo",
+    "icono": "usuario",
+    "estado": "en línea",
+    "mensajes": [
+     {
+      "de": "ia",
+      "texto": "Hola! ¿Tienen turno para mañana a la tarde?",
+      "hora": "23:14",
+      "en": "asistente"
+     },
+     {
+      "de": "yo",
+      "texto": "¡Hola! Sí, mañana tengo *15:30* y *17:00*. ¿Cuál te queda mejor?",
+      "hora": "23:14",
+      "en": "instante"
+     },
+     {
+      "de": "ia",
+      "texto": "17:00",
+      "hora": "23:15",
+      "en": "horarios"
+     },
+     {
+      "de": "yo",
+      "texto": "Listo, te anoté a las *17:00*. Mañana te mando un recordatorio.",
+      "hora": "23:15",
+      "en": "precios"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Toma el turno, pasa el precio, y lo que no sabe, *te lo deriva* a vos.",
+   "escena": {
+    "tipo": "pasos",
+    "pasos": [
+     {
+      "titulo": "Toma el *turno*",
+      "sub": "y lo carga en tu agenda",
+      "en": "turno"
+     },
+     {
+      "titulo": "Pasa precios y horarios",
+      "sub": "los que vos cargaste",
+      "en": "precio"
+     },
+     {
+      "titulo": "Lo que no sabe, te lo deriva",
+      "sub": "nunca inventa",
+      "en": "deriva"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Vos te despertás, y los turnos *ya están cargados*.",
+   "escena": {
+    "tipo": "notificaciones",
+    "items": [
+     {
+      "logo": "whatsapp",
+      "app": "WhatsApp",
+      "titulo": "Turno 17:00 · Sofi",
+      "texto": "Mañana · corte y color",
+      "hora": "23:15",
+      "en": "despertás"
+     },
+     {
+      "icono": "reloj",
+      "app": "Agenda",
+      "titulo": "Turno 10:30 · Martín",
+      "texto": "Mañana · corte",
+      "hora": "00:40",
+      "en": "turnos"
+     },
+     {
+      "icono": "alerta",
+      "app": "Asistente",
+      "titulo": "Consulta derivada",
+      "texto": "Preguntan por un servicio que no cargaste",
+      "hora": "07:12",
+      "en": "cargados"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Ojo: no inventa precios ni promete lo que no podés cumplir.",
+   "escena": {
+    "tipo": "alerta",
+    "titulo": "Lo que responde",
+    "filas": [
+     [
+      "Precios",
+      "solo los tuyos"
+     ],
+     [
+      "Horarios",
+      "los de tu agenda"
+     ],
+     [
+      "Si duda",
+      "te pregunta a vos"
+     ]
+    ],
+    "marcar": 2,
+    "en": "promete"
+   }
+  },
+  {
+   "texto": "Compartilo con alguien que tenga un negocio, y seguí a {@tobdev.ia|tob dev}.",
+   "escena": {
+    "tipo": "cierre",
+    "cta": "Escribime “TURNO”",
+    "sub": "Sistemas e IA para tu PyME"
+   }
+  }
+ ],
+ "voz_archivo": "/tmp/voz-turnos.mp3"
+}
