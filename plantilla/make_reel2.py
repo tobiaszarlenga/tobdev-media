@@ -34,9 +34,12 @@ SCENE_TYPES = {"terminal", "linea_tiempo", "prompt", "capas", "flujo", "cursores
                # v2.4
                "llamada",
                # v2.5 (estilo marca: sitios reales, caos, planilla, notificaciones, logo, cuenta regresiva)
-               "sitio", "carrusel", "muro", "notificaciones", "caos", "planilla", "logo", "cuenta"}
+               "sitio", "carrusel", "muro", "notificaciones", "caos", "planilla", "logo", "cuenta",
+               # v2.6 (looks nuevos: glitch, bandeja de correo, carta redactada, ranking con logos, documento triturado,
+               # interruptor, censura, visor de cámara, onda de audio)
+               "glitch", "bandeja", "carta", "ranking", "triturar", "interruptor", "censura", "visor", "onda"}
 LEAD = 0.12  # silencio al principio de la pista de voz
-NOCAPS = {"frase", "cierre", "impacto", "muro", "logo"}          # escenas que ya muestran el texto: sin subtítulos arriba
+NOCAPS = {"frase", "cierre", "impacto", "muro", "logo", "glitch"}          # escenas que ya muestran el texto: sin subtítulos arriba
 PUNCT_PAUSE = {",": 0.10, ";": 0.16, ":": 0.18, ".": 0.24, "?": 0.26, "!": 0.24, "…": 0.26}
 BEAT_GAP = 0.14
 # Temas visuales: cambian fondo, superficies, tipografía y subtítulos. El cierre y la cabecera son siempre de TobDev.
@@ -59,6 +62,16 @@ THEMES = {
     "estudio": dict(bg="#F4F3EF", surface="#FFFFFF", surface2="#ECEBE6", surface3="#E2E1DB", ink="#0A0E1A", text="#0E1B33",
                     soft="#3A4763", muted="#7B859A", border="rgba(14,27,51,.10)", line="rgba(14,27,51,.12)", capdone="#3A4763",
                     display='"Poppins","FreeSans",Arial,sans-serif', radius="22px", mark="brightness(0)", glow=".10"),
+    # v2.6
+    "alarma": dict(bg="#07070A", surface="rgba(18,13,16,.95)", surface2="#19131A", surface3="#231A23", ink="#07070A", text="#FFFFFF",
+                   soft="#E6DADA", muted="#978A94", border="rgba(var(--acc-rgb),.38)", line="rgba(255,255,255,.12)", capdone="#D8CBCB",
+                   display='"FreeSans","Helvetica Neue",Arial,sans-serif', radius="4px", mark="none", glow=".3"),
+    "poster": dict(bg="#2A22E6", surface="rgba(8,6,80,.55)", surface2="#2119B8", surface3="#1A1496", ink="#0A0E1A", text="#FFFFFF",
+                   soft="#E8E6FF", muted="#BDB9FF", border="rgba(255,255,255,.92)", line="rgba(255,255,255,.28)", capdone="#D6D3FF",
+                   display='"Poppins","FreeSans",Arial,sans-serif', radius="0px", mark="none", glow=".18"),
+    "cine": dict(bg="#050505", surface="rgba(22,22,22,.94)", surface2="#1B1B1B", surface3="#262626", ink="#050505", text="#F6F2E9",
+                 soft="#DAD4C8", muted="#8F8A80", border="rgba(255,255,255,.14)", line="rgba(255,255,255,.12)", capdone="#CFC9BD",
+                 display='"FreeSans","Helvetica Neue",Arial,sans-serif', radius="14px", mark="none", glow=".22"),
 }
 TRANSITIONS = ["zoom", "rise", "wipe", "slide", "iris", "flip", "push", "swing", "flash", "whip", "corte", "continuo"]
 MUSIC_STYLES = ["tech", "suave", "urgente", "retro", "suspenso"]
@@ -651,6 +664,127 @@ def scene_html(sid, b, D):
     e = b["escena"]; t = e["tipo"]; p = sid
     if t in ("sitio", "carrusel", "muro", "notificaciones", "caos", "planilla", "logo", "cuenta"):
         return scene_html_marca(sid, b, D)
+    if t == "glitch":
+        words = b["words"]
+        ln, lines = [], []
+        for i, w in enumerate(words):
+            ln.append((i, w))
+            if len(ln) >= int(e.get("por_linea", 2)) or w["cap"][-1] in ".,:;?!":
+                lines.append(ln); ln = []
+        if ln:
+            lines.append(ln)
+        longest = max((sum(len(w["cap"]) for _, w in l) + len(l) - 1) for l in lines) if lines else 8
+        fs = max(90, min(220, int(940 / (max(5, longest) * 0.62))))
+        def _gw(i, w):
+            up = esc(w["cap"].upper())
+            return (f'<span class="gl-w{" kw" if w["kw"] is not None else ""}" id="{p}-w{i}"><span class="gl-l r">{up}</span><span class="gl-l b">{up}</span>'
+                    f'<span class="gl-m">{up}<i class="gl-bar" id="{p}-b{i}"></i></span></span>')
+        rows = "".join('<div class="gl-ln">' + "".join(_gw(i, w) for i, w in l) + '</div>' for l in lines)
+        tag = f'<div class="gl-tag" id="{p}-tag">{esc(e["etiqueta"])}</div>' if e.get("etiqueta") else ""
+        return f'<div class="gl-tear" id="{p}-tear"></div>{tag}<div class="gl-box" style="font-size:{fs}px">{rows}</div>'
+    if t == "bandeja":
+        it = e.get("items", [])[:5]; mk = e.get("marcar", -1)
+        rows = "".join(f'<div class="bj-row{" mk" if i == mk else ""}" id="{p}-r{i}"><div class="bj-av">{esc((x.get("de") or "?")[0].upper())}</div>'
+                       f'<div class="bj-txt"><div class="bj-de">{esc(x.get("de", ""))}</div><div class="bj-as">{esc(x.get("asunto", ""))}</div>'
+                       f'<div class="bj-pv">{esc(x.get("texto", ""))}</div></div><div class="bj-h mono">{esc(x.get("hora", ""))}</div>'
+                       f'<div class="bj-scan" id="{p}-sc{i}"></div></div>' for i, x in enumerate(it))
+        stamp = f'<div class="bj-stamp" id="{p}-st">{esc(e["sello"])}</div>' if e.get("sello") else ""
+        return (f'<div class="bj-win glass"><div class="bj-top"><div class="cu-dots"><i></i><i></i><i></i></div>'
+                f'<span class="mono">{esc(e.get("app", "Bandeja de entrada"))} · {len(it)}</span></div>{rows}</div>{stamp}')
+    if t == "carta":
+        txt = e.get("texto", "")[:260]
+        parts = re.split(r"(\[\[.*?\]\])", txt)
+        html, k = [], 0
+        for seg in parts:
+            if seg.startswith("[[") and seg.endswith("]]"):
+                inner = "".join(f'<span class="ch">{esc(c_) if c_ != " " else "&nbsp;"}</span>' for c_ in seg[2:-2])
+                html.append(f'<span class="ct-red"><i class="ct-bar" id="{p}-rb{k}"></i>{inner}</span>'); k += 1
+            else:
+                html.append("".join(f'<span class="ch">{esc(c_)}</span>' if c_ != " " else '<span class="ch sp"> </span>' for c_ in seg))
+        fs = fit(re.sub(r"\[\[|\]\]", "", txt), [(120, 40), (180, 36), (999, 32)])
+        firma = f'<div class="ct-firma mono">{esc(e["firma"])}</div>' if e.get("firma") else ""
+        return (f'<div class="ct-win glass" id="{p}-win"><div class="ct-who">{esc(e.get("remitente", "Redactando…"))}</div><div class="ct-head">'
+                f'<div class="ct-row"><span class="mono">Para</span><b>{esc(e.get("para", ""))}</b></div>'
+                f'<div class="ct-row"><span class="mono">Asunto</span><b>{esc(e.get("asunto", ""))}</b></div></div>'
+                f'<div class="ct-body" style="font-size:{fs}px">{"".join(html)}{firma}</div>'
+                f'<div class="ct-foot"><div class="ct-send" id="{p}-send">{esc(e.get("boton", "Enviar"))}</div>'
+                f'<div class="ct-st" id="{p}-st">{icon("check", 28, "var(--acc)")}{esc(e.get("estado", "Enviado"))}</div></div></div>')
+    if t == "ranking":
+        filas = e.get("filas", [])[:6]; mk = e.get("marcar", 0)
+        suf = e.get("sufijo", "%")
+        def _lg(x):
+            return logo_badge(x["logo"], 76) if logo_key(x.get("logo")) else f'<div class="rk-ini">{esc((x.get("texto") or "?")[0].upper())}</div>'
+        rows = "".join(f'<div class="rk-row{" mk" if i == mk else ""}" id="{p}-r{i}"><div class="rk-logo">{_lg(x)}</div><div class="rk-txt">{esc(x.get("texto", ""))}</div>'
+                       f'<div class="rk-track"><div class="rk-fill" id="{p}-f{i}"></div></div><div class="rk-v" id="{p}-v{i}">0{esc(suf)}</div></div>'
+                       for i, x in enumerate(filas))
+        tit = f'<div class="eyebrow" id="{p}-tit">{esc(e["titulo"])}</div>' if e.get("titulo") else ""
+        note = f'<div class="rk-note" id="{p}-note">{esc(e["nota"])}</div>' if e.get("nota") else ""
+        return f'<div class="rk-wrap glass">{tit}{rows}{note}</div>'
+    if t == "triturar":
+        lns = e.get("lineas", [])[:5]
+        rows = "".join(f'<div class="tr-ln" id="{p}-l{i}">{esc(x)}</div>' for i, x in enumerate(lns))
+        cnt = f'<div class="tr-cnt" id="{p}-cnt">&nbsp;</div>' if e.get("contador") else ""
+        return (f'<canvas class="tr-cv" width="1080" height="1010" id="{p}-cv"></canvas>'
+                f'<div class="tr-doc" id="{p}-doc"><div class="tr-name">{icon("archivo", 30, "var(--acc)")}{esc(e.get("archivo", "documento.xlsx"))}</div>{rows}</div>'
+                f'<div class="tr-core"><div class="tr-ring" id="{p}-ring"></div><div class="tr-ring2" id="{p}-ring2"></div>{cnt}'
+                f'<div class="tr-lab" id="{p}-lab">{esc(e.get("destino", "Entrenamiento del modelo"))}</div></div>')
+    if t == "interruptor":
+        on_first = e.get("desde", "on") == "on"
+        return (f'<div class="sw-card glass"><div class="sw-ruta" id="{p}-ruta">{esc(e.get("ruta", "Ajustes"))}</div>'
+                f'<div class="sw-tit" id="{p}-tit">{esc(e.get("titulo", ""))}</div><div class="sw-sub" id="{p}-sub">{esc(e.get("sub", ""))}</div>'
+                f'<div class="sw-row" id="{p}-row"><div class="sw-state"><span class="on" id="{p}-on">{esc(e.get("texto_on", "ACTIVADO"))}</span>'
+                f'<span class="off" id="{p}-off">{esc(e.get("texto_off", "DESACTIVADO"))}</span></div>'
+                f'<div class="sw-track{"" if on_first else " off"}" id="{p}-track"><div class="sw-thumb" id="{p}-thumb"></div></div></div>'
+                f'<div class="sw-ok" id="{p}-ok">{icon("check", 30, "var(--acc)")}{esc(e.get("nota", "Guardado"))}</div></div>'
+                f'<div class="sw-finger" id="{p}-fg"></div>')
+    if t == "censura":
+        lns = e.get("lineas", [])[:6]
+        def _ln(i, x):
+            parts = re.split(r"(\[\[.*?\]\])", x.get("texto", "") if isinstance(x, dict) else str(x))
+            out, k = [], 0
+            for seg in parts:
+                if seg.startswith("[[") and seg.endswith("]]"):
+                    out.append(f'<span class="cs-red"><i class="cs-bar" id="{p}-b{i}_{k}"></i>{esc(seg[2:-2])}</span>'); k += 1
+                else:
+                    out.append(esc(seg))
+            return f'<div class="cs-ln" id="{p}-l{i}">{"".join(out)}</div>'
+        rows = "".join(_ln(i, x) for i, x in enumerate(lns))
+        head = (f'<div class="cs-h" id="{p}-h"><div class="eyebrow">{esc(e.get("titulo", ""))}</div><div class="mono cs-n">{esc(e.get("archivo", ""))}</div></div>'
+                if e.get("titulo") or e.get("archivo") else "")
+        stamp = f'<div class="cs-stamp" id="{p}-st"><span>{esc(e["sello"])}</span></div>' if e.get("sello") else ""
+        return f'<div class="cs-sheet glass">{head}{rows}</div>{stamp}'
+    if t == "visor":
+        tags = e.get("etiquetas", [])[:5]
+        W, H = 900, 950
+        els = []
+        for i, x in enumerate(tags):
+            px, py = int(float(x.get("x", .5)) * W), int(float(x.get("y", .4)) * H)
+            left = px > W * .55
+            style = f'right:{W - px + 70}px;top:{py - 30}px' if left else f'left:{px + 70}px;top:{py - 30}px'
+            els.append(f'<div class="vs-box" id="{p}-bx{i}" style="left:{px}px;top:{py}px"></div>'
+                       f'<div class="vs-tag{" ok" if x.get("ok") else ""}" id="{p}-tg{i}" style="{style}"><i></i>{esc(x.get("texto", ""))}</div>')
+        pts = [(450, 175), (300, 300), (600, 300), (330, 350), (390, 352), (515, 352), (575, 350), (450, 420), (412, 455), (488, 455),
+               (385, 525), (450, 545), (515, 525), (450, 612), (320, 470), (580, 470), (355, 565), (545, 565)]
+        seg = [(0, 1), (0, 2), (1, 3), (2, 6), (3, 4), (5, 6), (4, 7), (5, 7), (7, 8), (7, 9), (8, 10), (9, 12), (10, 11), (11, 12),
+               (10, 13), (12, 13), (1, 14), (2, 15), (14, 16), (15, 17), (16, 13), (17, 13), (14, 8), (15, 9), (3, 14), (6, 15)]
+        mesh = "".join(f'<line x1="{pts[a][0]}" y1="{pts[a][1]}" x2="{pts[b][0]}" y2="{pts[b][1]}"/>' for a, b in seg) + \
+               "".join(f'<circle cx="{x}" cy="{y}" r="4"/>' for x, y in pts)
+        stamp = f'<div class="vs-stamp" id="{p}-st"><span>{esc(e["sello"])}</span></div>' if e.get("sello") else ""
+        return (f'<div class="vs-frame"><div class="vs-img" id="{p}-img"><div class="vs-sh"></div><div class="vs-sil"></div></div>'
+                f'<svg class="vs-mesh" id="{p}-mesh" viewBox="0 0 {W} {H}">{mesh}</svg><div class="vs-scan" id="{p}-scan"></div>'
+                f'<div class="vs-corner tl"></div><div class="vs-corner tr"></div><div class="vs-corner bl"></div><div class="vs-corner br"></div>'
+                f'<div class="vs-rec" id="{p}-rec"><i></i>{esc(e.get("rec", "REC"))}</div><div class="vs-tc" id="{p}-tc">00:00:00:00</div>'
+                f'{"".join(els)}{stamp}</div>')
+    if t == "onda":
+        import math
+        tags = e.get("etiquetas", [])[:4]
+        rng = (e.get("marcar") or [0.5, 0.68])
+        a, b_ = int(float(rng[0]) * 56), int(float(rng[1]) * 56)
+        bars = "".join(f'<div class="on-b{" hi" if a <= k < b_ else ""}" id="{p}-b{k}" style="transform:scaleY({0.18 + 0.78 * abs(math.sin(k * 1.37) * math.cos(k * .61)):.3f})"></div>' for k in range(56))
+        chips = "".join(f'<div class="on-chip{" ok" if x.get("ok") else " no"}" id="{p}-c{i}"><i></i>{esc(x.get("texto", ""))}</div>' for i, x in enumerate(tags))
+        stamp = f'<div class="on-stamp" id="{p}-st"><span>{esc(e["sello"])}</span></div>' if e.get("sello") else ""
+        return (f'<div class="on-card glass"><div class="on-h"><div class="eyebrow">{esc(e.get("titulo", "Audio"))}</div><div class="mono on-d">{esc(e.get("duracion", ""))}</div></div>'
+                f'<div class="on-wave">{bars}<div class="on-ph" id="{p}-ph"></div></div><div class="on-chips">{chips}</div></div>{stamp}')
     if t == "prompt":
         chars = "".join(f'<span class="ch">{esc(c) if c != " " else "&nbsp;"}</span>' if c != " " else '<span class="ch sp"> </span>'
                         for c in e.get("texto", ""))
@@ -1036,6 +1170,51 @@ def scene_params(b, t0, t1):
         p["cues"] = scene_cues(b, [x.get("en", "") for x in lg], t0, t1)
         p["n"] = len(lg)
         p["pills"] = [bool(x.get("estado")) for x in lg]
+    elif t == "glitch":
+        p["cues"] = [round(w["t0"], 3) for w in b["words"]]
+        p["kw"] = [w["kw"] is not None for w in b["words"]]
+    elif t == "bandeja":
+        it = e.get("items", [])[:5]
+        p["cues"] = scene_cues(b, [x.get("en", "") for x in it], t0, t1)
+        p["n"] = len(it); p["mk"] = e.get("marcar", -1); p["sello"] = bool(e.get("sello"))
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+    elif t == "carta":
+        txt = e.get("texto", "")[:260]
+        reds, k = [], 0
+        for seg in re.split(r"(\[\[.*?\]\])", txt):
+            if seg.startswith("[[") and seg.endswith("]]"):
+                k += len(seg) - 4; reds.append(k - 1)
+            else:
+                k += len(seg)
+        p["n"] = k; p["reds"] = reds
+    elif t == "ranking":
+        filas = e.get("filas", [])[:6]
+        p["cues"] = scene_cues(b, [x.get("en", "") for x in filas], t0, t1)
+        p["n"] = len(filas); p["vals"] = [float(x.get("valor", 0)) for x in filas]
+        p["max"] = max(p["vals"] + [1.0]) if e.get("escala") != "100" else 100.0
+        p["mk"] = e.get("marcar", 0); p["suf"] = e.get("sufijo", "%"); p["dec"] = int(e.get("decimales", 0))
+    elif t == "triturar":
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+        p["n"] = len(e.get("lineas", [])[:5])
+        p["total"] = float(e["contador"]) if e.get("contador") else 0
+        p["unidad"] = e.get("unidad", "fragmentos")
+    elif t == "interruptor":
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+        p["on"] = e.get("desde", "on") == "on"
+    elif t == "censura":
+        lns = e.get("lineas", [])[:6]
+        p["cues"] = scene_cues(b, [(x.get("en", "") if isinstance(x, dict) else "") for x in lns], t0, t1)
+        p["n"] = len(lns)
+        p["reds"] = [len(re.findall(r"\[\[.*?\]\]", x.get("texto", "") if isinstance(x, dict) else str(x))) for x in lns]
+        p["sello"] = bool(e.get("sello")); p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+    elif t == "visor":
+        tags = e.get("etiquetas", [])[:5]
+        p["cues"] = scene_cues(b, [x.get("en", "") for x in tags], t0, t1)
+        p["n"] = len(tags); p["sello"] = bool(e.get("sello")); p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+    elif t == "onda":
+        tags = e.get("etiquetas", [])[:4]
+        p["cues"] = scene_cues(b, [x.get("en", "") for x in tags], t0, t1)
+        p["n"] = len(tags); p["sello"] = bool(e.get("sello")); p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
     elif t == "impacto":
         p["cues"] = [round(w["t0"], 3) for w in b["words"]]
         p["kw"] = [w["kw"] is not None for w in b["words"]]
@@ -1185,6 +1364,12 @@ def bg_html(tema):
         return ('<div class="blob" id="b3"></div><div id="rules"></div><div id="vig"></div><div id="grain"></div>')
     if tema == "estudio":
         return ('<div class="blob" id="b1"></div><div class="blob" id="b3"></div><div id="sgrid"></div><div id="vig"></div><div id="grain"></div>')
+    if tema == "alarma":
+        return ('<div id="al-red"></div><div class="blob" id="b3"></div><div id="scanlines"></div><div id="al-stripe"></div><div id="vig"></div><div id="grain"></div>')
+    if tema == "poster":
+        return ('<div id="ring2"></div><div id="dots"></div><div id="ring"></div><div id="grain"></div>')
+    if tema == "cine":
+        return ('<div class="blob" id="b3"></div><div id="cine-light"></div><div id="vig"></div><div id="grain"></div><div id="lb-t"></div><div id="lb-b"></div>')
     return ('<div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div><div class="blob" id="b4"></div>'
             '<div id="floor"></div><div id="vig"></div><div id="grain"></div>')
 
@@ -1828,6 +2013,154 @@ font-weight:700;font-size:40px;letter-spacing:-.01em;box-shadow:0 18px 40px -14p
 .ph.wa .ph-m b{font-weight:700}
 .ph-h{position:absolute;right:18px;bottom:10px;font-size:18px;color:#667781}
 .ph.wa .ph-typing{background:#fff}
+/* ===== v2.6: temas alarma, poster y cine ===== */
+.tema-alarma{--shadow:0 30px 80px -30px rgba(0,0,0,.9);--warn:#FF8A3D}
+#al-red{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 16%,rgba(255,45,45,.22),transparent 58%)}
+#scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.045) 0 2px,transparent 2px 7px)}
+#al-stripe{position:absolute;left:-200px;right:-200px;top:1588px;height:46px;opacity:.26;background:repeating-linear-gradient(-45deg,rgba(var(--acc-rgb),.95) 0 34px,transparent 34px 68px)}
+.tema-alarma .cap{text-transform:uppercase;font-size:62px;letter-spacing:.01em}
+.tema-alarma .eyebrow{letter-spacing:.3em}
+.tema-alarma .hdr .d{color:var(--acc)}
+.tema-alarma .glass{border-radius:4px}
+.tema-poster{--shadow:16px 16px 0 rgba(0,0,0,.35);--warn:#F5FF4A}
+#dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.17) 2.2px,transparent 2.9px);background-size:30px 30px}
+#ring{position:absolute;left:-280px;top:1150px;width:920px;height:920px;border-radius:50%;border:28px solid rgba(255,255,255,.10)}
+#ring2{position:absolute;left:640px;top:-360px;width:820px;height:820px;border-radius:50%;background:rgba(0,0,0,.16)}
+.tema-poster .cap{font-size:76px;letter-spacing:-.03em;text-shadow:none;line-height:1.08}
+.tema-poster .glass{border:3px solid rgba(255,255,255,.92)}
+.tema-poster .hdr{opacity:1}.tema-poster .hdr .h,.tema-poster .hdr .d{color:#fff}
+.tema-poster #grain{opacity:.08}
+.tema-cine{--shadow:0 40px 90px -30px rgba(0,0,0,.95);--warn:#FFB020}
+#lb-t,#lb-b{position:absolute;left:0;right:0;height:118px;background:#000}
+#lb-t{top:0;border-bottom:1px solid rgba(255,255,255,.08)}#lb-b{bottom:0;border-top:1px solid rgba(255,255,255,.08)}
+#cine-light{position:absolute;left:-300px;top:200px;width:1500px;height:1500px;border-radius:50%;background:radial-gradient(circle,rgba(var(--acc-rgb),.14),transparent 60%)}
+.tema-cine #grain{opacity:.14}
+.tema-cine .cap{letter-spacing:-.01em;text-shadow:0 6px 30px rgba(0,0,0,.9)}
+.tema-cine .eyebrow{letter-spacing:.28em}
+/* glitch */
+.gl-box{position:absolute;left:50px;right:30px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;font-weight:700;line-height:1;letter-spacing:-.03em;text-transform:uppercase}
+.gl-ln{white-space:nowrap;margin:.03em 0}
+.gl-w{position:relative;display:inline-block;opacity:0;margin-right:.24em}
+.gl-l{position:absolute;left:0;top:0;opacity:0;pointer-events:none}
+.gl-l.r{color:#FF2E2E;mix-blend-mode:screen}.gl-l.b{color:#2EB8FF;mix-blend-mode:screen}
+.tema-claro .gl-l,.tema-estudio .gl-l{mix-blend-mode:multiply}
+.gl-m{position:relative;display:inline-block}
+.gl-w.kw .gl-m{color:var(--acc)}
+.gl-bar{position:absolute;left:-.04em;right:-.04em;bottom:-.06em;height:.14em;background:var(--acc);transform:scaleX(0);transform-origin:0 50%}
+.gl-tear{position:absolute;left:-100px;right:-100px;height:110px;top:0;background:linear-gradient(to bottom,transparent,rgba(var(--acc-rgb),.2),transparent);opacity:0}
+.gl-tag{position:absolute;left:60px;top:30px;font-family:var(--mono);font-size:26px;letter-spacing:.3em;color:var(--acc);opacity:0}
+/* bandeja */
+.bj-win{position:absolute;left:60px;right:60px;top:50px;overflow:hidden}
+.bj-top{display:flex;align-items:center;gap:18px;padding:26px 34px;border-bottom:1px solid var(--line)}
+.bj-top .mono{font-size:26px;color:var(--text-muted);letter-spacing:.08em}
+.bj-row{position:relative;display:flex;align-items:center;gap:24px;padding:26px 34px;border-bottom:1px solid var(--line);opacity:0;overflow:hidden}
+.bj-av{width:72px;height:72px;border-radius:50%;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:32px;flex:none;color:var(--text-soft)}
+.bj-txt{flex:1;min-width:0}
+.bj-de{font-weight:700;font-size:33px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bj-as{font-size:31px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}
+.bj-pv{font-size:26px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}
+.bj-h{font-size:24px;color:var(--text-muted);flex:none;align-self:flex-start;margin-top:6px}
+.bj-row.mk .bj-av{background:var(--acc);color:var(--on-acc)}
+.bj-scan{position:absolute;left:0;right:0;top:-12px;height:12px;background:linear-gradient(90deg,transparent,var(--acc),transparent);box-shadow:0 0 34px var(--acc);opacity:0}
+.bj-stamp{position:absolute;right:70px;top:30px;padding:12px 26px;border:5px solid var(--acc);color:var(--acc);font-family:var(--mono);font-weight:700;font-size:34px;letter-spacing:.2em;opacity:0;background:rgba(var(--bg-rgb),.75);white-space:nowrap}
+/* carta */
+.ct-win{position:absolute;left:60px;right:60px;top:30px;overflow:hidden;opacity:0}
+.ct-head{padding:28px 36px 18px;border-bottom:1px solid var(--line)}
+.ct-row{display:flex;gap:18px;font-size:30px;padding:8px 0;color:var(--text-soft);align-items:baseline}
+.ct-row .mono{color:var(--text-muted);width:140px;flex:none;font-size:24px;letter-spacing:.12em;text-transform:uppercase}
+.ct-row b{font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct-body{padding:30px 36px 26px;line-height:1.42;min-height:360px;word-wrap:break-word;white-space:pre-wrap}
+.ct-body .ch{opacity:0}
+.ct-red{position:relative;display:inline-block;white-space:nowrap}
+.ct-bar{position:absolute;left:-.06em;right:-.06em;top:.04em;bottom:-.02em;background:var(--acc);transform:scaleX(0);transform-origin:0 50%;border-radius:4px;z-index:2}
+.tema-claro .ct-bar,.tema-estudio .ct-bar,.tema-poster .ct-bar,.tema-claro .cs-bar,.tema-estudio .cs-bar,.tema-poster .cs-bar{background:#000}
+.ct-firma{margin-top:22px;font-size:26px;color:var(--text-muted)}
+.ct-foot{display:flex;align-items:center;gap:24px;padding:22px 36px 30px;border-top:1px solid var(--line)}
+.ct-send{padding:16px 36px;border-radius:12px;background:var(--acc);color:var(--on-acc);font-weight:700;font-size:32px}
+.ct-st{font-family:var(--mono);font-size:26px;color:var(--text-muted);letter-spacing:.08em;opacity:0;display:flex;align-items:center;gap:12px}
+.ct-who{position:absolute;right:36px;top:28px;font-family:var(--mono);font-size:22px;color:var(--acc);letter-spacing:.2em;text-transform:uppercase}
+/* ranking */
+.rk-wrap{position:absolute;left:60px;right:60px;top:30px;padding:34px 40px 30px}
+.rk-wrap .eyebrow{margin-bottom:14px;opacity:0}
+.rk-row{display:flex;align-items:center;gap:22px;padding:16px 0;opacity:0}
+.rk-logo{width:76px;height:76px;flex:none;display:flex;align-items:center;justify-content:center}
+.rk-ini{width:76px;height:76px;border-radius:20px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:34px}
+.rk-txt{width:250px;flex:none;font-weight:700;font-size:30px;letter-spacing:-.01em;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk-track{flex:1;height:34px;border-radius:17px;background:var(--surface3);overflow:hidden;position:relative}
+.rk-fill{position:absolute;left:0;top:0;bottom:0;width:100%;border-radius:17px;background:var(--text-muted);transform:scaleX(0);transform-origin:0 50%}
+.rk-row.mk .rk-fill{background:var(--acc);box-shadow:0 0 30px rgba(var(--acc-rgb),.6)}
+.rk-v{width:140px;flex:none;text-align:right;font-family:var(--mono);font-weight:700;font-size:38px}
+.rk-row.mk .rk-v{color:var(--acc)}
+.rk-note{margin-top:22px;font-family:var(--mono);font-size:23px;color:var(--text-muted);letter-spacing:.08em;opacity:0;line-height:1.4}
+/* triturar */
+.tr-cv{position:absolute;left:0;top:0;width:1080px;height:1010px}
+.tr-doc{position:absolute;left:250px;top:40px;width:580px;padding:32px 36px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);transform-origin:50% 100%}
+.tr-name{font-family:var(--mono);font-size:24px;color:var(--acc);letter-spacing:.1em;margin-bottom:18px;display:flex;gap:12px;align-items:center}
+.tr-ln{font-size:28px;line-height:1.5;color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0}
+.tr-core{position:absolute;left:240px;top:560px;width:600px;height:440px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.tr-ring{position:absolute;left:150px;top:0;width:300px;height:300px;border-radius:50%;border:6px solid rgba(var(--acc-rgb),.7);box-shadow:0 0 60px rgba(var(--acc-rgb),.35),inset 0 0 80px rgba(var(--acc-rgb),.25)}
+.tr-ring2{position:absolute;left:190px;top:40px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(var(--acc-rgb),.9),rgba(var(--acc-rgb),.15) 60%,transparent 70%);opacity:.6}
+.tr-lab{position:relative;font-family:var(--mono);font-size:26px;letter-spacing:.22em;text-transform:uppercase;color:var(--text);text-align:center;margin-bottom:10px;opacity:0}
+.tr-cnt{position:relative;font-weight:700;font-size:50px;color:var(--acc);letter-spacing:-.02em;margin-bottom:12px;opacity:0;white-space:nowrap}
+/* interruptor */
+.sw-card{position:absolute;left:70px;right:70px;top:50px;padding:40px 44px 46px}
+.sw-ruta{font-family:var(--mono);font-size:23px;letter-spacing:.14em;color:var(--text-muted);text-transform:uppercase;margin-bottom:22px;opacity:0}
+.sw-tit{font-weight:700;font-size:46px;letter-spacing:-.02em;line-height:1.08;opacity:0}
+.sw-sub{font-size:28px;color:var(--text-soft);line-height:1.35;margin-top:14px;opacity:0;min-height:76px}
+.sw-row{display:flex;align-items:center;justify-content:space-between;margin-top:40px;opacity:0}
+.sw-state{font-family:var(--mono);font-weight:700;font-size:32px;letter-spacing:.2em;position:relative;height:44px;width:440px}
+.sw-state span{position:absolute;left:0;top:0;white-space:nowrap}
+.sw-state .on{color:var(--acc)}.sw-state .off{color:var(--text-muted);opacity:0}
+.sw-track{position:relative;width:360px;height:190px;border-radius:95px;background:var(--acc);flex:none;box-shadow:inset 0 6px 20px rgba(0,0,0,.25)}
+.sw-track.off{background:var(--text-muted)}
+.sw-thumb{position:absolute;left:14px;top:14px;width:162px;height:162px;border-radius:50%;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.sw-finger{position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.3);border:4px solid rgba(255,255,255,.95);left:810px;top:372px;opacity:0}
+.sw-ok{display:flex;align-items:center;gap:16px;margin-top:40px;font-family:var(--mono);font-size:28px;letter-spacing:.1em;color:var(--acc);opacity:0}
+/* censura */
+.cs-sheet{position:absolute;left:70px;right:70px;top:50px;padding:36px 44px 30px}
+.cs-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;opacity:0}
+.cs-n{font-size:24px;color:var(--text-muted);letter-spacing:.08em}
+.cs-ln{font-size:35px;line-height:1.45;padding:14px 0;border-bottom:1px solid var(--line);opacity:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cs-red{position:relative;display:inline-block;padding:0 .12em}
+.cs-bar{position:absolute;left:0;right:0;top:.08em;bottom:0;background:var(--acc);transform:scaleX(0);transform-origin:0 50%;border-radius:4px}
+.cs-stamp{position:absolute;left:0;right:0;top:430px;text-align:center;opacity:0}
+.cs-stamp span{display:inline-block;padding:16px 36px;border:6px solid var(--acc);color:var(--acc);font-family:var(--mono);font-weight:700;font-size:44px;letter-spacing:.2em;background:rgba(var(--bg-rgb),.82);white-space:nowrap}
+/* visor */
+.vs-frame{position:absolute;left:90px;right:90px;top:30px;height:950px;border-radius:18px;overflow:hidden;background:#0B0B0E;box-shadow:var(--shadow)}
+.vs-img{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%,#2A2D3A 0%,#15161D 55%,#0B0B0E 100%)}
+.vs-sil{position:absolute;left:50%;top:150px;width:360px;height:440px;margin-left:-180px;border-radius:180px 180px 150px 150px;background:linear-gradient(180deg,#3A3E4E,#20232E)}
+.vs-sh{position:absolute;left:50%;top:560px;width:720px;height:420px;margin-left:-360px;border-radius:360px 360px 0 0;background:linear-gradient(180deg,#2B2E3B,#15161D)}
+.vs-mesh{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0}
+.vs-mesh line{stroke:rgba(var(--acc-rgb),.55);stroke-width:1.5}.vs-mesh circle{fill:var(--acc)}
+.vs-corner{position:absolute;width:70px;height:70px;border:5px solid rgba(255,255,255,.9)}
+.vs-corner.tl{left:28px;top:28px;border-right:0;border-bottom:0}.vs-corner.tr{right:28px;top:28px;border-left:0;border-bottom:0}
+.vs-corner.bl{left:28px;bottom:28px;border-right:0;border-top:0}.vs-corner.br{right:28px;bottom:28px;border-left:0;border-top:0}
+.vs-rec{position:absolute;left:120px;top:44px;display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:26px;letter-spacing:.2em;color:#fff}
+.vs-rec i{width:22px;height:22px;border-radius:50%;background:#FF3B3B}
+.vs-tc{position:absolute;right:120px;top:44px;font-family:var(--mono);font-size:26px;letter-spacing:.12em;color:rgba(255,255,255,.85)}
+.vs-scan{position:absolute;left:0;right:0;top:0;height:120px;background:linear-gradient(to bottom,transparent,rgba(var(--acc-rgb),.22),rgba(var(--acc-rgb),.55));opacity:.9}
+.vs-box{position:absolute;width:110px;height:110px;border:4px solid var(--acc);border-radius:10px;opacity:0;margin:-55px 0 0 -55px;box-shadow:0 0 30px rgba(var(--acc-rgb),.6)}
+.vs-tag{position:absolute;padding:12px 22px;border-radius:12px;background:rgba(10,10,14,.86);border:2px solid var(--acc);font-family:var(--mono);font-size:26px;letter-spacing:.06em;color:#fff;opacity:0;white-space:nowrap;display:flex;gap:12px;align-items:center}
+.vs-tag i{width:14px;height:14px;border-radius:50%;background:var(--acc)}
+.vs-tag.ok{border-color:#22C55E}.vs-tag.ok i{background:#22C55E}
+.vs-stamp{position:absolute;left:0;right:0;top:400px;text-align:center;opacity:0}
+.vs-stamp span{display:inline-block;padding:18px 40px;border:7px solid #FF3B3B;color:#FF3B3B;font-weight:700;font-size:64px;letter-spacing:.14em;text-transform:uppercase;background:rgba(0,0,0,.55);border-radius:10px}
+/* onda */
+.on-card{position:absolute;left:60px;right:60px;top:70px;padding:40px 44px 44px}
+.on-h{display:flex;justify-content:space-between;align-items:center}
+.on-d{font-size:24px;color:var(--text-muted);letter-spacing:.1em}
+.on-wave{position:relative;height:300px;margin-top:40px;display:flex;align-items:center;gap:6px}
+.on-b{flex:1;height:100%;border-radius:4px;background:var(--text-muted);transform-origin:50% 50%}
+.on-b.hi{background:var(--acc)}
+.on-ph{position:absolute;left:0;top:-20px;bottom:-20px;width:4px;background:#fff;box-shadow:0 0 20px #fff}
+.tema-poster .on-ph{background:var(--acc);box-shadow:0 0 20px var(--acc)}
+.on-chips{display:flex;flex-wrap:wrap;gap:16px;margin-top:40px}
+.on-chip{display:flex;align-items:center;gap:12px;padding:16px 26px;border-radius:14px;border:2px solid var(--line);font-family:var(--mono);font-size:25px;letter-spacing:.04em;opacity:0;background:var(--surface2)}
+.on-chip i{width:14px;height:14px;border-radius:50%;background:var(--acc)}
+.on-chip.ok{border-color:#22C55E}.on-chip.ok i{background:#22C55E}
+.on-chip.no{border-color:var(--acc)}
+.on-stamp{position:absolute;left:0;right:0;top:300px;text-align:center;opacity:0}
+.on-stamp span{display:inline-block;padding:14px 34px;border:6px solid var(--acc);color:var(--acc);font-weight:700;font-size:54px;letter-spacing:.14em;text-transform:uppercase;background:rgba(var(--bg-rgb),.82);border-radius:10px}
 """
 
 JS = r"""
@@ -1907,6 +2240,16 @@ function PUNCH(c, times){ (times||[]).forEach(t => { if (t > c.t0+.75 && t < c.t
 const early = (c, t, max) => Math.min(t, c.t0 + (max === undefined ? .55 : max));
 function stagger(c, cues, gap, first){ const out = []; let prev = c.t0; cues.forEach((t, i) => { let v = i ? Math.max(t, prev + (gap||.22)) : early(c, t, first); out.push(v); prev = v; }); return out; }
 
+
+// ---- v2.6
+const TXTC = getComputedStyle(document.documentElement).getPropertyValue("--text").trim() || "#FFFFFF";
+const MUTC = getComputedStyle(document.documentElement).getPropertyValue("--text-muted").trim() || "#8A97B0";
+const ACCRGB = (h => { h = h.replace("#", ""); return [0,2,4].map(i => parseInt(h.slice(i, i+2), 16)).join(","); })(ACC);
+if ($("#al-red")) tl.fromTo("#al-red", {opacity:.75}, {opacity:1, duration:.7, yoyo:true, repeat:Math.max(1, Math.floor(D/.7)), ease:"sine.inOut"}, 0);
+if ($("#scanlines")) tl.fromTo("#scanlines", {y:0}, {y:14, duration:D, ease:"none"}, 0);
+if ($("#ring")) tl.fromTo("#ring", {rotation:0, scale:1}, {rotation:40, scale:1.08, duration:D, ease:"sine.inOut"}, 0);
+if ($("#ring2")) tl.fromTo("#ring2", {x:0, y:0}, {x:-90, y:120, duration:D, ease:"sine.inOut"}, 0);
+if ($("#cine-light")) tl.fromTo("#cine-light", {x:0, y:0}, {x:260, y:-200, duration:D, ease:"sine.inOut"}, 0);
 const SC = {
 prompt(c, p){
   const id = "#"+c.id, chs = $$(id+" .ch"), n = chs.length;
@@ -2113,6 +2456,139 @@ marcas(c, p){
   if ($(id+"-mid")) F(id+"-mid", {opacity:0, scale:2.2}, {opacity:1, scale:1, duration:.35, ease:"power3.out"}, (cues[0]+(cues[1]||cues[0]))/2);
   if ($(id+"-tit")) show(id+"-tit", c.t0+.2, .4, {y:-20});
   F(id+"-burst", {opacity:.9, scale:1}, {opacity:0, scale:16, duration:.7, ease:"power2.out"}, cues[0]);
+},
+glitch(c, p){
+  const id = "#"+c.id;
+  if ($(id+"-tag")) show(id+"-tag", c.t0+.1, .3, {x:-20});
+  p.cues.forEach((t, i) => {
+    const tt = Math.max(t-.05, c.t0+.06+i*.04), w = id+"-w"+i;
+    F(w, {opacity:0, x:-30, skewX:-12}, {opacity:1, x:0, skewX:0, duration:.16, ease:"power4.out"}, tt);
+    F(w+" .r", {x:0, y:0, opacity:.9}, {x:-16, y:-6, opacity:.9, duration:.05, yoyo:true, repeat:5, ease:"none"}, tt);
+    F(w+" .b", {x:0, y:0, opacity:.9}, {x:16, y:6, opacity:.9, duration:.05, yoyo:true, repeat:5, ease:"none"}, tt);
+    tl.set(w+" .r", {opacity:0}, tt+.34); tl.set(w+" .b", {opacity:0}, tt+.34);
+    tl.set(w+" .gl-m", {clipPath:"inset(0 0 55% 0)", x:12}, tt+.02);
+    tl.set(w+" .gl-m", {clipPath:"inset(45% 0 0 0)", x:-12}, tt+.08);
+    tl.set(w+" .gl-m", {clipPath:"inset(20% 0 50% 0)", x:8}, tt+.14);
+    tl.set(w+" .gl-m", {clipPath:"none", x:0}, tt+.2);
+    if (p.kw[i]) F(id+"-b"+i, {scaleX:0}, {scaleX:1, duration:.25, ease:"power3.out"}, tt+.1);
+    F(id+"-tear", {opacity:1, y:-120}, {opacity:1, y:1010, duration:.32, ease:"none"}, tt);
+    tl.set(id+"-tear", {opacity:0}, tt+.33);
+    F("#"+c.id+" .stage", {x:0}, {x:(i%2?10:-10), duration:.04, yoyo:true, repeat:1, ease:"none"}, tt);
+  });
+  F(id+" .gl-box", {opacity:1}, {opacity:.7, duration:.04, yoyo:true, repeat:1}, c.t0+(c.t1-c.t0)*.55);
+},
+bandeja(c, p){
+  const id = "#"+c.id, cues = stagger(c, p.cues, .28, .3);
+  for (let i=0;i<p.n;i++) F(id+"-r"+i, {opacity:0, y:-26}, {opacity:1, y:0, duration:.32, ease:E}, cues[i]);
+  if (p.mk >= 0 && p.mk < p.n){
+    const t = Math.max(cues[p.mk]+.45, Math.min(p.cue, c.t1-.9)), r = id+"-r"+p.mk;
+    F(id+"-sc"+p.mk, {opacity:1, y:0}, {opacity:1, y:150, duration:.5, ease:"none"}, t); tl.set(id+"-sc"+p.mk, {opacity:0}, t+.5);
+    F(r, {backgroundColor:"rgba("+ACCRGB+",0)"}, {backgroundColor:"rgba("+ACCRGB+",.14)", duration:.3}, t+.2);
+    F(r+" .bj-as", {color:TXTC}, {color:ACC, duration:.2}, t+.3);
+    if (p.sello) F(id+"-st", {opacity:0, scale:2.2, rotation:-20}, {opacity:1, scale:1, rotation:-8, duration:.3, ease:"power4.out"}, t+.55);
+  }
+},
+carta(c, p){
+  const id = "#"+c.id, chs = $$(id+" .ch"), n = chs.length;
+  const ts = c.t0+.4, dur = Math.min(n*.03, (c.t1-c.t0)*.66), dt = dur/Math.max(1,n);
+  show(id+"-win", c.t0+.05, .4, {y:30});
+  chs.forEach((ch,i) => { const t = ts+i*dt; tl.set(ch, {opacity:1, boxShadow:"3px 0 0 0 "+ACC}, t); if (i<n-1) tl.set(ch, {boxShadow:"0 0 0 0 rgba(0,0,0,0)"}, t+dt); });
+  p.reds.forEach((k, j) => { const t = ts+(k+1)*dt+.05; F(id+"-rb"+j, {scaleX:0}, {scaleX:1, duration:.22, ease:"power3.out"}, t);
+    F("#"+c.id+" .stage", {x:0}, {x:6, duration:.04, yoyo:true, repeat:1}, t); });
+  const te = ts+dur;
+  F(id+"-send", {scale:1}, {scale:.86, duration:.12, yoyo:true, repeat:1, ease:"power2.inOut"}, te+.25);
+  show(id+"-st", te+.5, .35, {x:-20});
+},
+ranking(c, p){
+  const id = "#"+c.id, cues = stagger(c, p.cues, .3, .35);
+  if ($(id+"-tit")) show(id+"-tit", c.t0+.1, .35, {y:-16});
+  for (let i=0;i<p.n;i++){
+    const o = {v:0}, t = cues[i], land = Math.min(t+1.0, c.t1-.3);
+    F(id+"-r"+i, {opacity:0, x:-40}, {opacity:1, x:0, duration:.3, ease:E}, t);
+    F(id+"-f"+i, {scaleX:0}, {scaleX:Math.max(.02, p.vals[i]/p.max), duration:Math.max(.3, land-t), ease:"power3.out"}, t+.1);
+    F(o, {v:0}, {v:p.vals[i], duration:Math.max(.3, land-t), ease:"power3.out", onUpdate:()=>{ $(id+"-v"+i).textContent = fmt(o.v, p.dec, true)+p.suf; }}, t+.1);
+  }
+  if (p.mk >= 0 && p.mk < p.n) F(id+"-r"+p.mk+" .rk-v", {scale:1}, {scale:1.18, duration:.18, yoyo:true, repeat:1, transformOrigin:"100% 50%"}, Math.min(cues[p.mk]+1.05, c.t1-.3));
+  if ($(id+"-note")) show(id+"-note", Math.min(cues[p.n-1]+.9, c.t1-.5), .35, {y:10});
+},
+triturar(c, p){
+  const id = "#"+c.id, cv = $(id+"-cv"), ctx = cv.getContext("2d"), rnd = seeded(11+SEED);
+  const cue = Math.max(c.t0+1.1, Math.min(p.cue, c.t1-1.7));
+  for (let i=0;i<p.n;i++) show(id+"-l"+i, c.t0+.25+i*.14, .3, {x:-20});
+  show(id+"-lab", c.t0+.6, .4, {y:12});
+  F(id+"-doc", {y:0}, {y:-14, duration:1.1, yoyo:true, repeat:Math.max(1, Math.floor((cue-c.t0)/1.1)), ease:"sine.inOut"}, c.t0);
+  F(id+"-doc", {y:0, scaleX:1, scaleY:1, opacity:1}, {y:470, scaleX:.12, scaleY:.06, opacity:0, duration:.75, ease:"power2.in"}, cue);
+  F(id+"-ring", {scale:1}, {scale:1.18, duration:.35, yoyo:true, repeat:1, ease:"power2.out"}, cue+.7);
+  F(id+"-ring2", {scale:1, opacity:.6}, {scale:1.6, opacity:1, duration:.9, ease:"power2.out"}, cue+.6);
+  const N = 320, P = [];
+  for (let i=0;i<N;i++) P.push({x:270+rnd()*540, y:60+rnd()*300, d:rnd()*.55, w:10+rnd()*34, s:rnd(), a:(rnd()-.5)*1.4});
+  const o = {k:0};
+  F(o, {k:0}, {k:1, duration:1.7, ease:"none", onUpdate:()=>{
+    ctx.clearRect(0,0,1080,1010); const k = o.k;
+    P.forEach(q => { const u = (k - q.d)/(1-q.d); if (u<=0 || u>=1) return; const e = u*u*(3-2*u);
+      const cx = 540 + Math.sin(u*6.28*q.s)*q.a*120*(1-u), cy = q.y + (700 - q.y)*e, x = q.x + (cx - q.x)*e;
+      ctx.globalAlpha = (1-u)*.9+.1; ctx.fillStyle = q.s>.5 ? ACC : TXTC; ctx.fillRect(x, cy, q.w*(1-u*.6), 6); });
+    ctx.globalAlpha = 1;
+  }}, cue+.1);
+  if (p.total > 0){ const cnt = {v:0};
+    F(cnt, {v:0}, {v:p.total, duration:1.6, ease:"power2.out", onUpdate:()=>{ $(id+"-cnt").textContent = "+"+fmt(cnt.v,0,true)+" "+p.unidad; }}, cue+.5);
+    show(id+"-cnt", cue+.5, .3, {y:10}); }
+},
+interruptor(c, p){
+  const id = "#"+c.id, cue = Math.max(c.t0+1.3, Math.min(p.cue, c.t1-1.0)), on = p.on, dx = 184;
+  show(id+"-ruta", c.t0+.1, .3, {x:-16}); show(id+"-tit", c.t0+.25, .4, {y:20}); show(id+"-sub", c.t0+.4, .4, {y:20}); show(id+"-row", c.t0+.55, .4, {y:24});
+  tl.set(id+"-thumb", {x:on ? dx : 0}, c.t0);
+  tl.set(id+"-on", {opacity:on ? 1 : 0}, c.t0); tl.set(id+"-off", {opacity:on ? 0 : 1}, c.t0);
+  show(id+"-fg", cue-.6, .3, {scale:.6, x:40, y:40});
+  F(id+"-fg", {scale:1}, {scale:.78, duration:.12, yoyo:true, repeat:1, ease:"power2.inOut"}, cue-.12);
+  F(id+"-fg", {x:0}, {x:on ? -dx : dx, duration:.4, ease:"power3.inOut"}, cue);
+  F(id+"-thumb", {x:on ? dx : 0}, {x:on ? 0 : dx, duration:.4, ease:"power3.inOut"}, cue);
+  F(id+"-track", {backgroundColor:on ? ACC : MUTC}, {backgroundColor:on ? MUTC : ACC, duration:.4}, cue);
+  F(id+"-on", {opacity:on ? 1 : 0}, {opacity:on ? 0 : 1, duration:.25}, cue+.1);
+  F(id+"-off", {opacity:on ? 0 : 1}, {opacity:on ? 1 : 0, duration:.25}, cue+.1);
+  F(id+"-fg", {opacity:1}, {opacity:0, duration:.3}, cue+.6);
+  F("#"+c.id+" .stage", {scale:1}, {scale:1.03, duration:.1, yoyo:true, repeat:1, ease:"power2.out"}, cue+.35);
+  show(id+"-ok", cue+.7, .35, {y:14});
+},
+censura(c, p){
+  const id = "#"+c.id, cues = stagger(c, p.cues, .32, .35);
+  if ($(id+"-h")) show(id+"-h", c.t0+.05, .3, {y:-10});
+  for (let i=0;i<p.n;i++){
+    F(id+"-l"+i, {opacity:0, x:-30}, {opacity:1, x:0, duration:.3, ease:E}, cues[i]);
+    for (let j=0;j<p.reds[i];j++){ const t = cues[i]+.3+j*.12;
+      F(id+"-b"+i+"_"+j, {scaleX:0}, {scaleX:1, duration:.26, ease:"power3.out"}, t);
+      F("#"+c.id+" .stage", {y:0}, {y:4, duration:.04, yoyo:true, repeat:1}, t); }
+  }
+  if (p.sello){ const t = Math.max(cues[p.n-1]+.7, Math.min(p.cue, c.t1-.8));
+    F(id+"-st", {opacity:0}, {opacity:1, duration:.05}, t);
+    F(id+"-st span", {scale:2.4, rotation:-24}, {scale:1, rotation:-10, duration:.3, ease:"power4.out"}, t);
+    F("#"+c.id+" .stage", {x:0}, {x:-8, duration:.05, yoyo:true, repeat:3}, t); }
+},
+visor(c, p){
+  const id = "#"+c.id, Dd = c.t1-c.t0, cues = stagger(c, p.cues, .4, .5);
+  F(id+"-rec i", {opacity:1}, {opacity:.15, duration:.5, yoyo:true, repeat:Math.max(1, Math.floor(Dd/.5)), ease:"steps(1)"}, c.t0);
+  F(id+"-scan", {y:-120}, {y:950, duration:2.2, repeat:Math.ceil(Dd/2.2), ease:"none"}, c.t0);
+  F(id+"-mesh", {opacity:0}, {opacity:.6, duration:.6}, c.t0+.35);
+  F(id+"-img", {scale:1}, {scale:1.06, duration:Dd, ease:"none"}, c.t0);
+  const tc = {v:0};
+  F(tc, {v:0}, {v:Dd, duration:Dd, ease:"none", onUpdate:()=>{ const s = tc.v, f = Math.floor((s%1)*30);
+    $(id+"-tc").textContent = "00:00:"+String(Math.floor(s)).padStart(2,"0")+":"+String(f).padStart(2,"0"); }}, c.t0);
+  for (let i=0;i<p.n;i++){ F(id+"-bx"+i, {opacity:0, scale:2.5}, {opacity:1, scale:1, duration:.3, ease:"power4.out"}, cues[i]); show(id+"-tg"+i, cues[i]+.15, .3, {x:-16}); }
+  if (p.sello){ const t = Math.max(c.t0+1.2, Math.min(p.cue, c.t1-.8));
+    F(id+"-st", {opacity:0}, {opacity:1, duration:.05}, t);
+    F(id+"-st span", {scale:2.6, rotation:-18}, {scale:1, rotation:-7, duration:.3, ease:"power4.out"}, t);
+    F("#"+c.id+" .stage", {x:0}, {x:-9, duration:.05, yoyo:true, repeat:3}, t); }
+},
+onda(c, p){
+  const id = "#"+c.id, Dd = c.t1-c.t0, cues = stagger(c, p.cues, .35, .5), rnd = seeded(5+SEED);
+  for (let k=0;k<56;k++){ const b = $(id+"-b"+k); if (!b) continue; const h = parseFloat((b.style.transform.match(/scaleY\(([\d.]+)\)/)||[0,.5])[1]);
+    const d = .22+rnd()*.4; F(b, {scaleY:h}, {scaleY:Math.max(.08, h*.35), duration:d, yoyo:true, repeat:Math.ceil(Dd/d), ease:"sine.inOut"}, c.t0+rnd()*.3); }
+  F(id+"-ph", {left:"0%"}, {left:"100%", duration:Dd, ease:"none"}, c.t0);
+  for (let i=0;i<p.n;i++) F(id+"-c"+i, {opacity:0, y:20, scale:.9}, {opacity:1, y:0, scale:1, duration:.3, ease:"back.out(1.6)"}, cues[i]);
+  if (p.sello){ const t = Math.max(c.t0+1.2, Math.min(p.cue, c.t1-.8));
+    F(id+"-st", {opacity:0}, {opacity:1, duration:.05}, t);
+    F(id+"-st span", {scale:2.4, rotation:-16}, {scale:1, rotation:-6, duration:.3, ease:"power4.out"}, t);
+    F("#"+c.id+" .stage", {x:0}, {x:-8, duration:.05, yoyo:true, repeat:3}, t); }
 },
 impacto(c, p){
   const id = "#"+c.id;
@@ -2349,7 +2825,7 @@ cierre(c, p){
 };
 
 const CALLS = __CALLS__;
-const NOPUNCH = {presentador:1, impacto:1, cuenta:1, logo:1, muro:1, caos:1};
+const NOPUNCH = {presentador:1, impacto:1, cuenta:1, logo:1, muro:1, caos:1, glitch:1};
 CALLS.forEach(c => { CAM(c); (SC[c.p.tipo] || (()=>{}))(c, c.p); if (!NOPUNCH[c.p.tipo]) PUNCH(c, c.kw); });
 
 // subtítulos palabra por palabra: la palabra que suena entra con un pop; las ya dichas quedan en el tono suave del tema
@@ -2391,8 +2867,10 @@ def mix_audio(work, voice, D, beats, groups, guion=None):
     cards, hits, ticks = [], [], []
     for b in beats:
         e = b["escena"]
-        if e["tipo"] == "impacto":
+        if e["tipo"] in ("impacto", "glitch"):
             hits += [round(w["t0"], 3) for w in b["words"]]
+        if e["tipo"] in ("visor", "onda", "censura", "bandeja") and e.get("sello"):
+            hits += scene_cues(b, [e.get("en", "")], b["t0"], b["t1"])
         if e["tipo"] == "llamada" and e.get("estado"):
             hits += scene_cues(b, [e.get("en", "")], b["t0"], b["t1"])
         if e["tipo"] == "marcas":
@@ -2442,7 +2920,9 @@ REQUIRED = {"terminal": "lineas", "linea_tiempo": "hitos", "chips": "items", "li
             "alerta": "filas", "reloj": "despues", "prompt": "texto", "cursores": "despues", "capas": "items",
             "codigo": "lineas", "pasos": "pasos", "anillo": "valor", "titular": "titulo", "cita": "autor", "tabla": "filas",
             "calendario": "marcas", "planes": "planes", "presentador": "video", "carrusel": "items", "muro": "imagenes",
-            "notificaciones": "items"}
+            "notificaciones": "items",
+            "bandeja": "items", "carta": "texto", "ranking": "filas", "triturar": "lineas", "interruptor": "titulo",
+            "censura": "lineas", "visor": "etiquetas", "onda": "etiquetas"}
 ENGLISH = {"claude", "chatgpt", "openai", "google", "microsoft", "gemini", "whatsapp", "iphone", "slides", "app", "apps",
            "prompt", "prompts", "code", "copilot", "meta", "apple", "android", "windows", "excel", "powerpoint", "notion",
            "canva", "youtube", "instagram", "tiktok", "linkedin", "email", "online", "software", "startup", "freelance",
