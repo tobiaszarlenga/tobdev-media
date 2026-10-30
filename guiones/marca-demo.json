@@ -12,8 +12,7 @@
   "slide",
   "whip",
   "zoom",
-  "flash",
-  "rise"
+  "flash"
  ],
  "beats": [
   {
@@ -111,7 +110,7 @@
       "en": "torneos"
      },
      {
-      "img": "../portfolio/capturas/1000-toros-rojos/escritorio.jpg",
+      "img": "../portfolio/capturas/1000-toros-rojos/caso-escritorio.jpg",
       "nombre": "1000 Toros Rojos",
       "rubro": "Estudio creativo",
       "url": "1000torosrojos-site.vercel.app",
@@ -152,44 +151,25 @@
    }
   },
   {
-   "texto": "Desde ciento setenta y cinco mil pesos, en *dos cuotas* sin interés.",
+   "texto": "Desde ciento setenta y cinco mil pesos, con *hosting* incluido.",
    "escena": {
     "tipo": "numero",
     "prefijo": "Desde $",
     "valor": 175000,
     "desde": 90000,
-    "etiqueta": "*2 cuotas* sin interés",
+    "etiqueta": "*Hosting* incluido",
     "en": "mil"
-   }
-  },
-  {
-   "texto": "Con *hosting* incluido, y mantenimiento gratis de por vida.",
-   "escena": {
-    "tipo": "chips",
-    "estilo": "etiqueta",
-    "items": [
-     {
-      "texto": "Hosting incluido",
-      "icono": "globo",
-      "en": "hosting"
-     },
-     {
-      "texto": "Mantenimiento gratis",
-      "icono": "check",
-      "en": "mantenimiento"
-     }
-    ]
    }
   },
   {
    "texto": "Escribime *{DEMO|demo}*, y en veinticuatro horas la ves.",
    "escena": {
     "tipo": "cierre",
-    "sub": "Desde $175.000 · 2 cuotas sin interés",
+    "sub": "Páginas web a medida · Desde $175.000",
     "cta": "Escribime “DEMO”",
     "lema": "PÁGINAS · SISTEMAS · IA"
    }
   }
  ],
- "voz_archivo": "/tmp/voz-demo.mp3"
+ "voz_archivo": "/tmp/voz-demo-v2.wav"
 }

@@ -8,6 +8,7 @@ Capturas reales de proyectos de Tob para los videos del pilar `marca` (y para cu
 - `capturas/<sitio>/`: `escritorio.jpg` (1400 px, lo que se ve al abrir la página), `escritorio-completa.jpg` (página entera, para hacer scroll), `celular.jpg` (780 px) y `celular-completa.jpg`.
 - `flujos/el-gordo-burger/`: el pedido real paso a paso (menú → agregar → carrito → datos → enviar), `flujo.json` con el toque de cada paso y el mensaje de WhatsApp que genera la página (cliente de prueba).
 - `fotos/`: fotos con licencia libre y su crédito en `sitios.json`.
+- **1000 Toros Rojos**: la home tiene un video de fondo que en la captura sale negro (`escritorio.jpg`); en los videos usá `caso-escritorio.jpg` (la página de un caso, con foto).
 
 ## Sumar o actualizar un sitio
 
