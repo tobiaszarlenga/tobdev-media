@@ -1,0 +1,172 @@
+{
+  "etiqueta": "IA Y PLATA #3",
+  "fuente": "Tribunal Civil de Columbia Británica · Daily Hive · Kiplinger",
+  "acento": "#F59E0B",
+  "tema": "claro",
+  "musica": "retro",
+  "voz_archivo": "/tmp/voz-2026-10-30.mp3",
+  "beats": [
+    {
+      "texto": "Un {chatbot|chat bot} *inventó* una regla, y la empresa la *pagó*.",
+      "escena": {
+        "tipo": "impacto",
+        "por_linea": 2
+      }
+    },
+    {
+      "texto": "Le pasó a {Air Canada|er cánada}. Un pasajero preguntó por la tarifa por duelo, después de perder a su abuela.",
+      "escena": {
+        "tipo": "titular",
+        "titulo": "Air Canada tiene que pagar por lo que dijo su *chatbot*",
+        "bajada": "El tribunal rechazó que la aerolínea no respondiera por su asistente",
+        "medio": "Tribunal Civil de Columbia Británica",
+        "fecha": "14 FEB 2024",
+        "etiqueta": "CASO REAL",
+        "en": "tarifa"
+      }
+    },
+    {
+      "texto": "El {chatbot|chat bot} le dijo que podía pedir el descuento *después de viajar*. La política real decía que no.",
+      "escena": {
+        "tipo": "celular",
+        "app": "Asistente de la aerolínea",
+        "icono": "chat",
+        "estado": "en línea",
+        "mensajes": [
+          {
+            "de": "yo",
+            "texto": "Ya viajé. ¿Puedo pedir igual la tarifa por duelo?",
+            "hora": "10:12",
+            "en": "dijo"
+          },
+          {
+            "de": "ia",
+            "texto": "Sí, podés pedirla dentro de los *90 días* desde que se emitió el pasaje.",
+            "hora": "10:12",
+            "en": "descuento"
+          },
+          {
+            "de": "ia",
+            "texto": "Solicitud rechazada: la tarifa no se aplica después del viaje.",
+            "hora": "11:40",
+            "en": "política"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "En el reclamo, la aerolínea alegó que no respondía por lo que dijera su {chatbot|chat bot}.",
+      "escena": {
+        "tipo": "balanza",
+        "a": {
+          "texto": "La empresa",
+          "flecha": "↑"
+        },
+        "b": {
+          "texto": "El chatbot",
+          "flecha": "↓"
+        },
+        "en": "alegó",
+        "nota": "Lo que alegó la aerolínea · febrero de 2024"
+      }
+    },
+    {
+      "texto": "El tribunal fue claro: la empresa responde por *toda* la información de su sitio, venga de una página o de un {chatbot|chat bot}.",
+      "escena": {
+        "tipo": "cita",
+        "texto": "Es responsable de toda la información de su sitio web. Da lo mismo si viene de una página estática o de un chatbot.",
+        "autor": "Christopher Rivers",
+        "cargo": "Tribunal Civil de Columbia Británica · 2024 (traducción)",
+        "en": "claro",
+        "en_autor": "página"
+      }
+    },
+    {
+      "texto": "Tuvo que pagar {812|ochocientos doce} dólares canadienses, entre daños, intereses y costas.",
+      "escena": {
+        "tipo": "numero",
+        "valor": 812.02,
+        "decimales": 2,
+        "prefijo": "CA$ ",
+        "desde": 0,
+        "etiqueta": "daños + intereses + *costas*",
+        "en": "dólares"
+      }
+    },
+    {
+      "texto": "Si vendés un {chatbot|chat bot}, aclaralo antes: *puede equivocarse* con total seguridad, y lo que dice, lo firma el negocio.",
+      "escena": {
+        "tipo": "lista",
+        "titulo": "Antes de venderlo, aclarale",
+        "items": [
+          {
+            "texto": "Puede equivocarse, y suena seguro igual",
+            "en": "equivocarse"
+          },
+          {
+            "texto": "Lo que responde, lo firma el negocio",
+            "en": "firma"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Y ponele límites por escrito: que no prometa descuentos, y que derive a una persona cuando no sabe.",
+      "escena": {
+        "tipo": "codigo",
+        "archivo": "reglas-del-asistente.md",
+        "lineas": [
+          {
+            "texto": "# Lo que el asistente NO hace",
+            "en": "límites"
+          },
+          {
+            "texto": "- No promete descuentos ni reintegros",
+            "en": "prometa",
+            "marcar": true
+          },
+          {
+            "texto": "- Políticas: solo las que le cargaste",
+            "en": "descuentos"
+          },
+          {
+            "texto": "- Si no sabe: \"Te paso con una persona\"",
+            "en": "derive"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Prometé lo justo. Mandáselo a quien está por vender su primer {chatbot|chat bot}.",
+      "escena": {
+        "tipo": "comparacion",
+        "antes": {
+          "titulo": "Prometer de más",
+          "items": [
+            "Responde todo",
+            "Nunca se equivoca"
+          ],
+          "en": "Prometé",
+          "icono": "alerta"
+        },
+        "despues": {
+          "titulo": "Prometer lo justo",
+          "items": [
+            "Responde lo que sabe",
+            "Deriva cuando duda"
+          ],
+          "en": "justo",
+          "icono": "check"
+        }
+      }
+    },
+    {
+      "texto": "Seguí a {@tobdev.ia|tob dev} para más ideas de negocio con {IA|inteligencia artificial}.",
+      "escena": {
+        "tipo": "cierre",
+        "sub": "Ideas de negocio con IA, sin humo",
+        "cta": "Compartilo"
+      }
+    }
+  ]
+}
