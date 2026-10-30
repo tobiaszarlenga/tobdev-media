@@ -38,7 +38,7 @@ Ideas para los días sin noticia y para cada pilar. **Antes de usar cualquiera, 
 - [ ] Detrás de escena: cómo tobdev arma la landing de un comercio con agentes de IA (real: pipeline de tobdev; sin nombrar clientes)
 - [x] 5 servicios con IA que le podés vender a un comercio de tu barrio (landing, turnos por WhatsApp, reels, presupuestos, respuestas a reseñas) (2026-10-23)
 - [ ] Cobrar por mes en vez de una sola vez: por qué conviene cobrar una cuota por un servicio con IA
-- [ ] El error de prometer de más: qué no hace la IA y conviene aclararlo antes de venderla
+- [x] El error de prometer de más: qué no hace la IA y conviene aclararlo antes de venderla (2026-10-30, caso Air Canada)
 - [ ] Cómo conseguir el primer cliente: mostrarle una demo hecha con sus datos públicos (sin usar datos privados)
 - [ ] Freelance con IA: hacer en una tarde lo que antes llevaba una semana, y qué hacer con ese tiempo
 

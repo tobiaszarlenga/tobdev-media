@@ -465,6 +465,31 @@
         "cierre"
       ],
       "voz": "elevenlabs"
+    },
+    {
+      "fecha": "2026-10-30",
+      "pilar": "negocio",
+      "serie": "IA Y PLATA #3",
+      "titulo": "El chatbot de Air Canada inventó una regla y la empresa la pagó: prometé lo justo al vender IA",
+      "url_fuente": "https://dailyhive.com/canada/air-canada-chatbot-decision",
+      "video": "videos/2026-10-30.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-8134321505639969633",
+      "acento": "#F59E0B",
+      "tema": "claro",
+      "musica": "retro",
+      "escenas": [
+        "impacto",
+        "titular",
+        "celular",
+        "balanza",
+        "cita",
+        "numero",
+        "lista",
+        "codigo",
+        "comparacion",
+        "cierre"
+      ],
+      "voz": "elevenlabs"
     }
   ]
 }
