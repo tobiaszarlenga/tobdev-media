@@ -55,6 +55,15 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 8. Voz TobDev: rioplatense con voseo, directo, sin hype (nada de "revolucionario", "increíble", "cambia todo"). Sin emojis.
 9. El último beat siempre es `cierre`, con "Seguí a {@tobdev.ia|tob dev}" y el remate del pilar (por ejemplo, "para más tips de {Claude|clod}").
 
+## Zona segura (v2.9)
+
+En celulares más altos que 9:16 (la mayoría de los iPhone y Android actuales), Instagram **agranda el Reel para llenar la pantalla y corta los costados** (en un iPhone de Tob se midieron ~44 px por lado; Meta pide dejar libre el 6%, ~65 px). En el feed se ve entero, por eso parece que "está bien".
+
+- El motor ya lo resuelve solo: subtítulos y cabecera con 100 px de margen y todas las escenas achicadas al 86% hacia el centro (salvo `presentador`, `logo` y `muro`, que son a pantalla completa a propósito). Con la deriva de cámara, el texto queda a 100 px o más del borde.
+- Al crear una escena nueva: diseñala sobre el escenario de siempre (1080x1010) con 40 px de margen como mínimo; el achique la lleva a la zona segura.
+- Abajo a la derecha (x > 930, y > 1180) van los botones de Instagram y en los últimos ~280 px el caption: nada de texto ahí.
+- `--revisar` imprime hojas `zona-segura-N.jpg` con el recorte dibujado: **rojo** = lo que Instagram puede cortar, **naranja** = botones y caption, **líneas amarillas** = margen de 100 px. Ningún texto puede tocar lo rojo ni lo naranja.
+
 ## Escenas (`escena.tipo`)
 
 `en` = palabra del texto del beat en la que aparece ese elemento (sincroniza la animación con la voz). Si no la ponés, se reparte parejo. Ninguna escena arranca vacía: el marco (ventana, tarjeta, teléfono) se ve desde el primer cuadro y las listas aparecen apagadas y se encienden cuando la voz las nombra; los números cuentan desde que empieza la escena y aterrizan cuando se dicen.

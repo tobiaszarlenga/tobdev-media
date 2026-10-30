@@ -63,7 +63,7 @@ Instrucciones para el agente programado. Corre de lunes a viernes. Formato v2: r
    ```bash
    python3 plantilla/make_reel2.py guiones/AAAA-MM-DD.json videos/AAAA-MM-DD.mp4 --revisar
    ```
-   Valida el guion (`ERROR` frena: corregí y repetí; `AVISO`: corregilo si tiene sentido, en especial los de variedad: mismo tema, misma música, escenas repetidas), arma la voz y el HTML (menos de 2 minutos) e imprime `REVISAR <ruta>` (una o dos hojas de contacto con un fotograma por escena). También imprime `VOZ archivo` (voz de ElevenLabs alineada) o `VOZ kokoro`. Miralas con Read: texto cortado, superposiciones, algo fuera de pantalla, una escena vacía o una imagen que no es la que esperabas. Si hay que corregir, cambiá el guion (no el texto de los beats, que ya tiene voz) y repetí `--revisar` (máximo 2 veces).
+   Valida el guion (`ERROR` frena: corregí y repetí; `AVISO`: corregilo si tiene sentido, en especial los de variedad: mismo tema, misma música, escenas repetidas), arma la voz y el HTML (menos de 2 minutos) e imprime `REVISAR <ruta>` (una o dos hojas de contacto con un fotograma por escena). También imprime `VOZ archivo` (voz de ElevenLabs alineada) o `VOZ kokoro`. Miralas con Read: texto cortado, superposiciones, algo fuera de pantalla, una escena vacía o una imagen que no es la que esperabas. Las hojas (`zona-segura-N.jpg`) traen dibujada la zona segura de Instagram: ningún texto puede tocar las franjas rojas de los costados (Instagram las corta en celulares altos) ni lo naranja (botones y caption). Si hay que corregir, cambiá el guion (no el texto de los beats, que ya tiene voz) y repetí `--revisar` (máximo 2 veces).
    ```bash
    python3 plantilla/make_reel2.py guiones/AAAA-MM-DD.json videos/AAAA-MM-DD.mp4
    ```

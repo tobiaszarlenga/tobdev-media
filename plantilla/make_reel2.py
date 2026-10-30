@@ -1561,7 +1561,7 @@ def build_html(guion, beats, groups, D):
         _tp = b["escena"]["tipo"]
         full = " full" if _tp in ("presentador", "logo", "muro") else (" libre" if _tp == "cuenta" else "")
         sc_html.append(f'<div id="{sid}" class="clip scene t-{b["escena"]["tipo"]}" data-start="{t0}" data-duration="{round(t1 - t0, 3)}" data-track-index="{1 + i % 2}">'
-                       f'<div class="stage{full}"><div class="cam"><div class="drift">{scene_html(sid, b, D)}</div></div></div></div>')
+                       f'<div class="stage{full}"><div class="safe"><div class="cam"><div class="drift">{scene_html(sid, b, D)}</div></div></div></div></div>')
         prm = scene_params(b, t0, t1)
         kwt, prev = [], None
         for w in b["words"]:
@@ -1662,10 +1662,10 @@ linear-gradient(rgba(120,160,255,.05) 1px,transparent 1px),linear-gradient(90deg
 .tema-editorial #grain{opacity:.09}
 .tema-editorial .cap{font-weight:600;letter-spacing:-.01em;line-height:1.14}
 .tema-editorial .eyebrow{letter-spacing:.24em}
-.hdr{position:absolute;left:70px;right:70px;top:150px;height:44px;display:flex;align-items:center;gap:14px;opacity:.85}
+.hdr{position:absolute;left:100px;right:100px;top:150px;height:44px;display:flex;align-items:center;gap:14px;opacity:.85}
 .hdr img{width:40px;height:40px;filter:var(--mark-filter)}.hdr .h{font-family:var(--mono);font-weight:500;font-size:24px;color:var(--text-soft)}
 .hdr .d{margin-left:auto;font-family:var(--mono);font-weight:500;font-size:22px;letter-spacing:.18em;color:var(--text-muted)}
-.cap{position:absolute;left:60px;right:60px;top:236px;text-align:center;font-weight:700;font-size:72px;line-height:1.16;letter-spacing:-.02em;opacity:0;
+.cap{position:absolute;left:100px;right:100px;top:236px;text-align:center;font-weight:700;font-size:72px;line-height:1.16;letter-spacing:-.02em;opacity:0;
 text-shadow:0 4px 24px rgba(0,0,0,.6)}
 .tema-claro .cap,.tema-estudio .cap{text-shadow:none}
 .cap .w{display:inline-block;opacity:0}
@@ -1675,6 +1675,10 @@ text-shadow:0 4px 24px rgba(0,0,0,.6)}
 .kb i:nth-child(1){left:-9px;top:-9px}.kb i:nth-child(2){right:-9px;top:-9px}.kb i:nth-child(3){left:-9px;bottom:-9px}.kb i:nth-child(4){right:-9px;bottom:-9px}
 .scene{position:absolute;inset:0}
 .stage{position:absolute;left:0;top:470px;width:1080px;height:1010px;perspective:1600px;clip-path:inset(-24px 0px -40px 0px)}
+/* zona segura: Instagram agranda el video y corta los costados en celulares más altos que 9:16;
+   las escenas se achican hacia el centro (con la deriva de cámara, el texto queda a 100 px o más del borde) */
+.safe{position:absolute;inset:0;transform:scale(.86);transform-origin:50% 50%;transform-style:preserve-3d}
+.stage.full>.safe{transform:none}
 .cam,.drift{position:absolute;inset:0;transform-style:preserve-3d}
 .glass{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
 .eyebrow{font-family:var(--mono);font-weight:500;font-size:26px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
@@ -2038,7 +2042,7 @@ font-size:22px;letter-spacing:.16em;color:#fff;opacity:0}
 .st-shot{position:relative;width:1020px;height:638px;overflow:hidden;background:#eee}
 .st-img{position:absolute;left:0;top:0;width:100%;height:auto;opacity:0;display:block}
 .st-ph{position:absolute;border-radius:58px;background:#0B0B0F;padding:12px;box-shadow:0 50px 100px -30px rgba(0,0,0,.6),0 0 0 2px rgba(255,255,255,.06) inset;opacity:0}
-.st-ph.lay-duo{left:714px;top:290px;width:318px;height:688px}
+.st-ph.lay-duo{left:690px;top:262px;width:318px;height:688px}
 .st-ph.lay-celular{left:332px;top:0px;width:416px;height:900px;border-radius:64px}
 .st-scr{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;background:#fff}
 .st-ph.lay-celular .st-scr{border-radius:52px}
@@ -2054,8 +2058,8 @@ box-shadow:0 20px 44px -16px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.06);opacity:0
 .st-chip.lay-escritorio.c0{left:60px;top:60px}.st-chip.lay-escritorio.c1{right:60px;top:690px}.st-chip.lay-escritorio.c2{left:60px;top:740px}
 .st-chip.lay-celular.c0{left:80px;top:170px}.st-chip.lay-celular.c1{right:80px;top:470px}.st-chip.lay-celular.c2{left:80px;top:740px}
 .st-lab{position:absolute;opacity:0}
-.st-lab.lay-duo{left:40px;top:770px;width:620px}
-.st-lab.lay-escritorio{left:40px;right:40px;top:850px;text-align:center}
+.st-lab.lay-duo{left:60px;top:770px;width:600px}
+.st-lab.lay-escritorio{left:60px;right:60px;top:850px;text-align:center}
 .st-lab.lay-celular{left:0;right:0;top:930px;text-align:center}
 .st-n{font-weight:700;font-size:56px;letter-spacing:-.03em;line-height:1.05}
 .st-r{margin-top:12px;font-size:24px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted)}
@@ -2063,7 +2067,7 @@ box-shadow:0 20px 44px -16px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.06);opacity:0
 .cr-scene{position:absolute;inset:0;perspective:1800px}
 .cr-fr.st-br{top:60px}
 .cr-scene.m-cel .cr-fr{top:0;height:840px;width:388px;left:346px}
-.cr-foot{position:absolute;left:40px;right:40px;top:760px;height:120px;opacity:0}
+.cr-foot{position:absolute;left:60px;right:60px;top:760px;height:120px;opacity:0}
 .cr-scene.m-cel .cr-foot{top:870px}
 .cr-labs{position:absolute;left:0;right:220px;top:0;height:120px}
 .cr-lab{position:absolute;left:0;top:0;opacity:0}
@@ -2478,10 +2482,10 @@ const TR = {
   continuo: {in:[{opacity:1}, {opacity:1}], out:[{opacity:1}, {opacity:1}]},
 };
 const DRIFTS = [
-  [{scale:1, y:0, x:0, rotation:0}, {scale:1.05, y:-22, x:14, rotation:.5}],
-  [{scale:1, y:0, x:0, rotation:0}, {scale:1.05, y:-22, x:-14, rotation:-.5}],
-  [{scale:1.04, y:10, x:-10}, {scale:1, y:-10, x:10}],
-  [{scale:1, y:0, x:0}, {scale:1.06, y:14, x:0}],
+  [{scale:1, y:0, x:0, rotation:0}, {scale:1.035, y:-22, x:14, rotation:.5}],
+  [{scale:1, y:0, x:0, rotation:0}, {scale:1.035, y:-22, x:-14, rotation:-.5}],
+  [{scale:1.03, y:10, x:-10}, {scale:1, y:-10, x:10}],
+  [{scale:1, y:0, x:0}, {scale:1.04, y:14, x:0}],
   [{scale:1.03, y:-8, x:12, rotation:-.4}, {scale:1.03, y:8, x:-12, rotation:.4}],
 ];
 const SEED = __SEED__;
@@ -3663,8 +3667,13 @@ def main():
         if not sheets:
             print((r.stdout + r.stderr)[-1500:])
             sys.exit(3)
-        for sh in sheets:
-            print("REVISAR", sh if os.path.isabs(sh) else os.path.join(work, sh))
+        sheets = [sh if os.path.isabs(sh) else os.path.join(work, sh) for sh in sheets]
+        safe = safe_zone_sheets(os.path.dirname(sheets[0]))
+        for sh in (safe or sheets):
+            print("REVISAR", sh)
+        if safe:
+            print("ZONA SEGURA: nada de texto sobre las franjas rojas (Instagram las corta en celulares altos) ni en lo naranja "
+                  "(botones y caption); lo importante adentro de las líneas amarillas")
         print("Escenas:", ", ".join(f"{i + 1}.{t}" for i, (t, _, _) in enumerate(esc_t)))
         return
     os.makedirs(os.path.dirname(out), exist_ok=True)
@@ -3682,6 +3691,53 @@ def main():
         print(f"ERROR video inesperado: {w_h} {dur:.1f} s (esperado 1080x1920, {D} s)")
         sys.exit(4)
 
+
+
+# Zona segura del Reel (1080x1920). En celulares más altos que 9:16, Instagram agranda el video para llenar
+# la pantalla y corta los costados (en un iPhone 15 se midieron ~44 px por lado; Meta pide dejar libre el 6%,
+# ~65 px). Abajo a la derecha van los botones (me gusta, comentar, compartir) y abajo el caption.
+SAFE_CUT, SAFE_MARGIN = 65, 100
+
+
+def safe_zone_sheets(frames_dir):
+    """Hojas de contacto propias con la zona segura dibujada encima. Devuelve las rutas o [] si no puede."""
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+    except ImportError:
+        return []
+    frames = sorted(f for f in os.listdir(frames_dir) if re.match(r"frame-\d+-at-[\d.]+s\.png$", f))
+    if not frames:
+        return []
+    try:
+        font = ImageFont.truetype(os.path.join(HERE, "fonts", "FreeSans-700.ttf"), 22)
+    except OSError:
+        font = ImageFont.load_default()
+    tw, th, cols, per = 360, 640, 5, 15
+    out = []
+    for si in range(0, len(frames), per):
+        chunk = frames[si:si + per]
+        rows = (len(chunk) + cols - 1) // cols
+        sheet = Image.new("RGB", (cols * tw + (cols + 1) * 8, rows * (th + 34) + 8), (24, 24, 28))
+        for j, f in enumerate(chunk):
+            im = Image.open(os.path.join(frames_dir, f)).convert("RGBA").resize((1080, 1920))
+            ov = Image.new("RGBA", im.size, (0, 0, 0, 0))
+            d = ImageDraw.Draw(ov)
+            d.rectangle([0, 0, SAFE_CUT, 1920], fill=(255, 40, 40, 120))
+            d.rectangle([1080 - SAFE_CUT, 0, 1080, 1920], fill=(255, 40, 40, 120))
+            d.rectangle([930, 1180, 1080 - SAFE_CUT, 1920], fill=(255, 150, 0, 70))
+            d.rectangle([SAFE_CUT, 1640, 930, 1920], fill=(255, 150, 0, 70))
+            for x in (SAFE_MARGIN, 1080 - SAFE_MARGIN):
+                for y in range(0, 1920, 48):
+                    d.line([x, y, x, y + 26], fill=(255, 220, 0, 230), width=4)
+            tile = Image.alpha_composite(im, ov).convert("RGB").resize((tw, th))
+            x0, y0 = 8 + (j % cols) * (tw + 8), 8 + (j // cols) * (th + 34)
+            m = re.match(r"frame-(\d+)-at-([\d.]+)s", f)
+            ImageDraw.Draw(sheet).text((x0, y0), f"{int(m.group(1)) + 1}. {m.group(2)} s", fill=(235, 235, 235), font=font)
+            sheet.paste(tile, (x0, y0 + 28))
+        path = os.path.join(frames_dir, f"zona-segura-{si // per + 1}.jpg")
+        sheet.save(path, quality=88)
+        out.append(path)
+    return out
 
 if __name__ == "__main__":
     main()
