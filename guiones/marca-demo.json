@@ -1,0 +1,195 @@
+{
+ "etiqueta": "PÁGINAS WEB",
+ "estilo": "marca",
+ "tema": "noche",
+ "acento": "#11BFD6",
+ "musica": "tech",
+ "fuente": "",
+ "transiciones": [
+  "corte",
+  "whip",
+  "flash",
+  "slide",
+  "whip",
+  "zoom",
+  "flash",
+  "rise"
+ ],
+ "beats": [
+  {
+   "texto": "Mirá tu página {web|güeb} *antes de pagarla*.",
+   "escena": {
+    "tipo": "boceto",
+    "etiqueta": "$0",
+    "boton": "Pedir",
+    "en": "antes"
+   }
+  },
+  {
+   "texto": "Te armo una *demo gratis*, en menos de veinticuatro horas.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "celular",
+    "nombre": "Férulas Tuc",
+    "rubro": "Ortopedia",
+    "url": "ferulas-tuc.pages.dev",
+    "celular": [
+     {
+      "img": "../portfolio/capturas/ferulas-tuc/celular-completa.jpg",
+      "scroll": 0.3
+     }
+    ],
+    "chips": [
+     {
+      "texto": "Demo gratis",
+      "en": "demo"
+     },
+     {
+      "texto": "En menos de 24 h",
+      "en": "veinticuatro"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Diseño a medida, pensado para *vender* desde el celular.",
+   "escena": {
+    "tipo": "sitio",
+    "nombre": "Malala",
+    "rubro": "Sombreros y accesorios",
+    "url": "malala-sombreros.pages.dev",
+    "escritorio": [
+     {
+      "img": "../portfolio/capturas/malala/escritorio-completa.jpg",
+      "scroll": 0.3
+     }
+    ],
+    "celular": [
+     {
+      "img": "../portfolio/capturas/malala/celular-completa.jpg",
+      "scroll": 0.28,
+      "en": "celular"
+     }
+    ],
+    "chips": [
+     {
+      "texto": "A medida",
+      "en": "medida"
+     },
+     {
+      "texto": "Pensado para vender",
+      "en": "vender"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Ropa, laboratorios, torneos, estudios: el rubro que sea.",
+   "escena": {
+    "tipo": "carrusel",
+    "marco": "navegador",
+    "items": [
+     {
+      "img": "../portfolio/capturas/d12tinto/escritorio.jpg",
+      "nombre": "D12tinto",
+      "rubro": "Indumentaria",
+      "url": "d12tinto-indumentaria.pages.dev",
+      "en": "Ropa"
+     },
+     {
+      "img": "../portfolio/capturas/infinity-labs/escritorio.jpg",
+      "nombre": "Infinity Labs",
+      "rubro": "Laboratorio",
+      "url": "infinity-labs-d8r.pages.dev",
+      "en": "laboratorios"
+     },
+     {
+      "img": "../portfolio/capturas/torneo-jogo/escritorio.jpg",
+      "nombre": "Torneo JOGO",
+      "rubro": "Fútbol 5",
+      "url": "torneo-jogo.pages.dev",
+      "en": "torneos"
+     },
+     {
+      "img": "../portfolio/capturas/1000-toros-rojos/escritorio.jpg",
+      "nombre": "1000 Toros Rojos",
+      "rubro": "Estudio creativo",
+      "url": "1000torosrojos-site.vercel.app",
+      "en": "estudios"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "La probás, la cambiás, y recién ahí *pagás*.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "celular",
+    "nombre": "Torneo JOGO",
+    "rubro": "Fútbol 5",
+    "url": "torneo-jogo.pages.dev",
+    "celular": [
+     {
+      "img": "../portfolio/capturas/torneo-jogo/celular.jpg",
+      "toque": [
+       0.5,
+       0.593
+      ],
+      "en": "probás"
+     },
+     {
+      "img": "../portfolio/capturas/torneo-jogo/celular-completa.jpg",
+      "scroll": 0.35,
+      "en": "cambiás"
+     }
+    ],
+    "chips": [
+     {
+      "texto": "Pagás al final",
+      "en": "pagás"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Desde ciento setenta y cinco mil pesos, en *dos cuotas* sin interés.",
+   "escena": {
+    "tipo": "numero",
+    "prefijo": "Desde $",
+    "valor": 175000,
+    "desde": 90000,
+    "etiqueta": "*2 cuotas* sin interés",
+    "en": "mil"
+   }
+  },
+  {
+   "texto": "Con *hosting* incluido, y mantenimiento gratis de por vida.",
+   "escena": {
+    "tipo": "chips",
+    "estilo": "etiqueta",
+    "items": [
+     {
+      "texto": "Hosting incluido",
+      "icono": "globo",
+      "en": "hosting"
+     },
+     {
+      "texto": "Mantenimiento gratis",
+      "icono": "check",
+      "en": "mantenimiento"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Escribime *{DEMO|demo}*, y en veinticuatro horas la ves.",
+   "escena": {
+    "tipo": "cierre",
+    "sub": "Desde $175.000 · 2 cuotas sin interés",
+    "cta": "Escribime “DEMO”",
+    "lema": "PÁGINAS · SISTEMAS · IA"
+   }
+  }
+ ],
+ "voz_archivo": "/tmp/voz-demo.mp3"
+}

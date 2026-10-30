@@ -443,6 +443,29 @@
         "cierre"
       ],
       "voz": "elevenlabs"
+    },
+    {
+      "fecha": "2026-10-30",
+      "pilar": "marca",
+      "serie": "TOBDEV #4",
+      "titulo": "Mirá tu página web antes de pagarla: demo gratis en 24 h, desde $175.000 (lo sube Tob a mano)",
+      "url_fuente": "",
+      "video": "videos/marca-demo.mp4",
+      "metricool": "manual",
+      "acento": "#11BFD6",
+      "tema": "noche",
+      "musica": "tech",
+      "escenas": [
+        "boceto",
+        "sitio",
+        "sitio",
+        "carrusel",
+        "sitio",
+        "numero",
+        "chips",
+        "cierre"
+      ],
+      "voz": "elevenlabs"
     }
   ]
 }

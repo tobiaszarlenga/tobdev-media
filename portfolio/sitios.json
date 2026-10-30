@@ -1,222 +1,222 @@
 {
- "_nota": "Proyectos de Tob. Solo se usan en videos los que tienen \"permiso\": true (clientes que aceptan aparecer o proyectos propios). Las demos para prospectos llevan fotos y marca del negocio: mostrarlas sin su autorización es publicidad engañosa y usa fotos ajenas. toque_cta = posición [x, y] (0 a 1) del botón principal en la captura 'celular'.",
- "sitios": [
-  {
-   "id": "liga-infantil-yb",
-   "nombre": "Liga Infantil YB",
-   "rubro": "Liga de fútbol infantil",
-   "ubicacion": "Yerba Buena, Tucumán",
-   "url": "ligainfantilyb.com",
-   "tipo": "plataforma",
-   "descripcion": "Plataforma completa para la Liga Infantil de Fútbol de Yerba Buena: fixture por fecha y cancha, resultados que cargan los veedores, goleadores, tablas de posiciones por categoría y perfiles de clubes. Con login y panel de carga, hecha en Next.js.",
-   "capturas": {
-    "escritorio": "portfolio/capturas/liga-infantil-yb/escritorio.jpg",
-    "escritorio_posiciones": "portfolio/capturas/liga-infantil-yb/posiciones.jpg",
-    "celular": "portfolio/capturas/liga-infantil-yb/celular.jpg"
-   },
-   "chips": [
-    "Fixture por cancha",
-    "Posiciones en vivo",
-    "Resultados de los veedores"
-   ],
-   "permiso": true
-  },
-  {
-   "id": "certificador",
-   "nombre": "Certificador de Obras",
-   "rubro": "Sistema para constructoras",
-   "ubicacion": "Tucumán",
-   "url": null,
-   "tipo": "sistema",
-   "descripcion": "Sistema web para constructoras de vivienda en serie que reemplaza el Excel con el que se sigue el avance de obra y se liquida a los contratistas. Avance por lote y por rubro, certifica solo la diferencia (nada se cobra dos veces), precios congelados por fecha, retención del 5 % y certificado en PDF, carga por voz en la obra y funciona sin señal (PWA). En producción, validando con usuarios reales.",
-   "capturas": {
-    "escritorio": "portfolio/capturas/certificador/reporte.jpg",
-    "escritorio_certificado": "portfolio/capturas/certificador/certificado.jpg",
-    "celular": "portfolio/capturas/certificador/celular-medir.jpg"
-   },
-   "datos": "obra de demostración: lotes, contratistas y montos inventados",
-   "chips": [
-    "Carga por voz",
-    "Funciona sin señal",
-    "Certificado en PDF"
-   ],
-   "permiso": true
-  },
-  {
-   "id": "casa-pan",
-   "nombre": "Casa Pan",
-   "rubro": "Panadería y café",
-   "ubicacion": "Yerba Buena, Tucumán",
-   "url": "casa-pan.pages.dev",
-   "tipo": "pagina",
-   "descripcion": "Panadería y café con carta completa y carrito de pedidos: desayunos, almuerzos, panadería y más. El pedido se arma solo y se envía por WhatsApp.",
-   "capturas": {
-    "escritorio": "portfolio/capturas/casa-pan/escritorio.jpg",
-    "escritorio_completa": "portfolio/capturas/casa-pan/escritorio-completa.jpg",
-    "celular": "portfolio/capturas/casa-pan/celular.jpg",
-    "celular_completa": "portfolio/capturas/casa-pan/celular-completa.jpg"
-   },
-   "toque_cta": [
-    0.257,
-    0.475
-   ],
-   "chips": [
-    "Carrito → WhatsApp"
-   ],
-   "permiso": false,
-   "permiso_nota": "No es cliente de Tob: demo hecha para mostrarle. No usar en videos hasta tener su autorización por escrito."
-  },
-  {
-   "id": "el-gordo-burger",
-   "nombre": "El Gordo Burger",
-   "rubro": "Hamburguesería",
-   "ubicacion": "San Miguel de Tucumán",
-   "url": "el-gordo-burger.pages.dev",
-   "tipo": "pagina",
-   "descripcion": "Hamburguesería smash solo delivery y take away. Menú configurable por tamaño, promos y carrito que arma el pedido y lo envía por WhatsApp.",
-   "capturas": {
-    "escritorio": "portfolio/capturas/el-gordo-burger/escritorio.jpg",
-    "escritorio_completa": "portfolio/capturas/el-gordo-burger/escritorio-completa.jpg",
-    "celular": "portfolio/capturas/el-gordo-burger/celular.jpg",
-    "celular_completa": "portfolio/capturas/el-gordo-burger/celular-completa.jpg"
-   },
-   "toque_cta": [
-    0.5,
-    0.539
-   ],
-   "flujo": "portfolio/flujos/el-gordo-burger",
-   "permiso": false,
-   "permiso_nota": "No es cliente de Tob: demo hecha para mostrarle. No usar en videos hasta tener su autorización por escrito."
-  },
-  {
-   "id": "ferulas-tuc",
-   "nombre": "Férulas Tuc (MOVI-TRANS)",
-   "rubro": "Ortopedia",
-   "ubicacion": "San Miguel de Tucumán",
-   "url": "ferulas-tuc.pages.dev",
-   "tipo": "pagina",
-   "descripcion": "Fabricantes de férulas e inmovilizadores ortopédicos a medida (marcas MOVI-TRANS y CONFE). Talles a medida, impresión 3D y envíos. Estética clínica profesional.",
-   "capturas": {
-    "escritorio": "portfolio/capturas/ferulas-tuc/escritorio.jpg",
-    "escritorio_completa": "portfolio/capturas/ferulas-tuc/escritorio-completa.jpg",
-    "celular": "portfolio/capturas/ferulas-tuc/celular.jpg",
-    "celular_completa": "portfolio/capturas/ferulas-tuc/celular-completa.jpg"
-   },
-   "toque_cta": [
-    0.5,
-    0.557
-   ],
-   "permiso": null,
-   "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
-  },
-  {
-   "id": "infinity-labs",
-   "nombre": "Infinity Labs",
-   "rubro": "Laboratorio de suplementos",
-   "ubicacion": "Yerba Buena, Tucumán",
-   "url": "infinity-labs-d8r.pages.dev",
-   "tipo": "pagina",
-   "descripcion": "Laboratorio de suplementos dietarios, primera PYME tucumana certificada por ANMAT. Creatina, Whey Protein, colágeno y más, con envíos a todo el país.",
-   "capturas": {
-    "escritorio": "portfolio/capturas/infinity-labs/escritorio.jpg",
-    "escritorio_completa": "portfolio/capturas/infinity-labs/escritorio-completa.jpg",
-    "celular": "portfolio/capturas/infinity-labs/celular.jpg",
-    "celular_completa": "portfolio/capturas/infinity-labs/celular-completa.jpg"
-   },
-   "toque_cta": [
-    0.5,
-    0.677
-   ],
-   "permiso": null,
-   "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
-  },
-  {
-   "id": "malala",
-   "nombre": "Malala",
-   "rubro": "Sombreros y accesorios",
-   "ubicacion": "Tucumán",
-   "url": "malala-sombreros.pages.dev",
-   "tipo": "pagina",
-   "descripcion": "Sombreros y gorras customizados a mano, accesorios handmade y workshops. Estética cálida y artesanal.",
-   "capturas": {
-    "escritorio": "portfolio/capturas/malala/escritorio.jpg",
-    "escritorio_completa": "portfolio/capturas/malala/escritorio-completa.jpg",
-    "celular": "portfolio/capturas/malala/celular.jpg",
-    "celular_completa": "portfolio/capturas/malala/celular-completa.jpg"
-   },
-   "permiso": null,
-   "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
-  },
-  {
-   "id": "torneo-jogo",
-   "nombre": "Torneo JOGO",
-   "rubro": "Fútbol 5",
-   "ubicacion": "Yerba Buena, Tucumán",
-   "url": "torneo-jogo.pages.dev",
-   "tipo": "pagina",
-   "descripcion": "Torneos de fútbol 5 amateur. Calendario, formato de copas, precios e inscripción por WhatsApp.",
-   "capturas": {
-    "escritorio": "portfolio/capturas/torneo-jogo/escritorio.jpg",
-    "escritorio_completa": "portfolio/capturas/torneo-jogo/escritorio-completa.jpg",
-    "celular": "portfolio/capturas/torneo-jogo/celular.jpg",
-    "celular_completa": "portfolio/capturas/torneo-jogo/celular-completa.jpg"
-   },
-   "toque_cta": [
-    0.5,
-    0.593
-   ],
-   "permiso": null,
-   "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
-  },
-  {
-   "id": "d12tinto",
-   "nombre": "D12tinto",
-   "rubro": "Indumentaria",
-   "ubicacion": "Yerba Buena, Tucumán",
-   "url": "d12tinto-indumentaria.pages.dev",
-   "tipo": "pagina",
-   "descripcion": "Indumentaria urbana y casual multimarca: buzos, remeras, camisas y más. Catálogo visual y consultas de talles y stock por WhatsApp.",
-   "capturas": {
-    "escritorio": "portfolio/capturas/d12tinto/escritorio.jpg",
-    "escritorio_completa": "portfolio/capturas/d12tinto/escritorio-completa.jpg",
-    "celular": "portfolio/capturas/d12tinto/celular.jpg",
-    "celular_completa": "portfolio/capturas/d12tinto/celular-completa.jpg"
-   },
-   "toque_cta": [
-    0.5,
-    0.81
-   ],
-   "permiso": null,
-   "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
-  },
-  {
-   "id": "1000-toros-rojos",
-   "nombre": "1000 Toros Rojos",
-   "rubro": "Estudio creativo",
-   "ubicacion": "Buenos Aires",
-   "url": "1000torosrojos-site.vercel.app",
-   "tipo": "pagina",
-   "descripcion": "Estudio creativo con treinta años de trayectoria. Reconstrucción de su sitio en Next.js: casos con galerías y video, sección Craft y un diseño oscuro 100% responsive.",
-   "capturas": {
-    "escritorio": "portfolio/capturas/1000-toros-rojos/escritorio.jpg",
-    "escritorio_completa": "portfolio/capturas/1000-toros-rojos/escritorio-completa.jpg",
-    "celular": "portfolio/capturas/1000-toros-rojos/celular.jpg",
-    "celular_completa": "portfolio/capturas/1000-toros-rojos/celular-completa.jpg",
-    "caso_escritorio": "portfolio/capturas/1000-toros-rojos/caso-escritorio.jpg"
-   },
-   "nota": "las capturas salieron sin los videos e imágenes del CDN (bloqueado desde la nube): usar la portada tipográfica y el caso",
-   "permiso": null,
-   "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
-  }
- ],
- "fotos": [
-  {
-   "img": "portfolio/fotos/estres-laptop.jpg",
-   "credito": "Foto: Vitaly Gariev · Unsplash",
-   "uso": "persona estresada frente a la compu (escena caos)"
-  }
- ],
- "pendientes": [
-  "Casa Vicente (casavicente.tobdev.workers.dev): el sistema tiene reservas reales; para mostrarlo hay que cargarle datos de demo antes de capturar"
- ]
+  "_nota": "Proyectos de Tob. Solo se usan en videos los que tienen \"permiso\": true (clientes que aceptan aparecer o proyectos propios). Las demos para prospectos llevan fotos y marca del negocio: mostrarlas sin su autorización es publicidad engañosa y usa fotos ajenas. toque_cta = posición [x, y] (0 a 1) del botón principal en la captura 'celular'.",
+  "sitios": [
+    {
+      "id": "liga-infantil-yb",
+      "nombre": "Liga Infantil YB",
+      "rubro": "Liga de fútbol infantil",
+      "ubicacion": "Yerba Buena, Tucumán",
+      "url": "ligainfantilyb.com",
+      "tipo": "plataforma",
+      "descripcion": "Plataforma completa para la Liga Infantil de Fútbol de Yerba Buena: fixture por fecha y cancha, resultados que cargan los veedores, goleadores, tablas de posiciones por categoría y perfiles de clubes. Con login y panel de carga, hecha en Next.js.",
+      "capturas": {
+        "escritorio": "portfolio/capturas/liga-infantil-yb/escritorio.jpg",
+        "escritorio_posiciones": "portfolio/capturas/liga-infantil-yb/posiciones.jpg",
+        "celular": "portfolio/capturas/liga-infantil-yb/celular.jpg"
+      },
+      "chips": [
+        "Fixture por cancha",
+        "Posiciones en vivo",
+        "Resultados de los veedores"
+      ],
+      "permiso": true
+    },
+    {
+      "id": "certificador",
+      "nombre": "Certificador de Obras",
+      "rubro": "Sistema para constructoras",
+      "ubicacion": "Tucumán",
+      "url": null,
+      "tipo": "sistema",
+      "descripcion": "Sistema web para constructoras de vivienda en serie que reemplaza el Excel con el que se sigue el avance de obra y se liquida a los contratistas. Avance por lote y por rubro, certifica solo la diferencia (nada se cobra dos veces), precios congelados por fecha, retención del 5 % y certificado en PDF, carga por voz en la obra y funciona sin señal (PWA). En producción, validando con usuarios reales.",
+      "capturas": {
+        "escritorio": "portfolio/capturas/certificador/reporte.jpg",
+        "escritorio_certificado": "portfolio/capturas/certificador/certificado.jpg",
+        "celular": "portfolio/capturas/certificador/celular-medir.jpg"
+      },
+      "datos": "obra de demostración: lotes, contratistas y montos inventados",
+      "chips": [
+        "Carga por voz",
+        "Funciona sin señal",
+        "Certificado en PDF"
+      ],
+      "permiso": true
+    },
+    {
+      "id": "casa-pan",
+      "nombre": "Casa Pan",
+      "rubro": "Panadería y café",
+      "ubicacion": "Yerba Buena, Tucumán",
+      "url": "casa-pan.pages.dev",
+      "tipo": "pagina",
+      "descripcion": "Panadería y café con carta completa y carrito de pedidos: desayunos, almuerzos, panadería y más. El pedido se arma solo y se envía por WhatsApp.",
+      "capturas": {
+        "escritorio": "portfolio/capturas/casa-pan/escritorio.jpg",
+        "escritorio_completa": "portfolio/capturas/casa-pan/escritorio-completa.jpg",
+        "celular": "portfolio/capturas/casa-pan/celular.jpg",
+        "celular_completa": "portfolio/capturas/casa-pan/celular-completa.jpg"
+      },
+      "toque_cta": [
+        0.257,
+        0.475
+      ],
+      "chips": [
+        "Carrito → WhatsApp"
+      ],
+      "permiso": false,
+      "permiso_nota": "No es cliente de Tob: demo hecha para mostrarle. No usar en videos hasta tener su autorización por escrito."
+    },
+    {
+      "id": "el-gordo-burger",
+      "nombre": "El Gordo Burger",
+      "rubro": "Hamburguesería",
+      "ubicacion": "San Miguel de Tucumán",
+      "url": "el-gordo-burger.pages.dev",
+      "tipo": "pagina",
+      "descripcion": "Hamburguesería smash solo delivery y take away. Menú configurable por tamaño, promos y carrito que arma el pedido y lo envía por WhatsApp.",
+      "capturas": {
+        "escritorio": "portfolio/capturas/el-gordo-burger/escritorio.jpg",
+        "escritorio_completa": "portfolio/capturas/el-gordo-burger/escritorio-completa.jpg",
+        "celular": "portfolio/capturas/el-gordo-burger/celular.jpg",
+        "celular_completa": "portfolio/capturas/el-gordo-burger/celular-completa.jpg"
+      },
+      "toque_cta": [
+        0.5,
+        0.539
+      ],
+      "flujo": "portfolio/flujos/el-gordo-burger",
+      "permiso": false,
+      "permiso_nota": "No es cliente de Tob: demo hecha para mostrarle. No usar en videos hasta tener su autorización por escrito."
+    },
+    {
+      "id": "ferulas-tuc",
+      "nombre": "Férulas Tuc (MOVI-TRANS)",
+      "rubro": "Ortopedia",
+      "ubicacion": "San Miguel de Tucumán",
+      "url": "ferulas-tuc.pages.dev",
+      "tipo": "pagina",
+      "descripcion": "Fabricantes de férulas e inmovilizadores ortopédicos a medida (marcas MOVI-TRANS y CONFE). Talles a medida, impresión 3D y envíos. Estética clínica profesional.",
+      "capturas": {
+        "escritorio": "portfolio/capturas/ferulas-tuc/escritorio.jpg",
+        "escritorio_completa": "portfolio/capturas/ferulas-tuc/escritorio-completa.jpg",
+        "celular": "portfolio/capturas/ferulas-tuc/celular.jpg",
+        "celular_completa": "portfolio/capturas/ferulas-tuc/celular-completa.jpg"
+      },
+      "toque_cta": [
+        0.5,
+        0.557
+      ],
+      "permiso": true,
+      "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
+    },
+    {
+      "id": "infinity-labs",
+      "nombre": "Infinity Labs",
+      "rubro": "Laboratorio de suplementos",
+      "ubicacion": "Yerba Buena, Tucumán",
+      "url": "infinity-labs-d8r.pages.dev",
+      "tipo": "pagina",
+      "descripcion": "Laboratorio de suplementos dietarios, primera PYME tucumana certificada por ANMAT. Creatina, Whey Protein, colágeno y más, con envíos a todo el país.",
+      "capturas": {
+        "escritorio": "portfolio/capturas/infinity-labs/escritorio.jpg",
+        "escritorio_completa": "portfolio/capturas/infinity-labs/escritorio-completa.jpg",
+        "celular": "portfolio/capturas/infinity-labs/celular.jpg",
+        "celular_completa": "portfolio/capturas/infinity-labs/celular-completa.jpg"
+      },
+      "toque_cta": [
+        0.5,
+        0.677
+      ],
+      "permiso": true,
+      "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
+    },
+    {
+      "id": "malala",
+      "nombre": "Malala",
+      "rubro": "Sombreros y accesorios",
+      "ubicacion": "Tucumán",
+      "url": "malala-sombreros.pages.dev",
+      "tipo": "pagina",
+      "descripcion": "Sombreros y gorras customizados a mano, accesorios handmade y workshops. Estética cálida y artesanal.",
+      "capturas": {
+        "escritorio": "portfolio/capturas/malala/escritorio.jpg",
+        "escritorio_completa": "portfolio/capturas/malala/escritorio-completa.jpg",
+        "celular": "portfolio/capturas/malala/celular.jpg",
+        "celular_completa": "portfolio/capturas/malala/celular-completa.jpg"
+      },
+      "permiso": true,
+      "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
+    },
+    {
+      "id": "torneo-jogo",
+      "nombre": "Torneo JOGO",
+      "rubro": "Fútbol 5",
+      "ubicacion": "Yerba Buena, Tucumán",
+      "url": "torneo-jogo.pages.dev",
+      "tipo": "pagina",
+      "descripcion": "Torneos de fútbol 5 amateur. Calendario, formato de copas, precios e inscripción por WhatsApp.",
+      "capturas": {
+        "escritorio": "portfolio/capturas/torneo-jogo/escritorio.jpg",
+        "escritorio_completa": "portfolio/capturas/torneo-jogo/escritorio-completa.jpg",
+        "celular": "portfolio/capturas/torneo-jogo/celular.jpg",
+        "celular_completa": "portfolio/capturas/torneo-jogo/celular-completa.jpg"
+      },
+      "toque_cta": [
+        0.5,
+        0.593
+      ],
+      "permiso": true,
+      "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
+    },
+    {
+      "id": "d12tinto",
+      "nombre": "D12tinto",
+      "rubro": "Indumentaria",
+      "ubicacion": "Yerba Buena, Tucumán",
+      "url": "d12tinto-indumentaria.pages.dev",
+      "tipo": "pagina",
+      "descripcion": "Indumentaria urbana y casual multimarca: buzos, remeras, camisas y más. Catálogo visual y consultas de talles y stock por WhatsApp.",
+      "capturas": {
+        "escritorio": "portfolio/capturas/d12tinto/escritorio.jpg",
+        "escritorio_completa": "portfolio/capturas/d12tinto/escritorio-completa.jpg",
+        "celular": "portfolio/capturas/d12tinto/celular.jpg",
+        "celular_completa": "portfolio/capturas/d12tinto/celular-completa.jpg"
+      },
+      "toque_cta": [
+        0.5,
+        0.81
+      ],
+      "permiso": true,
+      "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
+    },
+    {
+      "id": "1000-toros-rojos",
+      "nombre": "1000 Toros Rojos",
+      "rubro": "Estudio creativo",
+      "ubicacion": "Buenos Aires",
+      "url": "1000torosrojos-site.vercel.app",
+      "tipo": "pagina",
+      "descripcion": "Estudio creativo con treinta años de trayectoria. Reconstrucción de su sitio en Next.js: casos con galerías y video, sección Craft y un diseño oscuro 100% responsive.",
+      "capturas": {
+        "escritorio": "portfolio/capturas/1000-toros-rojos/escritorio.jpg",
+        "escritorio_completa": "portfolio/capturas/1000-toros-rojos/escritorio-completa.jpg",
+        "celular": "portfolio/capturas/1000-toros-rojos/celular.jpg",
+        "celular_completa": "portfolio/capturas/1000-toros-rojos/celular-completa.jpg",
+        "caso_escritorio": "portfolio/capturas/1000-toros-rojos/caso-escritorio.jpg"
+      },
+      "nota": "las capturas salieron sin los videos e imágenes del CDN (bloqueado desde la nube): usar la portada tipográfica y el caso",
+      "permiso": true,
+      "permiso_nota": "A confirmar con Tob si es cliente y si autorizó mostrarlo. Hasta entonces, no usar."
+    }
+  ],
+  "fotos": [
+    {
+      "img": "portfolio/fotos/estres-laptop.jpg",
+      "credito": "Foto: Vitaly Gariev · Unsplash",
+      "uso": "persona estresada frente a la compu (escena caos)"
+    }
+  ],
+  "pendientes": [
+    "Casa Vicente (casavicente.tobdev.workers.dev): el sistema tiene reservas reales; para mostrarlo hay que cargarle datos de demo antes de capturar"
+  ]
 }

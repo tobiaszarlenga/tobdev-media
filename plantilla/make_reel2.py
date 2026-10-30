@@ -39,7 +39,9 @@ SCENE_TYPES = {"terminal", "linea_tiempo", "prompt", "capas", "flujo", "cursores
                # interruptor, censura, visor de cámara, onda de audio)
                "glitch", "bandeja", "carta", "ranking", "triturar", "interruptor", "censura", "visor", "onda",
                # v2.7 (galería: retrato con medidores, curva del valle, espectro de imágenes, diff, cerebros, balanza, firma)
-               "retrato", "curva", "espectro", "diff", "cerebro", "balanza", "firma"}
+               "retrato", "curva", "espectro", "diff", "cerebro", "balanza", "firma",
+               # v2.8: boceto de una página (wireframe en un celular) con etiqueta de precio
+               "boceto"}
 LEAD = 0.12  # silencio al principio de la pista de voz
 NOCAPS = {"frase", "cierre", "impacto", "muro", "logo", "glitch"}          # escenas que ya muestran el texto: sin subtítulos arriba
 PUNCT_PAUSE = {",": 0.10, ";": 0.16, ":": 0.18, ".": 0.24, "?": 0.26, "!": 0.24, "…": 0.26}
@@ -666,10 +668,30 @@ def scene_html_marca(sid, b, D):
     return ""
 
 
+def fmt_py(v, dec=0, sep=True):
+    """Mismo formato que el JS (es-AR): puntos de miles y coma decimal; sin separador para años."""
+    try:
+        v = float(v)
+    except (TypeError, ValueError):
+        return str(v)
+    if not sep:
+        return f"{v:.{dec}f}"
+    s_ = f"{v:,.{dec}f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    return s_
+
+
 def scene_html(sid, b, D):
     e = b["escena"]; t = e["tipo"]; p = sid
     if t in ("sitio", "carrusel", "muro", "notificaciones", "caos", "planilla", "logo", "cuenta"):
         return scene_html_marca(sid, b, D)
+    if t == "boceto":
+        return (f'<div class="bc-wrap"><div class="bc-ph" id="{p}-ph"><i class="bc-notch"></i>'
+                f'<div class="bc-el bc-bar" id="{p}-e0"><b></b><b class="s"></b></div>'
+                f'<div class="bc-el bc-h1" id="{p}-e1"></div><div class="bc-el bc-h2" id="{p}-e2"></div>'
+                f'<div class="bc-el bc-btn" id="{p}-e3"><span class="mono">{esc(e.get("boton", "Ver más"))}</span></div>'
+                f'<div class="bc-el bc-img" id="{p}-e4"><svg viewBox="0 0 120 80" width="120" height="80"><path d="M6 70 L40 30 L62 54 L80 40 L114 70 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><circle cx="92" cy="22" r="9" fill="none" stroke="currentColor" stroke-width="4"/></svg></div>'
+                f'<div class="bc-el bc-row" id="{p}-e5"></div><div class="bc-el bc-row w" id="{p}-e6"></div></div>'
+                f'<div class="bc-tag" id="{p}-tag"><i></i>{esc(e.get("etiqueta", "$0"))}</div></div>')
     if t == "retrato":
         src = e.get("_src", "")
         cred = f'<div class="rt-cred mono">{esc(e["credito"])}</div>' if e.get("credito") else ""
@@ -965,7 +987,9 @@ def scene_html(sid, b, D):
                 f'<div class="al-tt">{esc(e.get("titulo", "Atención"))}</div></div><div class="al-rows">{rows}</div></div>'
                 f'<div class="al-lens" id="{p}-lens">{icon("lupa", 150, "#FFFFFF")}</div>')
     if t == "numero":
-        return (f'<div class="nu-glow"></div><div class="nu-box"><div class="nu-v"><span class="nu-pre">{esc(e.get("prefijo", ""))}</span>'
+        _ln = len(e.get("prefijo", "")) + len(fmt_py(e.get("valor", 0), int(e.get("decimales", 0)), e.get("separador", True))) + len(e.get("sufijo", ""))
+        _sz = "" if _ln <= 7 else (" sm" if _ln <= 9 else " xs")
+        return (f'<div class="nu-glow"></div><div class="nu-box"><div class="nu-v{_sz}"><span class="nu-pre">{esc(e.get("prefijo", ""))}</span>'
                 f'<span id="{p}-n">0</span><span class="nu-suf">{esc(e.get("sufijo", ""))}</span></div>'
                 f'<div class="nu-l" id="{p}-l">{kw_text(e.get("etiqueta", ""))}</div></div>')
     if t == "navegador":
@@ -1270,6 +1294,8 @@ def scene_params(b, t0, t1):
         p["cues"] = scene_cues(b, [x.get("en", "") for x in lg], t0, t1)
         p["n"] = len(lg)
         p["pills"] = [bool(x.get("estado")) for x in lg]
+    elif t == "boceto":
+        p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
     elif t == "retrato":
         m1, m2 = e.get("parecido") or {}, e.get("afinidad") or {}
         p["c1"] = scene_cues(b, [m1.get("en", "")], t0, t1)[0]; p["v1"] = float(m1.get("valor", 92))
@@ -1757,7 +1783,7 @@ box-shadow:0 0 0 14px rgba(255,255,255,.03),0 40px 90px -30px rgba(0,0,0,.95)}
 /* numero */
 .nu-glow{position:absolute;left:140px;top:110px;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(var(--acc-rgb),.28),transparent 65%)}
 .nu-box{position:absolute;left:40px;right:40px;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.nu-v{font-weight:700;font-size:230px;letter-spacing:-.05em;line-height:1;white-space:nowrap}.nu-v.sm{font-size:170px}
+.nu-v{font-weight:700;font-size:230px;letter-spacing:-.05em;line-height:1;white-space:nowrap}.nu-v.sm{font-size:170px}.nu-v.xs{font-size:124px}
 .nu-pre,.nu-suf{color:var(--acc)}
 .nu-l{margin-top:30px;font-size:52px;font-weight:700;color:var(--text-soft);text-align:center;letter-spacing:-.01em;line-height:1.15;max-width:900px}
 /* navegador */
@@ -2303,6 +2329,21 @@ font-weight:700;font-size:40px;letter-spacing:-.01em;box-shadow:0 18px 40px -14p
 .tema-galeria .hdr .d{color:var(--acc)}
 .tema-galeria #grain{opacity:.1;mix-blend-mode:multiply}
 .tema-galeria .kb{background:rgba(var(--acc-rgb),.10)}
+/* boceto */
+.bc-wrap{position:absolute;left:0;top:0;width:1080px;height:1010px}
+.bc-ph{position:absolute;left:300px;top:40px;width:480px;height:930px;border:5px solid var(--text);border-radius:56px;background:rgba(var(--acc-rgb),.04);opacity:0}
+.bc-notch{position:absolute;left:150px;top:18px;width:170px;height:30px;border-radius:15px;background:var(--text);opacity:.85}
+.bc-el{position:absolute;left:40px;right:40px;border:3px solid var(--text);border-radius:12px;opacity:0}
+.bc-bar{top:90px;height:70px;display:flex;align-items:center;gap:14px;padding:0 20px}
+.bc-bar b{display:block;height:14px;width:120px;border-radius:7px;background:var(--text)}.bc-bar b.s{width:60px;margin-left:auto;opacity:.5}
+.bc-h1{top:200px;height:44px;border:0;border-radius:8px;background:var(--text)}
+.bc-h2{top:258px;height:44px;left:40px;right:140px;border:0;border-radius:8px;background:var(--text);opacity:0}
+.bc-btn{top:338px;height:84px;border-color:var(--acc);background:var(--acc);display:flex;align-items:center;justify-content:center;color:var(--on-acc);font-size:30px;letter-spacing:.14em;text-transform:uppercase}
+.bc-img{top:460px;height:260px;display:flex;align-items:center;justify-content:center;color:var(--acc)}
+.bc-row{top:760px;height:40px;border:0;border-radius:8px;background:var(--text);opacity:0}
+.bc-row.w{top:820px;right:170px}
+.bc-tag{position:absolute;left:720px;top:120px;padding:18px 34px;border-radius:18px;background:var(--acc);color:var(--on-acc);font-weight:700;font-size:64px;letter-spacing:-.02em;box-shadow:0 20px 50px rgba(0,0,0,.35);opacity:0}
+.bc-tag i{position:absolute;left:-22px;top:50%;margin-top:-14px;width:0;height:0;border-top:14px solid transparent;border-bottom:14px solid transparent;border-right:22px solid var(--acc)}
 /* retrato */
 .rt-wrap{position:absolute;left:40px;right:40px;top:0;bottom:0;border-radius:var(--radius);overflow:hidden;background:var(--surface2);box-shadow:var(--shadow)}
 .rt-img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 40%}
@@ -2681,6 +2722,14 @@ marcas(c, p){
   if ($(id+"-mid")) F(id+"-mid", {opacity:0, scale:2.2}, {opacity:1, scale:1, duration:.35, ease:"power3.out"}, (cues[0]+(cues[1]||cues[0]))/2);
   if ($(id+"-tit")) show(id+"-tit", c.t0+.2, .4, {y:-20});
   F(id+"-burst", {opacity:.9, scale:1}, {opacity:0, scale:16, duration:.7, ease:"power2.out"}, cues[0]);
+},
+boceto(c, p){
+  const id = "#"+c.id, cue = Math.max(c.t0+1.3, Math.min(p.cue, c.t1-.8));
+  F(id+"-ph", {opacity:0, scale:.9, y:30}, {opacity:1, scale:1, y:0, duration:.5, ease:E}, c.t0+.05);
+  for (let i=0;i<7;i++) F(id+"-e"+i, {opacity:0, clipPath:"inset(0 100% 0 0)"}, {opacity:i===2||i===5||i===6 ? .45 : 1, clipPath:"inset(0 0% 0 0)", duration:.32, ease:"power2.out"}, c.t0+.35+i*.14);
+  F(id+"-ph", {y:0}, {y:-10, duration:1.4, yoyo:true, repeat:Math.max(1, Math.floor((c.t1-c.t0)/1.4)), ease:"sine.inOut"}, c.t0+.6);
+  F(id+"-tag", {opacity:0, scale:.4, rotation:-16, x:-30}, {opacity:1, scale:1, rotation:0, x:0, duration:.4, ease:"back.out(2)"}, cue);
+  F("#"+c.id+" .stage", {scale:1}, {scale:1.03, duration:.1, yoyo:true, repeat:1, ease:"power2.out"}, cue+.05);
 },
 retrato(c, p){
   const id = "#"+c.id, Dd = c.t1-c.t0;
