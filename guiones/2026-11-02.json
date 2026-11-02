@@ -1,0 +1,163 @@
+{
+  "etiqueta": "IA EN TU NEGOCIO #2",
+  "fuente": "Ejemplo con datos ficticios",
+  "acento": "#22C55E",
+  "tema": "grilla",
+  "musica": "suave",
+  "beats": [
+    {
+      "texto": "Tu lista de precios ya sabe hacer *presupuestos*. Solo le falta alguien que la lea.",
+      "escena": {
+        "tipo": "planilla",
+        "archivo": "lista_precios_2026_FINAL.xlsx",
+        "formula": "=BUSCARV(B4;Precios!A:C;3;FALSO)*C4",
+        "error": {
+          "titulo": "Presupuesto pendiente",
+          "texto": "Hace 2 días que el cliente espera",
+          "en": "lea"
+        }
+      }
+    },
+    {
+      "texto": "Le pasás tu lista a {Claude|Claude} o a {ChatGPT|chat yi pi ti}: un {Excel|éxel}, un {PDF|pe de efe} o una foto.",
+      "escena": {
+        "tipo": "chips",
+        "estilo": "archivo",
+        "items": [
+          {
+            "texto": "Lista de precios",
+            "sub": "XLSX",
+            "en": "Excel"
+          },
+          {
+            "texto": "Catálogo",
+            "sub": "PDF",
+            "en": "PDF"
+          },
+          {
+            "texto": "Foto de la pizarra",
+            "sub": "JPG",
+            "en": "foto"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Después le pegás el pedido del cliente, *tal cual* te llegó.",
+      "escena": {
+        "tipo": "celular",
+        "estilo": "whatsapp",
+        "app": "Sofi · Cliente",
+        "estado": "en línea",
+        "mensajes": [
+          {
+            "de": "ia",
+            "texto": "Hola! Me pasás precio de 3 sillas de algarrobo, una mesa de 1,60 y el envío a Yerba Buena?",
+            "hora": "21:47",
+            "en": "pedido"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Y le pedís que arme el presupuesto *solo con tus precios*.",
+      "escena": {
+        "tipo": "prompt",
+        "texto": "Armá el presupuesto de este pedido usando solo los precios de mi lista",
+        "etiqueta": "Tu mensaje",
+        "estado": "Armando presupuesto…"
+      }
+    },
+    {
+      "texto": "Te devuelve el detalle: cada producto, la cantidad, y el total.",
+      "escena": {
+        "tipo": "tabla",
+        "titulo": "Presupuesto · Mueblería Demo",
+        "columnas": [
+          "Producto",
+          "Cant.",
+          "Subtotal"
+        ],
+        "filas": [
+          [
+            "Silla algarrobo",
+            "3",
+            "$ 186.000"
+          ],
+          [
+            "Mesa 1,60 m",
+            "1",
+            "$ 240.000"
+          ],
+          [
+            "Envío",
+            "1",
+            "A confirmar"
+          ],
+          [
+            "Total",
+            "",
+            "$ 426.000 + envío"
+          ]
+        ],
+        "marcar": 3,
+        "en": "total"
+      }
+    },
+    {
+      "texto": "Para que salga bien: lista actualizada, tus condiciones, y que marque *a confirmar* lo que no está en la lista.",
+      "escena": {
+        "tipo": "pasos",
+        "pasos": [
+          {
+            "titulo": "Lista *actualizada*",
+            "sub": "precios de hoy",
+            "en": "lista"
+          },
+          {
+            "titulo": "Tus condiciones",
+            "sub": "validez, pago, envío",
+            "en": "condiciones"
+          },
+          {
+            "titulo": "Nada inventado",
+            "sub": "lo que falta: a confirmar",
+            "en": "confirmar"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Y antes de mandarlo, *revisalo vos*. El presupuesto lo firmás vos, no la {IA|inteligencia artificial}.",
+      "escena": {
+        "tipo": "firma",
+        "titulo": "Presupuesto N.º 0147",
+        "lineas": [
+          "Precios revisados",
+          "Condiciones de pago y envío",
+          "Válido por 7 días"
+        ],
+        "etiqueta": "Revisado por",
+        "nombre": "vos",
+        "en": "firmás"
+      }
+    },
+    {
+      "texto": "Pasás de armarlo a mano, a *revisar y mandar*.",
+      "escena": {
+        "tipo": "reloj",
+        "antes": "Armarlo a mano",
+        "despues": "Revisar y mandar",
+        "en": "revisar"
+      }
+    },
+    {
+      "texto": "¿Cuánto tardás hoy en mandar un presupuesto? *Contámelo* en los comentarios, y seguí a {@tobdev.ia|tob dev}.",
+      "escena": {
+        "tipo": "cierre",
+        "cta": "¿Cuánto tardás hoy?"
+      }
+    }
+  ],
+  "voz_archivo": "/tmp/voz-2026-11-02.mp3"
+}
