@@ -1,130 +1,93 @@
 {
   "etiqueta": "IA EN TU NEGOCIO #2",
   "fuente": "Ejemplo con datos ficticios",
-  "acento": "#22C55E",
-  "tema": "grilla",
-  "musica": "suave",
+  "acento": "#FF6B6B",
+  "tema": "poster",
+  "musica": "tech",
+  "voz_archivo": "/tmp/voz-2026-11-02.mp3",
   "beats": [
     {
       "texto": "Tu lista de precios ya sabe hacer *presupuestos*. Solo le falta alguien que la lea.",
       "escena": {
-        "tipo": "planilla",
-        "archivo": "lista_precios_2026_FINAL.xlsx",
-        "formula": "=BUSCARV(B4;Precios!A:C;3;FALSO)*C4",
-        "error": {
-          "titulo": "Presupuesto pendiente",
-          "texto": "Hace 2 días que el cliente espera",
-          "en": "lea"
-        }
+        "tipo": "triturar",
+        "archivo": "lista_precios_2026.xlsx",
+        "lineas": [
+          "Silla algarrobo — $ 62.000",
+          "Mesa 1,60 m — $ 240.000",
+          "Banqueta alta — $ 38.000",
+          "Ropero 2 puertas — $ 410.000"
+        ],
+        "en": "lea",
+        "destino": "LEYENDO",
+        "contador": 48,
+        "unidad": "precios"
       }
     },
     {
       "texto": "Le pasás tu lista a {Claude|Claude} o a {ChatGPT|chat yi pi ti}: un {Excel|éxel}, un {PDF|pe de efe} o una foto.",
       "escena": {
-        "tipo": "chips",
-        "estilo": "archivo",
-        "items": [
-          {
-            "texto": "Lista de precios",
-            "sub": "XLSX",
-            "en": "Excel"
-          },
-          {
-            "texto": "Catálogo",
-            "sub": "PDF",
-            "en": "PDF"
-          },
-          {
-            "texto": "Foto de la pizarra",
-            "sub": "JPG",
-            "en": "foto"
-          }
+        "tipo": "marcas",
+        "titulo": "Cualquiera de los dos sirve",
+        "union": "y",
+        "logos": [
+          {"marca": "claude", "texto": "Claude", "estado": "Lee tu Excel", "ok": true, "en": "Claude"},
+          {"marca": "chatgpt", "texto": "ChatGPT", "estado": "Lee tu PDF", "ok": true, "en": "ChatGPT"}
         ]
       }
     },
     {
       "texto": "Después le pegás el pedido del cliente, *tal cual* te llegó.",
       "escena": {
-        "tipo": "celular",
-        "estilo": "whatsapp",
-        "app": "Sofi · Cliente",
-        "estado": "en línea",
-        "mensajes": [
-          {
-            "de": "ia",
-            "texto": "Hola! Me pasás precio de 3 sillas de algarrobo, una mesa de 1,60 y el envío a Yerba Buena?",
-            "hora": "21:47",
-            "en": "pedido"
-          }
-        ]
+        "tipo": "bandeja",
+        "app": "Mensajes del negocio",
+        "items": [
+          {"de": "Sofi · WhatsApp", "asunto": "Pedido: sillas y mesa", "texto": "¿Me pasás precio de 3 sillas de algarrobo y una mesa de 1,60?", "hora": "21:47", "en": "pedido"},
+          {"de": "Martín", "asunto": "Consulta banquetas", "texto": "¿Tenés banquetas altas en stock?", "hora": "20:15", "en": "cliente"}
+        ],
+        "marcar": 0,
+        "sello": "PEDIDO",
+        "en": "llegó"
       }
     },
     {
       "texto": "Y le pedís que arme el presupuesto *solo con tus precios*.",
       "escena": {
-        "tipo": "prompt",
-        "texto": "Armá el presupuesto de este pedido usando solo los precios de mi lista",
-        "etiqueta": "Tu mensaje",
-        "estado": "Armando presupuesto…"
+        "tipo": "carta",
+        "remitente": "VOS",
+        "para": "Claude",
+        "asunto": "Presupuesto · pedido de Sofi",
+        "texto": "Te paso el pedido. Armá el presupuesto usando solo los precios de mi lista. Lo que no esté en la lista, dejalo sin precio.",
+        "boton": "Enviar",
+        "estado": "Enviado"
       }
     },
     {
       "texto": "Te devuelve el detalle: cada producto, la cantidad, y el total.",
       "escena": {
-        "tipo": "tabla",
-        "titulo": "Presupuesto · Mueblería Demo",
-        "columnas": [
-          "Producto",
-          "Cant.",
-          "Subtotal"
-        ],
-        "filas": [
-          [
-            "Silla algarrobo",
-            "3",
-            "$ 186.000"
-          ],
-          [
-            "Mesa 1,60 m",
-            "1",
-            "$ 240.000"
-          ],
-          [
-            "Envío",
-            "1",
-            "A confirmar"
-          ],
-          [
-            "Total",
-            "",
-            "$ 426.000 + envío"
-          ]
-        ],
-        "marcar": 3,
-        "en": "total"
+        "tipo": "codigo",
+        "archivo": "presupuesto-sofi.txt",
+        "lineas": [
+          {"texto": "Presupuesto · Mueblería Demo", "en": "detalle"},
+          {"texto": "3x Silla algarrobo ....... $ 186.000", "en": "producto"},
+          {"texto": "1x Mesa 1,60 m ........... $ 240.000", "en": "cantidad"},
+          {"texto": "Envío Yerba Buena ........ a confirmar", "en": "y"},
+          {"texto": "TOTAL .................... $ 426.000 + envío", "en": "total", "marcar": true}
+        ]
       }
     },
     {
       "texto": "Para que salga bien: lista actualizada, tus condiciones, y que marque *a confirmar* lo que no está en la lista.",
       "escena": {
-        "tipo": "pasos",
-        "pasos": [
-          {
-            "titulo": "Lista *actualizada*",
-            "sub": "precios de hoy",
-            "en": "lista"
-          },
-          {
-            "titulo": "Tus condiciones",
-            "sub": "validez, pago, envío",
-            "en": "condiciones"
-          },
-          {
-            "titulo": "Nada inventado",
-            "sub": "lo que falta: a confirmar",
-            "en": "confirmar"
-          }
-        ]
+        "tipo": "censura",
+        "titulo": "Antes de pedirlo",
+        "archivo": "condiciones.txt",
+        "lineas": [
+          {"texto": "Precios: lista de hoy", "en": "actualizada"},
+          {"texto": "Validez, pago y envío", "en": "condiciones"},
+          {"texto": "Envío: [[$ ???]]", "en": "marque"}
+        ],
+        "sello": "A CONFIRMAR",
+        "en": "confirmar"
       }
     },
     {
@@ -158,6 +121,5 @@
         "cta": "¿Cuánto tardás hoy?"
       }
     }
-  ],
-  "voz_archivo": "/tmp/voz-2026-11-02.mp3"
+  ]
 }
