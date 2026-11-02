@@ -491,6 +491,30 @@
       ],
       "voz": "elevenlabs",
       "nota": "Re-renderizado con el motor v2.9 (zona segura) y cambiado en Metricool el mismo día"
+    },
+    {
+      "fecha": "2026-11-02",
+      "pilar": "uso",
+      "serie": "IA EN TU NEGOCIO #2",
+      "titulo": "Tu lista de precios ya sabe hacer presupuestos: armarlos con IA solo con tus precios y revisarlos antes de mandar",
+      "url_fuente": "",
+      "video": "videos/2026-11-02.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=1153557214531045542",
+      "acento": "#22C55E",
+      "tema": "grilla",
+      "musica": "suave",
+      "escenas": [
+        "planilla",
+        "chips",
+        "celular",
+        "prompt",
+        "tabla",
+        "pasos",
+        "firma",
+        "reloj",
+        "cierre"
+      ],
+      "voz": "elevenlabs"
     }
   ]
 }

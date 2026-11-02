@@ -70,7 +70,7 @@ Formatos y escenas en `plantilla/ESCENAS.md` → "Estilo marca". Proyectos y lo 
 ## uso (martes o jueves sin noticia) — IA en tu negocio
 
 - [x] Contestar consultas de WhatsApp fuera de horario (2026-10-29, `guiones/2026-10-29-turnos-whatsapp.json`, lo sube Tob a mano)
-- [ ] Armar presupuestos en minutos a partir de una lista de precios
+- [x] Armar presupuestos en minutos a partir de una lista de precios (2026-11-02; lunes de tip sin acceso a la doc oficial)
 - [ ] Responder reseñas de Google con el tono del negocio
 - [ ] Resumir audios largos de clientes o proveedores
 - [ ] Escribir descripciones de productos para la tienda online
