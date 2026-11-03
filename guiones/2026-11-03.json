@@ -1,0 +1,185 @@
+{
+  "etiqueta": "3 NOV",
+  "fuente": "Bloomberg · 2 de noviembre de 2026",
+  "acento": "#D97757",
+  "tema": "neon",
+  "musica": "urgente",
+  "transiciones": [
+    "flash",
+    "whip",
+    "zoom",
+    "rise",
+    "wipe",
+    "swing",
+    "flash",
+    "slide",
+    "iris",
+    "zoom"
+  ],
+  "beats": [
+    {
+      "texto": "{Goldman Sachs|góldman sacs} le sacó {Claude Code|Claude Code} a sus *traders* y *banqueros*.",
+      "escena": {
+        "tipo": "glitch",
+        "por_linea": 2,
+        "etiqueta": "BLOOMBERG · 2 NOV"
+      }
+    },
+    {
+      "texto": "Lo contó {Bloomberg|blúmberg}: esas herramientas ahora son *solo para ingenieros*.",
+      "escena": {
+        "tipo": "titular",
+        "titulo": "Goldman limita Claude Code y GitHub a *sus ingenieros*",
+        "bajada": "Traders y banqueros dejan de usarlas, según una guía interna actualizada en octubre",
+        "medio": "Bloomberg",
+        "fecha": "2 NOV 2026",
+        "logo": "claude",
+        "en": "ingenieros"
+      }
+    },
+    {
+      "texto": "Según una guía interna de octubre, traders y banqueros se quedaron *sin acceso*.",
+      "escena": {
+        "tipo": "interruptor",
+        "ruta": "Herramientas › Programación con IA",
+        "titulo": "Traders y banqueros",
+        "sub": "Acceso a Claude Code y GitHub",
+        "desde": "on",
+        "en": "acceso",
+        "nota": "Guía interna actualizada"
+      }
+    },
+    {
+      "texto": "Hacía meses que las usaban para seguir operaciones, modelar posiciones y armar contenido.",
+      "escena": {
+        "tipo": "chips",
+        "estilo": "etiqueta",
+        "items": [
+          {
+            "texto": "Seguir operaciones de clientes",
+            "icono": "grafico",
+            "en": "operaciones"
+          },
+          {
+            "texto": "Modelar posiciones",
+            "icono": "codigo",
+            "en": "posiciones"
+          },
+          {
+            "texto": "Armar textos y gráficos",
+            "icono": "archivo",
+            "en": "contenido"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "El banco lo explicó así: después de experimentar, las deja en manos de quienes mejor las aprovechan.",
+      "escena": {
+        "tipo": "cita",
+        "texto": "Después de un período de experimentación, las ponemos en manos de quienes mejor pueden aprovecharlas a largo plazo.",
+        "autor": "Nick Carcaterra",
+        "cargo": "Vocero de Goldman Sachs",
+        "en": "experimentar",
+        "en_autor": "aprovechan"
+      }
+    },
+    {
+      "texto": "En la balanza pusieron dos cosas: *productividad* y *riesgo*.",
+      "escena": {
+        "tipo": "balanza",
+        "a": {
+          "texto": "Productividad",
+          "flecha": "sube"
+        },
+        "b": {
+          "texto": "Riesgo",
+          "flecha": "baja"
+        },
+        "en": "riesgo",
+        "nota": "Lo que evaluó el banco"
+      }
+    },
+    {
+      "texto": "Siguen usándolas sus ingenieros, que son unos *doce mil*.",
+      "escena": {
+        "tipo": "numero",
+        "valor": 12000,
+        "etiqueta": "ingenieros de Goldman *con acceso*",
+        "en": "mil"
+      }
+    },
+    {
+      "texto": "Y en julio, el mismo banco celebraba que gente no técnica programara con {IA|inteligencia artificial}.",
+      "escena": {
+        "tipo": "linea_tiempo",
+        "hitos": [
+          {
+            "anio": "JUL",
+            "texto": "Programar con IA, *para todos*",
+            "en": "julio"
+          },
+          {
+            "anio": "OCT",
+            "texto": "Solo *ingenieros*",
+            "en": "técnica"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "La lección para tu negocio: probá, medí, y dejá cada herramienta en manos de quien la aprovecha.",
+      "escena": {
+        "tipo": "pasos",
+        "pasos": [
+          {
+            "titulo": "*Probá*",
+            "sub": "Con un grupo y un tiempo definido",
+            "en": "probá"
+          },
+          {
+            "titulo": "*Medí*",
+            "sub": "Tiempo ahorrado y errores",
+            "en": "medí"
+          },
+          {
+            "titulo": "*Asigná*",
+            "sub": "A quien le saca provecho",
+            "en": "dejá"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "¿Le darías {IA|inteligencia artificial} a todo tu equipo, o solo a algunos? Contame en los comentarios.",
+      "escena": {
+        "tipo": "comparacion",
+        "antes": {
+          "titulo": "Todo el equipo",
+          "items": [
+            "Acceso para todos",
+            "Sin medir"
+          ],
+          "icono": "usuario",
+          "en": "todo"
+        },
+        "despues": {
+          "titulo": "Solo algunos",
+          "items": [
+            "Probado y medido",
+            "Quien lo aprovecha"
+          ],
+          "icono": "check",
+          "en": "algunos"
+        }
+      }
+    },
+    {
+      "texto": "Seguí a {@tobdev.ia|tob dev} para entender la {IA|inteligencia artificial} en tu negocio.",
+      "escena": {
+        "tipo": "cierre",
+        "sub": "Noticias de IA para negocios"
+      }
+    }
+  ]
+}
