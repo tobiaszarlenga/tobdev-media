@@ -515,6 +515,32 @@
         "cierre"
       ],
       "voz": "elevenlabs"
+    },
+    {
+      "fecha": "2026-11-03",
+      "pilar": "noticia",
+      "serie": "3 NOV",
+      "titulo": "Goldman Sachs le sacó Claude Code a sus traders y banqueros: solo para ingenieros",
+      "url_fuente": "https://www.bloomberg.com/news/articles/2026-11-02/goldman-restricts-traders-and-bankers-from-using-some-ai-tools",
+      "video": "videos/2026-11-03.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=8474806581948662213",
+      "acento": "#D97757",
+      "tema": "neon",
+      "musica": "urgente",
+      "escenas": [
+        "glitch",
+        "titular",
+        "interruptor",
+        "chips",
+        "cita",
+        "balanza",
+        "numero",
+        "linea_tiempo",
+        "pasos",
+        "comparacion",
+        "cierre"
+      ],
+      "voz": "kokoro"
     }
   ]
 }
