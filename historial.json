@@ -541,6 +541,30 @@
         "cierre"
       ],
       "voz": "kokoro"
+    },
+    {
+      "fecha": "2026-11-04",
+      "pilar": "para_todos",
+      "serie": "PARA TODOS #5",
+      "titulo": "El efecto ELIZA: la secretaria que pidió hablar a solas con un programa (1966) y el estudio MIT Media Lab + OpenAI sobre uso de chatbots y soledad (ensayo)",
+      "url_fuente": "https://arxiv.org/abs/2503.17473",
+      "video": "videos/2026-11-04.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-2329927670418814980",
+      "acento": "#1F6F6B",
+      "tema": "galeria",
+      "musica": "suave",
+      "escenas": [
+        "terminal",
+        "diff",
+        "balanza",
+        "cerebro",
+        "notificaciones",
+        "numero",
+        "tabla",
+        "firma",
+        "cierre"
+      ],
+      "voz": "kokoro"
     }
   ]
 }
