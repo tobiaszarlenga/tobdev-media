@@ -1,0 +1,190 @@
+{
+ "etiqueta": "PARA TODOS #5",
+ "fuente": "Weizenbaum, MIT 1966 · MIT Media Lab y OpenAI, 2025",
+ "acento": "#1F6F6B",
+ "tema": "galeria",
+ "musica": "suave",
+ "transiciones": [
+  "rise",
+  "wipe",
+  "iris",
+  "swing",
+  "zoom",
+  "rise",
+  "wipe",
+  "iris"
+ ],
+ "beats": [
+  {
+   "texto": "En mil novecientos sesenta y seis, una secretaria del {MIT|em ai ti} le pidió a su jefe que *saliera de la sala*. Quería hablar a solas con un programa.",
+   "escena": {
+    "tipo": "terminal",
+    "titulo": "ELIZA — MIT, 1966",
+    "lineas": [
+     {
+      "tipo": "cmd",
+      "texto": "Me siento sola últimamente.",
+      "en": "secretaria"
+     },
+     {
+      "tipo": "out",
+      "texto": "¿Por qué decís que te sentís sola?",
+      "en": "jefe"
+     },
+     {
+      "tipo": "cmd",
+      "texto": "Nadie me escucha.",
+      "en": "sala"
+     },
+     {
+      "tipo": "out",
+      "texto": "Contame más.",
+      "en": "programa"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Era {ELIZA|Elisa}, de {Joseph Weizenbaum|Yósef Váisenbaum}. Hacía de terapeuta sin entender nada: buscaba *palabras clave* y te devolvía tu frase, dada vuelta.",
+   "escena": {
+    "tipo": "diff",
+    "titulo_a": "Vos",
+    "titulo_b": "ELIZA",
+    "lineas": [
+     {
+      "a": "Estoy triste por mi trabajo.",
+      "b": "¿Por qué estás triste por tu trabajo?",
+      "en": "terapeuta"
+     },
+     {
+      "a": "Mi jefe no me valora.",
+      "b": "¿Qué te hace pensar que tu jefe no te valora?",
+      "en": "devolvía"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y ella sabía que era un programa. Igual, le habló *como a alguien*.",
+   "escena": {
+    "tipo": "balanza",
+    "a": {
+     "texto": "Le habló como a alguien",
+     "flecha": "↓"
+    },
+    "b": {
+     "texto": "Sabía que era un programa",
+     "flecha": "↑"
+    },
+    "en": "Igual",
+    "nota": "Weizenbaum · MIT · 1966"
+   }
+  },
+  {
+   "texto": "Eso tiene nombre: *efecto {ELIZA|Elisa}*. Le atribuimos entendimiento a algo que solo devuelve patrones.",
+   "escena": {
+    "tipo": "cerebro",
+    "a": {
+     "titulo": "Lo que hace"
+    },
+    "b": {
+     "titulo": "Lo que le atribuimos"
+    },
+    "densidad": [
+     0.2,
+     1.0
+    ],
+    "en": "atribuimos",
+    "etiqueta": "*efecto ELIZA* · patrones, no comprensión"
+   }
+  },
+  {
+   "texto": "Hoy los chatbots no repiten tu frase. Te contestan bien, y *a cualquier hora*.",
+   "escena": {
+    "tipo": "notificaciones",
+    "items": [
+     {
+      "icono": "chat",
+      "app": "Asistente",
+      "titulo": "Nuevo mensaje",
+      "texto": "Te entiendo. ¿Querés contarme más?",
+      "hora": "02:47",
+      "en": "chatbots"
+     },
+     {
+      "icono": "chat",
+      "app": "Asistente",
+      "titulo": "Nuevo mensaje",
+      "texto": "Acá estoy cuando lo necesites.",
+      "hora": "03:12",
+      "en": "contestan"
+     },
+     {
+      "icono": "chat",
+      "app": "Asistente",
+      "titulo": "Nuevo mensaje",
+      "texto": "¿Cómo dormiste?",
+      "hora": "07:05",
+      "en": "hora"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "En dos mil veinticinco, el {MIT|em ai ti} y {OpenAI|open ei ai} siguieron a novecientas ochenta y una personas durante *cuatro semanas*.",
+   "escena": {
+    "tipo": "numero",
+    "valor": 981,
+    "etiqueta": "personas · *4 semanas*",
+    "en": "personas"
+   }
+  },
+  {
+   "texto": "Los que más lo usaban se sentían *más solos*, y más dependientes del chat. Ojo: es correlación, no causa.",
+   "escena": {
+    "tipo": "tabla",
+    "titulo": "Más uso diario, asociado a",
+    "columnas": [
+     "Más",
+     "Menos"
+    ],
+    "filas": [
+     [
+      "Soledad",
+      "Tiempo con otras personas"
+     ],
+     [
+      "Dependencia emocional",
+      "—"
+     ],
+     [
+      "Uso problemático",
+      "—"
+     ]
+    ],
+    "marcar": 0,
+    "en": "solos"
+   }
+  },
+  {
+   "texto": "La regla: que la {IA|inteligencia artificial} te ayude a pensar. Lo que importa, *hablalo con personas*.",
+   "escena": {
+    "tipo": "firma",
+    "titulo": "Regla práctica",
+    "lineas": [
+     "La IA te ayuda a pensar",
+     "Lo que importa, con personas"
+    ],
+    "etiqueta": "Firmado por",
+    "nombre": "vos",
+    "en": "personas"
+   }
+  },
+  {
+   "texto": "¿Alguna vez le hablaste a un chat *como a alguien*? Contámelo, y seguí a {@tobdev.ia|tob dev}.",
+   "escena": {
+    "tipo": "cierre"
+   }
+  }
+ ]
+}
