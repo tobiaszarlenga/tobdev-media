@@ -565,6 +565,30 @@
         "cierre"
       ],
       "voz": "kokoro"
+    },
+    {
+      "fecha": "2026-11-05",
+      "pilar": "uso",
+      "serie": "IA EN TU NEGOCIO #3",
+      "titulo": "Responder reseñas de Google con IA y con tu tono: sin excusas, al privado y siempre revisadas (jueves sin noticia verificable: WebFetch no disponible en la corrida)",
+      "url_fuente": "https://support.google.com/business/answer/9075681",
+      "video": "videos/2026-11-05.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-3040164546664510112",
+      "acento": "#4285F4",
+      "tema": "claro",
+      "musica": "retro",
+      "escenas": [
+        "glitch",
+        "navegador",
+        "flujo",
+        "codigo",
+        "diff",
+        "celular",
+        "censura",
+        "lista",
+        "cierre"
+      ],
+      "voz": "kokoro"
     }
   ]
 }
