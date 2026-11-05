@@ -1,0 +1,44 @@
+{
+  "etiqueta": "IA EN TU NEGOCIO #3",
+  "fuente": "Google · Ayuda de Perfil de Negocio · ejemplo con datos ficticios",
+  "acento": "#4285F4",
+  "tema": "claro",
+  "musica": "retro",
+  "beats": [
+    {"texto": "Esa reseña de *una estrella* sigue ahí. *Sin respuesta.*",
+     "escena": {"tipo": "glitch", "por_linea": 2, "etiqueta": "RESEÑA · HACE 3 SEMANAS"}},
+    {"texto": "Desde el perfil de tu negocio en {Google|gugol}, podés responder cada reseña, *una por una*.",
+     "escena": {"tipo": "navegador", "url": "perfil.panaderia-demo.com/resenas", "pestanas": ["Reseñas", "Fotos"], "titulo": "Panadería Demo · 12 reseñas sin responder", "en": "responder"}},
+    {"texto": "El truco: le pasás a la {IA|inteligencia artificial} la reseña, y le explicás *cómo hablás vos*.",
+     "escena": {"tipo": "flujo", "entradas": [{"texto": "La reseña", "icono": "estrella", "en": "reseña"}, {"texto": "Cómo hablás vos", "icono": "chat", "en": "hablás"}], "salida": "Borrador de respuesta", "en": "vos"}},
+    {"texto": "Pegale tres respuestas tuyas de antes, y que copie *tu tono*: si tuteás, cómo firmás, qué nunca decís.",
+     "escena": {"tipo": "codigo", "archivo": "tono-del-local.txt", "lineas": [
+       {"texto": "# Así respondemos en Panadería Demo", "en": "Pegale"},
+       {"texto": "- Tuteamos, siempre con el nombre", "en": "tuteás"},
+       {"texto": "- Firmamos: Caro, de Panadería Demo", "en": "firmás"},
+       {"texto": "- Nunca discutimos en público", "en": "nunca", "marcar": true},
+       {"texto": "- Máximo tres líneas", "en": "decís"}]}},
+    {"texto": "Así, en vez de una frase de manual, sale algo que *suena a tu local*.",
+     "escena": {"tipo": "diff", "titulo_a": "De manual", "titulo_b": "Con tu tono", "lineas": [
+       {"a": "Estimado cliente, lamentamos el inconveniente.", "b": "Martín, tenés razón, y perdón.", "en": "manual"},
+       {"a": "Trabajamos para mejorar nuestro servicio.", "b": "Ese día el pan salió tarde del horno.", "en": "sale"},
+       {"a": "Atentamente, la gerencia.", "b": "Caro, de Panadería Demo.", "en": "local"}]}},
+    {"texto": "Si la reseña es mala, que reconozca el problema sin excusas, e invite a seguir la charla *por privado*.",
+     "escena": {"tipo": "celular", "app": "Asistente", "icono": "chat", "estado": "borrador", "mensajes": [
+       {"de": "yo", "texto": "Reseña de 1 estrella: \"Esperé 20 minutos y el pan estaba frío\"", "hora": "10:12", "en": "mala"},
+       {"de": "ia", "texto": "Martín, tenés razón: esperar así no está bien, perdón.\nEscribinos por *privado* y lo charlamos.\nCaro, de Panadería Demo", "hora": "10:12", "en": "invite"}]}},
+    {"texto": "Y antes de publicar, *la leés vos*: la {IA|inteligencia artificial} no sabe qué pasó en tu local.",
+     "escena": {"tipo": "censura", "titulo": "Revisión antes de publicar", "archivo": "respuesta-martin.txt", "lineas": [
+       {"texto": "Martín, tenés razón: esperar así no está bien.", "en": "publicar"},
+       {"texto": "[[Te regalamos la próxima docena de facturas.]]", "en": "leés"},
+       {"texto": "Escribinos por privado y lo charlamos.", "en": "sabe"}], "sello": "REVISADO", "en": "local"}},
+    {"texto": "Tu tono, sin excusas, al privado, y revisado. *Cuatro reglas*, y contestás todas en un rato.",
+     "escena": {"tipo": "lista", "titulo": "Para responder reseñas con IA", "items": [
+       {"texto": "Con tu tono", "en": "tono"},
+       {"texto": "Sin excusas", "en": "excusas"},
+       {"texto": "Lo grave, al privado", "en": "privado"},
+       {"texto": "Siempre revisada por vos", "en": "revisado"}]}},
+    {"texto": "¿Cuántas reseñas tenés sin contestar? Contámelo en los comentarios, y seguí a {@tobdev.ia|tob dev} para más ideas para tu negocio.",
+     "escena": {"tipo": "cierre", "sub": "Ideas de IA para tu negocio", "cta": "Contame en los comentarios"}}
+  ]
+}
