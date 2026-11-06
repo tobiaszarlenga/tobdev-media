@@ -50,7 +50,7 @@ Formatos y escenas en `plantilla/ESCENAS.md` → "Estilo marca". Proyectos y lo 
 - [x] Suspenso: "Este cursor está a punto de hacer clic" (`guiones/marca-clic.json`, lo subió Tob a mano) (2026-10-25)
 - [x] Caso real: "Este pedido llegó completo" con El Gordo Burger (`guiones/marca-pedido.json`, lo subió Tob a mano) (2026-10-25)
 - [x] Oferta: "Mirá tu página web antes de pagarla" (demo gratis en 24 h, desde $175.000, hosting incluido; `boceto` → sitios → `numero`) (`guiones/marca-demo.json`, 2026-10-30, lo sube Tob a mano)
-- [ ] Caso real: Liga Infantil YB, los veedores cargan el resultado y la tabla de posiciones se arma sola (sitio duo con escritorio → posiciones)
+- [x] Caso real: Liga Infantil YB, los veedores cargan el resultado y la tabla de posiciones se arma sola (sitio duo con escritorio → posiciones) (2026-11-06, `guiones/2026-11-06.json`)
 - [ ] Caso real: Certificador de Obras, el medidor dicta "revoque al 70" desde el celular y se carga aunque no haya señal (sitio con `celular-medir`, chips "Carga por voz" / "Funciona sin señal")
 - [ ] Suspenso: un dedo a punto de tocar "Inscribí tu equipo" (Torneo JOGO) y la inscripción que llega por WhatsApp
 - [ ] Problema → trabajos: "Tu negocio vive en Instagram y nadie encuentra el precio" → carrusel de páginas con carta, catálogo y botón de WhatsApp (Casa Pan, El Gordo Burger, D12tinto, Malala)

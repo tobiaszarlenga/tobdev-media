@@ -589,6 +589,31 @@
         "cierre"
       ],
       "voz": "kokoro"
+    },
+    {
+      "fecha": "2026-11-06",
+      "pilar": "marca",
+      "serie": "TOBDEV #5",
+      "titulo": "Caso real Liga Infantil YB: el veedor carga el resultado y la tabla de posiciones se arma sola (+ Certificador de Obras)",
+      "url_fuente": "portfolio/sitios.json",
+      "video": "videos/2026-11-06.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-1037948057813693114",
+      "acento": "#F59E0B",
+      "tema": "estudio",
+      "musica": "tech",
+      "escenas": [
+        "impacto",
+        "sitio",
+        "calendario",
+        "notificaciones",
+        "sitio",
+        "balanza",
+        "sitio",
+        "sitio",
+        "onda",
+        "cierre"
+      ],
+      "voz": "kokoro"
     }
   ]
 }
