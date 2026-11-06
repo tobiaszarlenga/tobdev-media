@@ -1,0 +1,129 @@
+{
+ "etiqueta": "TOBDEV #5",
+ "estilo": "marca",
+ "tema": "estudio",
+ "acento": "#F59E0B",
+ "musica": "tech",
+ "fuente": "",
+ "transiciones": ["flash", "zoom", "rise", "whip", "slide", "swing", "rise", "flash", "zoom"],
+ "beats": [
+  {
+   "texto": "Termina el partido, y la tabla *se arma sola*.",
+   "escena": {"tipo": "impacto", "por_linea": 3}
+  },
+  {
+   "texto": "Es la plataforma que le hice a la *Liga Infantil* de fútbol de Yerba Buena.",
+   "escena": {
+    "tipo": "sitio",
+    "url": "ligainfantilyb.com",
+    "nombre": "Liga Infantil YB",
+    "rubro": "Liga de fútbol infantil · Yerba Buena",
+    "escritorio": "../portfolio/capturas/liga-infantil-yb/escritorio.jpg",
+    "celular": [{"img": "../portfolio/capturas/liga-infantil-yb/celular.jpg", "scroll": 0}],
+    "chips": [{"texto": "Liga Infantil YB", "en": "Liga"}]
+   }
+  },
+  {
+   "texto": "Cada sábado, el {fixture|fíxtur} sale por *fecha*, por cancha, y por categoría.",
+   "escena": {
+    "tipo": "calendario",
+    "mes": "Septiembre",
+    "anio": 2026,
+    "inicio": 1,
+    "cantidad": 30,
+    "marcas": [
+     {"dia": 12, "texto": "Fecha 1", "en": "sábado"},
+     {"dia": 19, "texto": "Fecha 2", "en": "fecha"},
+     {"dia": 26, "texto": "Fecha 3", "en": "categoría"}
+    ]
+   }
+  },
+  {
+   "texto": "El veedor de cada cancha entra con su usuario, y carga el *resultado*.",
+   "escena": {
+    "tipo": "notificaciones",
+    "items": [
+     {"icono": "usuario", "app": "Panel de carga", "titulo": "Veedor · Cancha 3", "texto": "Inició sesión", "en": "usuario"},
+     {"icono": "check", "app": "Resultado cargado", "titulo": "Categoría 2018 - 2019", "texto": "Local 3 · Visitante 1", "en": "resultado"},
+     {"icono": "estrella", "app": "Goleadores", "titulo": "Tabla de goleadores", "texto": "Actualizada", "en": "resultado"}
+    ]
+   }
+  },
+  {
+   "texto": "Y las *posiciones* se actualizan solas, categoría por categoría.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "escritorio",
+    "url": "ligainfantilyb.com/posiciones",
+    "nombre": "Liga Infantil YB",
+    "rubro": "Posiciones por categoría",
+    "escritorio": "../portfolio/capturas/liga-infantil-yb/posiciones.jpg",
+    "chips": [
+     {"texto": "Posiciones en vivo", "en": "posiciones"},
+     {"texto": "Resultados de los veedores", "en": "categoría"}
+    ]
+   }
+  },
+  {
+   "texto": "Nadie pasa resultados por chat, ni arma la tabla *a mano*.",
+   "escena": {
+    "tipo": "balanza",
+    "a": {"texto": "Tabla a mano", "flecha": "baja"},
+    "b": {"texto": "Tabla automática", "flecha": "sube"},
+    "en": "mano",
+    "nota": "resultados cargados una sola vez"
+   }
+  },
+  {
+   "texto": "Y desde el celular, cualquiera sigue el {fixture|fíxtur}, los resultados, y a *su club*.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "celular",
+    "nombre": "Liga Infantil YB",
+    "rubro": "Fixture · Resultados · Clubes",
+    "celular": [
+     {"img": "../portfolio/capturas/liga-infantil-yb/celular.jpg", "scroll": 0, "toque": [0.33, 0.65]},
+     {"img": "../portfolio/capturas/liga-infantil-yb/celular.jpg", "scroll": 0.4, "en": "resultados"}
+    ],
+    "chips": [{"texto": "Fixture por cancha", "en": "fixture"}]
+   }
+  },
+  {
+   "texto": "Con la misma idea, armé un sistema para *constructoras*: el avance de obra, sin {Excel|éxel}.",
+   "escena": {
+    "tipo": "sitio",
+    "url": "certificador · obra demo",
+    "nombre": "Certificador de Obras",
+    "rubro": "Sistema · Constructoras",
+    "escritorio": [
+     {"img": "../portfolio/capturas/certificador/reporte.jpg"},
+     {"img": "../portfolio/capturas/certificador/certificado.jpg", "en": "avance"}
+    ],
+    "celular": "../portfolio/capturas/certificador/celular-medir.jpg",
+    "chips": [{"texto": "Certificado en PDF", "en": "avance"}]
+   }
+  },
+  {
+   "texto": "El avance se carga *por voz* en la obra, y funciona aunque no haya señal.",
+   "escena": {
+    "tipo": "onda",
+    "titulo": "Nota de voz · Lote 14",
+    "duracion": "0:04",
+    "marcar": [0.2, 0.75],
+    "etiquetas": [
+     {"texto": "Revoque al 70 %", "en": "voz", "ok": true},
+     {"texto": "Funciona sin señal", "en": "señal", "ok": true}
+    ]
+   }
+  },
+  {
+   "texto": "¿Tu liga, tu club o tu negocio todavía arma todo a mano? Escribime *sistema*, y vemos el tuyo. Seguí a {@tobdev.ia|tob dev}.",
+   "escena": {
+    "tipo": "cierre",
+    "sub": "Sistemas a medida para tu negocio",
+    "cta": "Escribime “SISTEMA”",
+    "lema": "PÁGINAS · SISTEMAS · IA"
+   }
+  }
+ ]
+}
