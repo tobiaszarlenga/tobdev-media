@@ -1,0 +1,99 @@
+{
+  "etiqueta": "DEMO",
+  "fuente": "TobDev · Certificador de Obras",
+  "acento": "#11BFD6",
+  "tema": "grilla",
+  "musica": "urgente",
+  "beats": [
+    {
+      "texto": "La certificación de tu obra vive en un {Excel|éxel} que entiende *una sola persona*.",
+      "escena": {
+        "tipo": "planilla",
+        "archivo": "certificados_FINAL_v7_ahora_si.xlsx",
+        "formula": "=SI(G14>0;G14*0,95;\"VER HOJA 3\")",
+        "error": { "titulo": "#¡REF!", "texto": "La fórmula perdió la fila del contratista", "en": "persona" }
+      }
+    },
+    {
+      "texto": "Y cada corte es lo mismo: avance casa por casa, pagos, y la *garantía* del cinco por ciento a mano.",
+      "escena": {
+        "tipo": "alerta",
+        "titulo": "Cada corte de obra",
+        "filas": [
+          ["Avance", "24 casas × 100 ítems"],
+          ["Pagos", "uno por contratista"],
+          ["Garantía 5 %", "anotada en un cuaderno"]
+        ],
+        "marcar": 2,
+        "en": "garantía"
+      }
+    },
+    {
+      "texto": "Para eso armamos el *Certificador*.",
+      "escena": { "tipo": "frase" }
+    },
+    {
+      "texto": "El capataz carga el avance desde el *teléfono*, en la obra, hasta sin señal.",
+      "escena": {
+        "tipo": "chips",
+        "estilo": "etiqueta",
+        "items": [
+          { "texto": "Funciona sin señal", "icono": "rayo", "en": "avance" },
+          { "texto": "Dictado por voz", "icono": "chat", "en": "teléfono" },
+          { "texto": "Varias casas de una", "icono": "check", "en": "señal" }
+        ]
+      }
+    },
+    {
+      "texto": "Cerrás el corte, y te arma *un certificado por contratista*, con la retención ya descontada.",
+      "escena": {
+        "tipo": "tabla",
+        "titulo": "Corte al 15/11 — 24 viviendas",
+        "columnas": ["Contratista", "Neto a pagar"],
+        "filas": [
+          ["Gómez", "$ 2.410.000"],
+          ["Ruiz", "$ 980.500"],
+          ["Equipo propio", "$ 0"]
+        ],
+        "marcar": 0,
+        "en": "certificado"
+      }
+    },
+    {
+      "texto": "Ves el *avance real* de la obra, rubro por rubro, sin perseguir a nadie.",
+      "escena": {
+        "tipo": "grafico",
+        "titulo": "Avance físico",
+        "barras": [
+          { "label": "Estructura", "valor": 38, "texto": "38%" },
+          { "label": "Mampostería", "valor": 24, "texto": "24%" },
+          { "label": "Techos", "valor": 12, "texto": "12%" },
+          { "label": "Instalaciones", "valor": 6, "texto": "6%" }
+        ],
+        "marcar": 0,
+        "en": "real"
+      }
+    },
+    {
+      "texto": "¿Pagaste redondo? La diferencia va sola contra la garantía, y *nada se pierde*.",
+      "escena": {
+        "tipo": "comparacion",
+        "antes": { "titulo": "A ojo", "items": ["Diferencias en la cabeza", "Discusiones en cada corte"], "icono": "alerta", "en": "redondo" },
+        "despues": { "titulo": "Con el Certificador", "items": ["Garantía al centavo", "Historia completa, nada se borra"], "icono": "check", "en": "pierde" }
+      }
+    },
+    {
+      "texto": "Y el certificado sale en {PDF|pe de efe}, listo para firmar, en *minutos* y no en una tarde.",
+      "escena": { "tipo": "reloj", "antes": "Una tarde", "despues": "3 minutos", "en": "minutos" }
+    },
+    {
+      "texto": "¿Certificás obra así? Escribime *{OBRA|obra}* y te muestro el sistema andando. Seguí a {@tobdev.ia|tob dev}.",
+      "escena": {
+        "tipo": "cierre",
+        "sub": "Sistema de certificación de obra",
+        "cta": "Escribime “OBRA”",
+        "lema": "PÁGINAS · SISTEMAS · IA"
+      }
+    }
+  ]
+}
