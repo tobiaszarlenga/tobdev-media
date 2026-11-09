@@ -1,0 +1,172 @@
+{
+  "etiqueta": "IA EN TU NEGOCIO #4",
+  "fuente": "TobDev · uso real en comercios",
+  "acento": "#B48CFF",
+  "tema": "grilla",
+  "musica": "retro",
+  "beats": [
+    {
+      "texto": "Si la descripción de tu producto dice solo *remera negra, talle M*, el cliente se queda con dudas.",
+      "escena": {
+        "tipo": "boceto",
+        "etiqueta": "Talle M",
+        "boton": "Comprar",
+        "en": "remera"
+      }
+    },
+    {
+      "texto": "Y esas dudas te llegan por mensaje: ¿de qué tela es?, ¿cómo calza?, ¿se puede lavar en el lavarropas?",
+      "escena": {
+        "tipo": "bandeja",
+        "app": "Consultas · Tienda Demo",
+        "marcar": 1,
+        "sello": "SIN RESPONDER",
+        "en": "lavarropas",
+        "items": [
+          {
+            "de": "Sofi",
+            "asunto": "Remera negra",
+            "texto": "Hola, ¿de qué tela es?",
+            "hora": "10:12",
+            "en": "tela"
+          },
+          {
+            "de": "Martín",
+            "asunto": "Talle M",
+            "texto": "¿Calza grande o justo?",
+            "hora": "10:40",
+            "en": "calza"
+          },
+          {
+            "de": "Caro",
+            "asunto": "Consulta",
+            "texto": "¿Se puede lavar en el lavarropas?",
+            "hora": "11:05",
+            "en": "lavarropas"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "La {IA|inteligencia artificial} te escribe la descripción, pero solo si le pasás *tu ficha real*.",
+      "escena": {
+        "tipo": "triturar",
+        "archivo": "ficha_remera_negra.txt",
+        "en": "ficha",
+        "destino": "Asistente de IA",
+        "lineas": [
+          "Tela: algodón peinado",
+          "Calce: holgado, para usar suelta",
+          "Medidas talle M: largo 72 cm",
+          "Cuidado: lavarropas en frío, del revés"
+        ]
+      }
+    },
+    {
+      "texto": "Y le pedís claro: usá solo estos datos, *no inventes nada*.",
+      "escena": {
+        "tipo": "prompt",
+        "texto": "Escribí la descripción de esta remera usando solo los datos de la ficha. No inventes nada.",
+        "estado": "Escribiendo…"
+      }
+    },
+    {
+      "texto": "Antes, cuatro palabras. Ahora, *tela, calce y cuidados*, sin que nadie tenga que preguntar.",
+      "escena": {
+        "tipo": "comparacion",
+        "antes": {
+          "titulo": "Antes",
+          "items": [
+            "Remera negra, talle M"
+          ],
+          "en": "Antes",
+          "icono": "alerta"
+        },
+        "despues": {
+          "titulo": "Con tu ficha",
+          "items": [
+            "Algodón peinado, calce holgado",
+            "Largo y medidas del talle",
+            "Se lava en lavarropas, en frío"
+          ],
+          "en": "Ahora",
+          "icono": "check"
+        }
+      }
+    },
+    {
+      "texto": "Pedile también una versión corta, para {Instagram|instagram} o {WhatsApp|guasap}.",
+      "escena": {
+        "tipo": "marcas",
+        "union": "y",
+        "titulo": "La versión corta",
+        "logos": [
+          {
+            "marca": "instagram",
+            "texto": "Instagram",
+            "en": "Instagram"
+          },
+          {
+            "marca": "whatsapp",
+            "texto": "WhatsApp",
+            "en": "WhatsApp"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Ojo: si un dato falta, lo puede inventar. Nada se publica solo: *revisás* medidas y materiales.",
+      "escena": {
+        "tipo": "interruptor",
+        "ruta": "Tienda › Productos › Ajustes",
+        "titulo": "Publicar sin revisar",
+        "sub": "Subir la descripción apenas la escribe la IA",
+        "en": "Nada",
+        "texto_on": "ACTIVADO",
+        "texto_off": "DESACTIVADO",
+        "nota": "Primero revisás vos"
+      }
+    },
+    {
+      "texto": "Ficha, pedido claro y revisión. ¿Lo usarías en tu tienda? *Contámelo* en los comentarios.",
+      "escena": {
+        "tipo": "pasos",
+        "pasos": [
+          {
+            "titulo": "Tu *ficha*",
+            "sub": "tela, medidas, cuidados",
+            "en": "Ficha"
+          },
+          {
+            "titulo": "Pedido claro",
+            "sub": "solo estos datos",
+            "en": "pedido"
+          },
+          {
+            "titulo": "Revisión",
+            "sub": "antes de publicar",
+            "en": "revisión"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Seguí a {@tobdev.ia|tob dev} para más usos de {IA|inteligencia artificial} en tu negocio.",
+      "escena": {
+        "tipo": "cierre",
+        "sub": "Usos reales de IA en tu negocio",
+        "lema": "PÁGINAS · SISTEMAS · IA"
+      }
+    }
+  ],
+  "transiciones": [
+    "whip",
+    "rise",
+    "wipe",
+    "flash",
+    "push",
+    "whip",
+    "slide",
+    "zoom"
+  ]
+}
