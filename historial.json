@@ -614,6 +614,31 @@
         "cierre"
       ],
       "voz": "kokoro"
+    },
+    {
+      "fecha": "2026-11-09",
+      "pilar": "uso",
+      "serie": "IA EN TU NEGOCIO #4",
+      "titulo": "Descripciones de productos con IA: solo con tu ficha real, versión corta para redes y siempre revisadas (lunes de tip sin acceso a la doc oficial)",
+      "url_fuente": "",
+      "video": "videos/2026-11-09.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-8873649614348465682",
+      "acento": "#B48CFF",
+      "tema": "grilla",
+      "musica": "retro",
+      "escenas": [
+        "boceto",
+        "bandeja",
+        "triturar",
+        "prompt",
+        "comparacion",
+        "marcas",
+        "interruptor",
+        "pasos",
+        "cierre"
+      ],
+      "voz": "kokoro",
+      "nota": "Programado a las 20:00 a pedido de Tob: el render se cortó dos veces por reinicio del contenedor; salió con --workers 1. ElevenLabs sin créditos."
     }
   ]
 }
