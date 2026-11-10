@@ -639,6 +639,32 @@
       ],
       "voz": "kokoro",
       "nota": "Programado a las 20:00 a pedido de Tob: el render se cortó dos veces por reinicio del contenedor; salió con --workers 1. ElevenLabs sin créditos."
+    },
+    {
+      "fecha": "2026-11-10",
+      "pilar": "noticia",
+      "serie": "10 NOV",
+      "titulo": "Anthropic lanzó Claude Fable 5.2 y Mythos 5.2 (mismo modelo, distinto acceso) y recomienda empezar con Opus 5.5 para la mayoría de las tareas",
+      "url_fuente": "https://www.anthropic.com/claude-fable-and-mythos-5-2",
+      "video": "videos/2026-11-10.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-7359921559445027353",
+      "acento": "#D97757",
+      "tema": "noche",
+      "musica": "urgente",
+      "escenas": [
+        "impacto",
+        "titular",
+        "balanza",
+        "interruptor",
+        "ranking",
+        "numero",
+        "planes",
+        "cita",
+        "tabla",
+        "frase",
+        "cierre"
+      ],
+      "voz": "kokoro"
     }
   ]
 }
