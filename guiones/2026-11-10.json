@@ -1,0 +1,179 @@
+{
+  "etiqueta": "10 NOV",
+  "fuente": "Anthropic · anuncio oficial (9 nov 2026)",
+  "acento": "#D97757",
+  "tema": "noche",
+  "musica": "urgente",
+  "transiciones": [
+    "flash",
+    "whip",
+    "rise",
+    "wipe",
+    "zoom",
+    "flash",
+    "swing",
+    "iris",
+    "whip",
+    "rise",
+    "zoom"
+  ],
+  "beats": [
+    {
+      "texto": "{Anthropic|Ántropic} sacó su modelo *más potente*, y te recomienda arrancar con otro.",
+      "escena": {
+        "tipo": "impacto",
+        "logo": "anthropic",
+        "por_linea": 2
+      }
+    },
+    {
+      "texto": "Se llama {Claude Fable 5.2|Claude Féibol cinco punto dos}, y salió el *nueve de noviembre*.",
+      "escena": {
+        "tipo": "titular",
+        "titulo": "Anthropic presenta *Claude Fable 5.2* y Claude Mythos 5.2",
+        "bajada": "Para el trabajo técnico más ambicioso y abierto",
+        "medio": "Anthropic",
+        "fecha": "9 NOV 2026",
+        "etiqueta": "LANZAMIENTO",
+        "logo": "anthropic",
+        "en": "nueve"
+      }
+    },
+    {
+      "texto": "Por dentro, {Fable|Féibol} y {Mythos|Mítos} son *el mismo modelo*. Cambia quién lo usa.",
+      "escena": {
+        "tipo": "balanza",
+        "a": {
+          "texto": "Fable 5.2 · para todos",
+          "flecha": "abierto"
+        },
+        "b": {
+          "texto": "Mythos 5.2 · solo verificados",
+          "flecha": "restringido"
+        },
+        "en": "cambia",
+        "nota": "MISMO MODELO · DISTINTO ACCESO"
+      }
+    },
+    {
+      "texto": "{Fable|Féibol} trae *frenos fuertes* en ciberseguridad y biología: por eso es para todos.",
+      "escena": {
+        "tipo": "interruptor",
+        "ruta": "Claude › Fable 5.2 › Seguridad",
+        "titulo": "Frenos en ciberseguridad y biología",
+        "sub": "Lo que permite abrirlo a todos los usuarios",
+        "desde": "off",
+        "en": "frenos",
+        "texto_on": "ACTIVADOS",
+        "texto_off": "SIN FRENOS",
+        "nota": "Mythos: solo organizaciones verificadas"
+      }
+    },
+    {
+      "texto": "En programación saca {69,9|sesenta y nueve coma nueve} por ciento, contra {62,3|sesenta y dos coma tres} de {Opus 5.5|Opus cinco punto cinco}.",
+      "escena": {
+        "tipo": "ranking",
+        "titulo": "FrontierSWE v2 · programación",
+        "filas": [
+          {
+            "logo": "claude",
+            "texto": "Claude Fable 5.2",
+            "valor": 69.9,
+            "en": "saca"
+          },
+          {
+            "logo": "claude",
+            "texto": "Claude Opus 5.5",
+            "valor": 62.3,
+            "en": "contra"
+          }
+        ],
+        "marcar": 0,
+        "sufijo": "%",
+        "decimales": 1,
+        "escala": "100",
+        "nota": "Datos publicados por Anthropic"
+      }
+    },
+    {
+      "texto": "Y responde hasta un *treinta por ciento* más rápido.",
+      "escena": {
+        "tipo": "numero",
+        "valor": 30,
+        "prefijo": "hasta ",
+        "sufijo": "%",
+        "etiqueta": "más rápido que *Fable 5.1*",
+        "en": "treinta"
+      }
+    },
+    {
+      "texto": "Eso sí: {8 dólares|ocho dólares} por millón de {tokens|tóquens} de entrada, y {40|cuarenta} de salida.",
+      "escena": {
+        "tipo": "planes",
+        "planes": [
+          {
+            "nombre": "Fable 5.2",
+            "precio": "US$ 8 / 40",
+            "detalle": "por millón de tokens · entrada / salida",
+            "destacado": true,
+            "tag": "Normal",
+            "en": "ocho"
+          },
+          {
+            "nombre": "Modo rápido",
+            "precio": "US$ 16 / 80",
+            "detalle": "hasta 2,5 veces más rápido",
+            "en": "cuarenta"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Y {Anthropic|Ántropic} misma recomienda empezar con {Opus 5.5|Opus cinco punto cinco} para la mayoría de las tareas.",
+      "escena": {
+        "tipo": "cita",
+        "texto": "Para la mayoría de las tareas de código y conocimiento, recomendamos empezar con Claude Opus 5.5.",
+        "autor": "Anthropic",
+        "cargo": "Anuncio oficial · 9 nov 2026 (traducido)",
+        "en": "recomienda",
+        "en_autor": "mayoría"
+      }
+    },
+    {
+      "texto": "En tu negocio, igual: el modelo grande, para *lo difícil*. El día a día, con {Opus|Opus}.",
+      "escena": {
+        "tipo": "tabla",
+        "titulo": "Qué modelo para qué",
+        "columnas": [
+          "Tarea",
+          "Modelo"
+        ],
+        "filas": [
+          [
+            "Problema técnico largo y abierto",
+            "Fable 5.2"
+          ],
+          [
+            "Código y tareas de todos los días",
+            "Opus 5.5"
+          ]
+        ],
+        "marcar": 0,
+        "en": "difícil"
+      }
+    },
+    {
+      "texto": "¿Lo probarías, o seguís con el que ya usás? *Contámelo*.",
+      "escena": {
+        "tipo": "frase"
+      }
+    },
+    {
+      "texto": "Seguí a {@tobdev.ia|tob dev} para las noticias de {IA|inteligencia artificial} que importan.",
+      "escena": {
+        "tipo": "cierre",
+        "sub": "Noticias de IA para tu negocio"
+      }
+    }
+  ]
+}
