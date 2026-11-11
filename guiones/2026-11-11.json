@@ -1,0 +1,188 @@
+{
+  "etiqueta": "HISTORIA #3",
+  "fuente": "Turing (1950), Mind · Jones y Bergen, UC San Diego (2025)",
+  "acento": "#22C55E",
+  "tema": "editorial",
+  "musica": "suave",
+  "transiciones": [
+    "flash",
+    "rise",
+    "wipe",
+    "zoom",
+    "swing",
+    "iris",
+    "whip",
+    "rise",
+    "wipe",
+    "zoom"
+  ],
+  "beats": [
+    {
+      "texto": "En {2025|dos mil veinticinco}, la gente eligió a una máquina como *más humana* que a una persona real.",
+      "escena": {
+        "tipo": "visor",
+        "etiquetas": [
+          {
+            "texto": "Testigo A",
+            "x": 0.25,
+            "y": 0.22,
+            "en": "gente"
+          },
+          {
+            "texto": "¿Humano? Sí",
+            "x": 0.62,
+            "y": 0.5,
+            "en": "humana",
+            "ok": true
+          }
+        ],
+        "sello": "ERA UNA MÁQUINA",
+        "en": "real",
+        "rec": "CHAT"
+      }
+    },
+    {
+      "texto": "Todo arranca en {1950|mil novecientos cincuenta}, cuando *Alan {Turing|Tiúring}* se preguntó si una máquina podía ser inteligente.",
+      "escena": {
+        "tipo": "titular",
+        "titulo": "Computing Machinery and *Intelligence*",
+        "bajada": "A. M. Turing · vol. LIX, n.º 236",
+        "medio": "Mind",
+        "fecha": "1950",
+        "etiqueta": "PAPER",
+        "en": "Turing"
+      }
+    },
+    {
+      "texto": "En vez de discutirlo, propuso un *juego*.",
+      "escena": {
+        "tipo": "impacto",
+        "por_linea": 2
+      }
+    },
+    {
+      "texto": "Un interrogador chatea con una persona y una máquina, y tiene que adivinar *cuál es cuál*.",
+      "escena": {
+        "tipo": "diff",
+        "titulo_a": "Testigo A",
+        "titulo_b": "Testigo B",
+        "lineas": [
+          {
+            "a": "Hola, todo bien, ¿y vos?",
+            "b": "Hola, todo tranqui, ¿y vos?",
+            "en": "interrogador"
+          },
+          {
+            "a": "Me gusta el fútbol, más o menos",
+            "b": "Me gusta el fútbol, bastante",
+            "en": "persona"
+          },
+          {
+            "a": "No sé, dejame pensar",
+            "b": "Mmm, dejame pensar",
+            "en": "adivinar"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Para {Turing|Tiúring}, alcanzaba con una charla de *cinco minutos*.",
+      "escena": {
+        "tipo": "reloj",
+        "antes": "0:00",
+        "despues": "5:00",
+        "en": "cinco"
+      }
+    },
+    {
+      "texto": "Setenta y cinco años después, en la Universidad de California, lo probaron con modelos de hoy.",
+      "escena": {
+        "tipo": "linea_tiempo",
+        "hitos": [
+          {
+            "anio": "1950",
+            "texto": "Turing propone el *juego*",
+            "en": "Setenta"
+          },
+          {
+            "anio": "2025",
+            "texto": "UC San Diego lo prueba con *modelos actuales*",
+            "en": "probaron"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "{GPT-4.5|Yi pi ti cuatro punto cinco}, actuando como un joven, fue elegido como humano el *{73 por ciento|setenta y tres por ciento}* de las veces.",
+      "escena": {
+        "tipo": "anillo",
+        "valor": 73,
+        "etiqueta": "veces que lo eligieron *humano*",
+        "en": "73"
+      }
+    },
+    {
+      "texto": "Más seguido que a las personas reales. {ELIZA|Elisa}, el {chatbot|chatbot} de {1966|mil novecientos sesenta y seis}, apenas llegó al *{23|veintitrés}*.",
+      "escena": {
+        "tipo": "ranking",
+        "titulo": "Elegido como humano · test de 5 minutos",
+        "filas": [
+          {
+            "logo": "openai",
+            "texto": "GPT-4.5 con personaje",
+            "valor": 73,
+            "en": "Más"
+          },
+          {
+            "logo": "meta",
+            "texto": "LLaMa 3.1 405B con personaje",
+            "valor": 56,
+            "en": "personas"
+          },
+          {
+            "texto": "ELIZA (1966)",
+            "valor": 23,
+            "en": "ELIZA"
+          }
+        ],
+        "marcar": 0,
+        "escala": "100",
+        "nota": "JONES Y BERGEN · UC SAN DIEGO · 2025"
+      }
+    },
+    {
+      "texto": "Ojo: pasar el test no prueba que piense. Prueba que *imita* muy bien cómo hablamos.",
+      "escena": {
+        "tipo": "balanza",
+        "a": {
+          "texto": "Imitar cómo hablamos",
+          "flecha": "lo logra"
+        },
+        "b": {
+          "texto": "Pensar como nosotros",
+          "flecha": "no lo prueba"
+        },
+        "en": "imita",
+        "nota": "EL TEST MIDE LA IMITACIÓN"
+      }
+    },
+    {
+      "texto": "¿Vos te darías cuenta en cinco minutos? Contámelo en los *comentarios*.",
+      "escena": {
+        "tipo": "prompt",
+        "texto": "¿Sos una persona o una máquina?",
+        "etiqueta": "Interrogador",
+        "estado": "Escribiendo…"
+      }
+    },
+    {
+      "texto": "Seguí a {@tobdev.ia|tob dev} para más historia de la tecnología.",
+      "escena": {
+        "tipo": "cierre",
+        "sub": "Historia de la tecnología",
+        "lema": "HISTORIA · IA · CURIOSIDADES"
+      }
+    }
+  ],
+  "velocidad": 1.15
+}
