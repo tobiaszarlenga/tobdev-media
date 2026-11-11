@@ -22,7 +22,7 @@ Ideas para los días sin noticia y para cada pilar. **Antes de usar cualquiera, 
 - [x] 1969: el primer mensaje de ARPANET iba a ser "LOGIN" y el sistema se colgó después de "LO" (2026-10-21)
 - [x] 1947: el "primer bug" fue una polilla real pegada en el cuaderno del Harvard Mark II (2026-10-28)
 - [ ] 1966: ELIZA, el primer chatbot, y la gente que se encariñó con un programa de pocas reglas (verificar)
-- [ ] 1950: Turing propone el "juego de la imitación" (verificar)
+- [x] 1950: Turing propone el "juego de la imitación" (2026-11-11, con el estudio de UC San Diego 2025)
 - [ ] 1956: la conferencia de Dartmouth y el nacimiento del término "inteligencia artificial" (verificar)
 - [ ] 1920: la palabra "robot" viene de una obra de teatro checa (R.U.R., Karel Čapek) (verificar)
 - [ ] 1843: Ada Lovelace y el primer algoritmo pensado para una máquina (verificar)

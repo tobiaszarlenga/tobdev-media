@@ -665,6 +665,32 @@
         "cierre"
       ],
       "voz": "kokoro"
+    },
+    {
+      "fecha": "2026-11-11",
+      "pilar": "historia",
+      "serie": "HISTORIA #3",
+      "titulo": "1950: Turing propone el juego de la imitación; en 2025 GPT-4.5 fue elegido humano el 73% de las veces (UC San Diego)",
+      "url_fuente": "https://arxiv.org/abs/2503.23674",
+      "video": "videos/2026-11-11.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=3256200581166155801",
+      "acento": "#22C55E",
+      "tema": "editorial",
+      "musica": "suave",
+      "escenas": [
+        "visor",
+        "titular",
+        "impacto",
+        "diff",
+        "reloj",
+        "linea_tiempo",
+        "anillo",
+        "ranking",
+        "balanza",
+        "prompt",
+        "cierre"
+      ],
+      "voz": "kokoro"
     }
   ]
 }
