@@ -1,0 +1,209 @@
+{
+  "etiqueta": "12 NOV",
+  "fuente": "Google · blog oficial (10 nov 2026)",
+  "acento": "#4285F4",
+  "tema": "neon",
+  "musica": "tech",
+  "transiciones": [
+    "flash",
+    "whip",
+    "rise",
+    "zoom",
+    "wipe",
+    "flash",
+    "swing",
+    "iris",
+    "whip",
+    "rise",
+    "zoom"
+  ],
+  "beats": [
+    {
+      "texto": "{Google|Gugol} sacó su modelo *más fuerte*, y el precio de lanzamiento dura *poco*.",
+      "escena": {
+        "tipo": "marcas",
+        "logos": [
+          {
+            "marca": "gemini",
+            "texto": "Gemini 4 Carbon",
+            "estado": "Nuevo · 10 NOV",
+            "ok": true,
+            "en": "modelo"
+          }
+        ],
+        "titulo": "Lanzamiento de Google"
+      }
+    },
+    {
+      "texto": "Se llama {Gemini 4 Carbon|yémini cuatro cárbon}, y salió el *diez de noviembre*.",
+      "escena": {
+        "tipo": "navegador",
+        "url": "blog.google",
+        "pestanas": [
+          "Gemini 4 Carbon ya está disponible"
+        ],
+        "titulo": "Gemini 4 Carbon ya está disponible",
+        "en": "salió"
+      }
+    },
+    {
+      "texto": "Es para lo más exigente: migraciones de código, buscar la causa de un error, rediseñar un sistema.",
+      "escena": {
+        "tipo": "triturar",
+        "archivo": "tarea-larga.md",
+        "lineas": [
+          "Migrar varios paquetes a la vez",
+          "Encontrar la causa del error",
+          "Rediseñar la arquitectura"
+        ],
+        "en": "rediseñar",
+        "destino": "Gemini 4 Carbon"
+      }
+    },
+    {
+      "texto": "En la prueba de automatización de {Zapier|Sápier}, quedó *primero*.",
+      "escena": {
+        "tipo": "numero",
+        "valor": 1,
+        "prefijo": "#",
+        "etiqueta": "en *Zapier AutomationBench*",
+        "en": "primero"
+      }
+    },
+    {
+      "texto": "Y con un costo por tarea de *menos de la mitad* que el siguiente mejor modelo externo.",
+      "escena": {
+        "tipo": "comparacion",
+        "antes": {
+          "titulo": "Siguiente mejor modelo externo",
+          "items": [
+            "Más del doble de costo por tarea"
+          ],
+          "en": "costo"
+        },
+        "despues": {
+          "titulo": "Gemini 4 Carbon",
+          "items": [
+            "Primero en AutomationBench",
+            "Menos de la mitad del costo por tarea"
+          ],
+          "en": "mitad",
+          "logo": "gemini"
+        }
+      }
+    },
+    {
+      "texto": "Hasta el {30 de noviembre|treinta de noviembre} cuesta {2 dólares|dos dólares} por millón de {tokens|tóquens} de entrada, y {10|diez} de salida.",
+      "escena": {
+        "tipo": "calendario",
+        "mes": "Noviembre",
+        "anio": 2026,
+        "inicio": 6,
+        "cantidad": 30,
+        "marcas": [
+          {
+            "dia": 10,
+            "texto": "Lanzamiento",
+            "en": "Hasta"
+          },
+          {
+            "dia": 30,
+            "texto": "Fin del precio",
+            "en": "noviembre"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Después se *duplica*: {4|cuatro} y {20|veinte} dólares.",
+      "escena": {
+        "tipo": "diff",
+        "titulo_a": "Hasta el 30 de noviembre",
+        "titulo_b": "Después",
+        "lineas": [
+          {
+            "a": "Entrada: US$ 2 por millón",
+            "b": "Entrada: US$ 4 por millón",
+            "en": "cuatro"
+          },
+          {
+            "a": "Salida: US$ 10 por millón",
+            "b": "Salida: US$ 20 por millón",
+            "en": "veinte"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Y con {/swarm|suarm}, un solo pedido arma un *equipo de agentes* que trabajan en paralelo.",
+      "escena": {
+        "tipo": "flujo",
+        "entradas": [
+          {
+            "texto": "Un solo pedido",
+            "icono": "chat",
+            "en": "pedido"
+          }
+        ],
+        "salida": "Equipo de agentes en paralelo (vista previa)",
+        "en": "equipo"
+      }
+    },
+    {
+      "texto": "Está en la {API|a pe i} paga, en {Gemini Enterprise|yémini énterprais}, y en la {app|ap} con {Ultra|últra}.",
+      "escena": {
+        "tipo": "chips",
+        "estilo": "etiqueta",
+        "items": [
+          {
+            "texto": "API paga · AI Studio",
+            "icono": "codigo",
+            "en": "paga"
+          },
+          {
+            "texto": "Gemini Enterprise",
+            "icono": "usuario",
+            "en": "Enterprise"
+          },
+          {
+            "texto": "App Gemini · Google AI Ultra",
+            "icono": "telefono",
+            "en": "Ultra"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Ojo: usa *más {tokens|tóquens}*. Para la mayoría de las tareas, {Google|Gugol} recomienda {Gemini 4 Argon|yémini cuatro árgon}.",
+      "escena": {
+        "tipo": "cerebro",
+        "a": {
+          "titulo": "Gemini 4 Argon · la mayoría de las tareas"
+        },
+        "b": {
+          "titulo": "Gemini 4 Carbon · lo más difícil"
+        },
+        "densidad": [
+          0.45,
+          1.0
+        ],
+        "en": "recomienda",
+        "etiqueta": "Más razonamiento, *más tokens*"
+      }
+    },
+    {
+      "texto": "¿Lo probarías antes de que suba? *Contámelo*.",
+      "escena": {
+        "tipo": "impacto",
+        "por_linea": 2
+      }
+    },
+    {
+      "texto": "Seguí a {@tobdev.ia|tob dev} para las noticias de {IA|inteligencia artificial} que importan.",
+      "escena": {
+        "tipo": "cierre",
+        "sub": "Noticias de IA para tu negocio"
+      }
+    }
+  ]
+}
