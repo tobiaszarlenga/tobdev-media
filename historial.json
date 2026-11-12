@@ -691,6 +691,34 @@
         "cierre"
       ],
       "voz": "kokoro"
+    },
+    {
+      "fecha": "2026-11-12",
+      "pilar": "noticia",
+      "serie": "12 NOV",
+      "titulo": "Google lanzó Gemini 4 Carbon (10 nov): primero en Zapier AutomationBench, precio de lanzamiento US$ 2/10 por millón de tokens hasta el 30/11 y después US$ 4/20; para la mayoría de las tareas Google recomienda Argon",
+      "url_fuente": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/",
+      "video": "videos/2026-11-12.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=5254450525520284014",
+      "acento": "#4285F4",
+      "tema": "neon",
+      "musica": "tech",
+      "escenas": [
+        "marcas",
+        "navegador",
+        "triturar",
+        "numero",
+        "comparacion",
+        "calendario",
+        "diff",
+        "flujo",
+        "chips",
+        "cerebro",
+        "impacto",
+        "cierre"
+      ],
+      "voz": "kokoro",
+      "nota": "ElevenLabs sin créditos (279 disponibles, 913 necesarios)."
     }
   ]
 }
