@@ -1,0 +1,158 @@
+{
+  "etiqueta": "IA Y PLATA #4",
+  "fuente": "TobDev · Ayuda de Google Business",
+  "acento": "#FF6B6B",
+  "tema": "poster",
+  "musica": "retro",
+  "beats": [
+    {
+      "texto": "Tu primer cliente no sale de un *portfolio*. Sale de una *demo*.",
+      "escena": {
+        "tipo": "impacto",
+        "por_linea": 2
+      }
+    },
+    {
+      "texto": "Un mensaje que dice hago páginas {web|güeb}, se parece a todos los demás.",
+      "escena": {
+        "tipo": "carta",
+        "remitente": "Enviado",
+        "para": "hola@panaderiademo.com",
+        "asunto": "Hago páginas web",
+        "texto": "Hola, ¿cómo va? Hago páginas web a buen precio. Si te interesa, avisame y te paso [[mi lista de precios]].",
+        "firma": "Un freelancer más",
+        "boton": "Enviar",
+        "estado": "Sin respuesta"
+      }
+    },
+    {
+      "texto": "Lo que hago yo es otra cosa: le armo la página *antes* de que me la pida.",
+      "escena": {
+        "tipo": "boceto",
+        "etiqueta": "DEMO",
+        "boton": "Pedí por WhatsApp",
+        "en": "antes"
+      }
+    },
+    {
+      "texto": "Con lo que el negocio ya publicó: nombre, horarios, dirección y teléfono. *Nada privado*.",
+      "escena": {
+        "tipo": "censura",
+        "titulo": "Datos para la demo",
+        "archivo": "panaderia_demo.txt",
+        "lineas": [
+          {
+            "texto": "Nombre: Panadería Demo",
+            "en": "nombre"
+          },
+          {
+            "texto": "Horarios: lunes a sábado, 7 a 21",
+            "en": "horarios"
+          },
+          {
+            "texto": "Dirección y teléfono: los de su perfil",
+            "en": "teléfono"
+          },
+          {
+            "texto": "Clientes y ventas: [[no se usan]]",
+            "en": "privado"
+          }
+        ],
+        "sello": "SOLO LO PÚBLICO",
+        "en": "privado"
+      }
+    },
+    {
+      "texto": "Se la mandás con un mensaje corto: te armé esto, miralo sin compromiso.",
+      "escena": {
+        "tipo": "celular",
+        "estilo": "whatsapp",
+        "app": "Panadería Demo",
+        "estado": "en línea",
+        "mensajes": [
+          {
+            "de": "yo",
+            "texto": "Hola! Te armé una página de muestra con lo que ya tenés publicado. Mirala sin compromiso",
+            "hora": "10:02",
+            "en": "corto"
+          },
+          {
+            "de": "ia",
+            "texto": "Uh, mirá vos. ¿Y esto cuánto sale?",
+            "hora": "10:15",
+            "en": "miralo"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "La diferencia: ve *su negocio*, no una promesa. Y decide con algo concreto.",
+      "escena": {
+        "tipo": "lista",
+        "titulo": "Por qué la demo",
+        "items": [
+          {
+            "texto": "Ve su propio negocio",
+            "en": "negocio"
+          },
+          {
+            "texto": "No una promesa",
+            "en": "promesa"
+          },
+          {
+            "texto": "Decide con algo concreto",
+            "en": "concreto"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Así trabajo en {TobDev|tob dev}: demo gratis en menos de *{24 horas|veinticuatro horas}*, y se paga recién después de verla.",
+      "escena": {
+        "tipo": "numero",
+        "valor": 24,
+        "prefijo": "< ",
+        "sufijo": " h",
+        "separador": false,
+        "etiqueta": "demo gratis, *se paga después de verla*",
+        "en": "verla"
+      }
+    },
+    {
+      "texto": "Si le gusta, recién ahí se cierra el trato.",
+      "escena": {
+        "tipo": "firma",
+        "titulo": "Presupuesto aceptado",
+        "lineas": [
+          "Página web para Panadería Demo",
+          "Aprobada después de ver la demo"
+        ],
+        "etiqueta": "Aceptado por",
+        "nombre": "el cliente",
+        "en": "trato"
+      }
+    },
+    {
+      "texto": "Una regla: la demo es para *mostrársela a él*. No la publiques con su nombre sin permiso.",
+      "escena": {
+        "tipo": "interruptor",
+        "ruta": "Demo › Visibilidad",
+        "titulo": "Publicar con su nombre",
+        "sub": "Solo con permiso del negocio",
+        "desde": "on",
+        "en": "permiso",
+        "texto_on": "PÚBLICA",
+        "texto_off": "PRIVADA",
+        "nota": "Solo la ve el dueño"
+      }
+    },
+    {
+      "texto": "Mandáselo a ese amigo que hace páginas y no consigue clientes. Seguí a {@tobdev.ia|tob dev}.",
+      "escena": {
+        "tipo": "cierre",
+        "sub": "Plata y negocios con IA, cada viernes",
+        "lema": "PÁGINAS · SISTEMAS · IA"
+      }
+    }
+  ]
+}
