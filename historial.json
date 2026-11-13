@@ -719,6 +719,31 @@
       ],
       "voz": "kokoro",
       "nota": "ElevenLabs sin créditos (279 disponibles, 913 necesarios)."
+    },
+    {
+      "fecha": "2026-11-13",
+      "pilar": "negocio",
+      "serie": "IA Y PLATA #4",
+      "titulo": "Tu primer cliente no sale de un portfolio: sale de una demo hecha con sus datos públicos",
+      "url_fuente": "https://support.google.com/business/answer/7032839",
+      "video": "videos/2026-11-13.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-7022165036711392419",
+      "acento": "#FF6B6B",
+      "tema": "poster",
+      "musica": "retro",
+      "escenas": [
+        "impacto",
+        "carta",
+        "boceto",
+        "censura",
+        "celular",
+        "lista",
+        "numero",
+        "firma",
+        "interruptor",
+        "cierre"
+      ],
+      "voz": "kokoro"
     }
   ]
 }

@@ -39,7 +39,7 @@ Ideas para los días sin noticia y para cada pilar. **Antes de usar cualquiera, 
 - [x] 5 servicios con IA que le podés vender a un comercio de tu barrio (landing, turnos por WhatsApp, reels, presupuestos, respuestas a reseñas) (2026-10-23)
 - [ ] Cobrar por mes en vez de una sola vez: por qué conviene cobrar una cuota por un servicio con IA
 - [x] El error de prometer de más: qué no hace la IA y conviene aclararlo antes de venderla (2026-10-30, caso Air Canada)
-- [ ] Cómo conseguir el primer cliente: mostrarle una demo hecha con sus datos públicos (sin usar datos privados)
+- [x] Cómo conseguir el primer cliente: mostrarle una demo hecha con sus datos públicos (sin usar datos privados) (2026-11-13)
 - [ ] Freelance con IA: hacer en una tarde lo que antes llevaba una semana, y qué hacer con ese tiempo
 
 ## marca (viernes, una semana sí y una no) — trabajos reales de TobDev
