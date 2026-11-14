@@ -355,6 +355,45 @@ def synth_elevenlabs(guion, beats):
     return track, total
 
 
+FISH_API = "https://api.fish.audio/v1/tts"
+
+
+def synth_fish(guion, beats):
+    """Voz de Fish Audio desde el guion. `s2.1-pro-free` es gratis bajo uso justo (anunciado hasta fines de
+    noviembre de 2026); `s2.1-pro` cuesta US$ 15 por millón de bytes. La clave sale de FISH_API_KEY.
+    Fish no devuelve tiempos por palabra: se alinea contra Kokoro como con voz_archivo. Cachea por texto+voz."""
+    import hashlib
+    cfg = guion["fish"]
+    model = cfg.get("modelo", "s2.1-pro-free")
+    body = {"text": el_text(beats)[0], "reference_id": cfg["voice_id"], "format": "mp3", "mp3_bitrate": 128,
+            "latency": "normal", "normalize": True}
+    if cfg.get("velocidad"):
+        body["prosody"] = {"speed": float(cfg["velocidad"]), "volume": 0}
+    if cfg.get("temperatura") is not None:
+        body["temperature"] = float(cfg["temperatura"])
+    h = hashlib.sha256(json.dumps([body, model], sort_keys=True).encode()).hexdigest()[:16]
+    os.makedirs(EL_CACHE, exist_ok=True)
+    mp3 = os.path.join(EL_CACHE, "fish-" + h + ".mp3")
+    if not os.path.exists(mp3):
+        key = os.environ.get("FISH_API_KEY", "")
+        if not key:
+            raise RuntimeError("falta FISH_API_KEY")
+        cmd = ["curl", "-sS", "--max-time", "240", "-o", mp3 + ".part", "-w", "%{http_code}", "-X", "POST", FISH_API,
+               "-H", "Content-Type: application/json", "-H", "model: " + model, "-H", "Authorization: Bearer " + key,
+               "--data-binary", "@-"]
+        r = subprocess.run(cmd, input=json.dumps(body).encode(), capture_output=True)
+        code = r.stdout.decode().strip()
+        if code != "200" or not os.path.exists(mp3 + ".part") or os.path.getsize(mp3 + ".part") < 2000:
+            detail = r.stderr.decode().strip()[-200:]
+            if os.path.exists(mp3 + ".part"):
+                detail = open(mp3 + ".part", errors="replace").read()[:300]
+                os.remove(mp3 + ".part")
+            raise RuntimeError(f"Fish Audio respondió {code or 'sin conexión'}: {detail}")
+        os.replace(mp3 + ".part", mp3)
+    print("VOZ fish archivo", mp3)
+    return synth_external(guion, beats, mp3)
+
+
 # ---------------------------------------------------------------- tiempos de escenas y subtítulos
 def layout_beats(guion):
     beats = []
@@ -367,8 +406,21 @@ def layout_beats(guion):
     return beats
 
 
-def caption_groups(beats):
-    """Agrupa palabras para los subtítulos: hasta 6 palabras / 34 caracteres, cortando en puntuación."""
+SUB_MODOS = {"clasico": (6, 34), "bloque": (3, 20), "karaoke": (5, 30)}  # palabras y caracteres por grupo
+
+
+def sub_modo(guion):
+    """Estilo de subtítulos del reel. El estilo marca tiene los suyos (se maneja como `clasico`)."""
+    if guion.get("estilo") == "marca":
+        return "clasico"
+    m = guion.get("subtitulos", "clasico")
+    return m if m in SUB_MODOS else "clasico"
+
+
+def caption_groups(beats, modo="clasico"):
+    """Agrupa palabras para los subtítulos cortando en puntuación. `clasico`: hasta 6 palabras / 34 caracteres;
+    `bloque`: 1 a 3 palabras grandes; `karaoke`: hasta 5 palabras con la que suena resaltada."""
+    max_w, max_c = SUB_MODOS.get(modo, SUB_MODOS["clasico"])
     groups = []
     for bi, b in enumerate(beats):
         if b["escena"]["tipo"] in NOCAPS:
@@ -378,11 +430,11 @@ def caption_groups(beats):
         cur = []
         for w in b["words"]:
             n = sum(len(x["cap"]) + 1 for x in cur) + len(w["cap"])
-            if cur and (len(cur) >= 6 or n > 34):
+            if cur and (len(cur) >= max_w or n > max_c):
                 groups.append(cur); cur = []
             cur.append(w)
             last = w["cap"][-1]
-            if last in ".?!:;…" or (last == "," and len(cur) >= 4):
+            if last in ".?!:;…" or (last == "," and (len(cur) >= 4 or modo == "bloque")):
                 groups.append(cur); cur = []
         if cur:
             groups.append(cur)
@@ -1600,11 +1652,11 @@ def build_html(guion, beats, groups, D):
     js = (JS.replace("__ACC__", acc).replace("__D__", str(round(D, 3)))
           .replace("__CALLS__", json.dumps(calls)).replace("__CAPS__", json.dumps(cap_js))
           .replace("__ENDT__", str(round(end_t, 3))).replace("__SEED__", str(seed % 100000)).replace("__TEMA__", tema)
-          .replace("__MARCA__", "true" if marca else "false"))
+          .replace("__MARCA__", "true" if marca else "false").replace("__SUB__", json.dumps(sub_modo(guion))))
     return f"""<!doctype html>
 <html lang="es" data-tema="{tema}"><head><meta charset="UTF-8"/><meta name="viewport" content="width=1080, height=1920"/>
 <script src="assets/gsap.min.js"></script><style>{fonts}{css}</style></head>
-<body class="tema-{tema}{" estilo-marca" if marca else ""}{" fondo-liso" if guion.get("fondo") == "liso" else ""}">
+<body class="tema-{tema}{" estilo-marca" if marca else ""}{" fondo-liso" if guion.get("fondo") == "liso" else ""} sub-{sub_modo(guion)}">
 <div id="root" data-composition-id="main" data-start="0" data-duration="{round(D, 3)}" data-width="1080" data-height="1920">
 <div id="bg" class="clip" data-start="0" data-duration="{round(D, 3)}" data-track-index="0">
   {bg_html(tema)}
@@ -2031,6 +2083,13 @@ font-size:22px;letter-spacing:.16em;color:#fff;opacity:0}
 .estilo-marca .kb{border:none;background:var(--acc);border-radius:10px;left:-12px;right:-12px;top:6px;bottom:-2px}
 .estilo-marca .kb i{display:none}
 .estilo-marca .kw .w{position:relative}
+/* subtítulos `bloque`: 1 a 3 palabras grandes en mayúsculas; la clave va en el color de acento */
+.sub-bloque .cap:not(.low){top:250px;font-size:96px;overflow-wrap:anywhere;line-height:1.02;letter-spacing:-.025em;text-transform:uppercase}
+.sub-bloque .cap .kb,.sub-karaoke .cap .kb{display:none}
+.sub-bloque .kw,.sub-karaoke .kw{padding:0;margin:0}
+/* subtítulos `karaoke`: frase apagada y una pastilla de color en la palabra que suena */
+.sub-karaoke .cap:not(.low){font-size:68px;line-height:1.32}
+.sub-karaoke .cap:not(.low) .w{padding:0 .14em;border-radius:14px;margin:0 -.03em}
 .lema{margin-top:22px;font-size:26px;letter-spacing:.42em;color:var(--text-muted);text-transform:uppercase}
 /* sitio: capturas reales en navegador y celular */
 .st-scene{position:absolute;inset:0;perspective:1800px;transform-style:preserve-3d}
@@ -3200,8 +3259,27 @@ const MARCA = __MARCA__;
 const TXT = getComputedStyle(document.documentElement).getPropertyValue("--text").trim() || "#FFFFFF";
 const DONE = MARCA ? TXT : (getComputedStyle(document.documentElement).getPropertyValue("--cap-done").trim() || "#C6CFE0");
 const ONACC = getComputedStyle(document.documentElement).getPropertyValue("--on-acc").trim() || "#FFFFFF";
+const SUB = __SUB__, ACCC = "__ACC__", CLEAR = "rgba(0,0,0,0)";
 CAPS.forEach(g => {
   const el = "#g"+g.g;
+  if (!g.low && SUB === "bloque") {
+    // 1 a 3 palabras grandes que entran juntas con un golpe; la clave va en el color de acento
+    F(el, {opacity:0, scale:.8, y:20}, {opacity:1, scale:1, y:0, duration:.13, ease:"back.out(2.2)"}, g.t0);
+    F(el, {opacity:1}, {opacity:0, duration:.05}, g.t1-.1);  // termina antes de que entre el grupo siguiente
+    g.w.forEach(([w, t0, t1, kw]) => F("#"+w, {opacity:0, color:kw ? ACCC : TXT}, {opacity:1, color:kw ? ACCC : TXT, duration:.01}, g.t0));
+    return;
+  }
+  if (!g.low && SUB === "karaoke") {
+    // la frase entera aparece apagada y una pastilla del color de acento va saltando a la palabra que suena
+    F(el, {opacity:0, y:14}, {opacity:1, y:0, duration:.14, ease:"power2.out"}, g.t0);
+    F(el, {opacity:1}, {opacity:0, duration:.06}, g.t1-.1);
+    g.w.forEach(([w, t0, t1, kw]) => {
+      F("#"+w, {opacity:0}, {opacity:.4, color:TXT, backgroundColor:CLEAR, duration:.01}, g.t0);
+      F("#"+w, {opacity:.4, color:TXT, backgroundColor:CLEAR, scale:1}, {opacity:1, color:ONACC, backgroundColor:ACCC, scale:1.07, duration:.07, ease:"power2.out"}, t0);
+      F("#"+w, {opacity:1, color:ONACC, backgroundColor:ACCC, scale:1.07}, {opacity:1, color:kw ? ACCC : TXT, backgroundColor:CLEAR, scale:1, duration:.1}, Math.max(t0+.09, t1-.03));
+    });
+    return;
+  }
   F(el, {opacity:0}, {opacity:1, duration:.01}, g.t0);
   F(el, {opacity:1}, {opacity:0, duration:.1}, g.t1-.1);
   const on = g.low ? "#FFFFFF" : TXT, done = g.low ? "rgba(255,255,255,.78)" : DONE;
@@ -3304,6 +3382,10 @@ def validar(guion, historial=None):
     if not beats:
         return ["el guion no tiene beats"], []
     tipos = []
+    if guion.get("subtitulos") and guion["subtitulos"] not in SUB_MODOS:
+        err.append(f"subtitulos '{guion['subtitulos']}' no existe ({', '.join(SUB_MODOS)})")
+    if guion.get("fish") and not (guion["fish"] or {}).get("voice_id"):
+        err.append("'fish' necesita 'voice_id' (el id de la voz en fish.audio)")
     for i, b in enumerate(beats, 1):
         e = b.get("escena") or {}
         t = e.get("tipo")
@@ -3622,6 +3704,15 @@ def main():
         if voz_path:
             voice, D = synth_external(guion, beats, voz_path)
             print("VOZ archivo", os.path.basename(voz_path))
+        elif guion.get("fish"):
+            try:
+                voice, D = synth_fish(guion, beats)
+                print("VOZ fish", guion["fish"].get("voice_id"), guion["fish"].get("modelo", "s2.1-pro-free"))
+            except Exception as e:  # el reel sale igual: Kokoro de respaldo
+                print("AVISO voz Fish falló, uso Kokoro:", str(e)[:300])
+                beats = layout_beats(guion)
+                voice, D = synth(guion, beats)
+                print("VOZ kokoro (respaldo)")
         elif guion.get("elevenlabs"):
             try:
                 voice, D = synth_elevenlabs(guion, beats)
@@ -3637,7 +3728,7 @@ def main():
         if beats[-1]["escena"]["tipo"] == "cierre":
             D = max(D, beats[-1]["t_speech"] + 3.4)
         D = round(D + 0.5, 3)
-        groups = caption_groups(beats)
+        groups = caption_groups(beats, sub_modo(guion))
         os.makedirs(os.path.join(work, "assets"), exist_ok=True)
         shutil.copytree(os.path.join(HERE, "fonts"), os.path.join(work, "assets", "fonts"), dirs_exist_ok=True)
         for f in ("mark-white.svg", "grain.png"):
