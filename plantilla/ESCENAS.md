@@ -16,6 +16,16 @@ El reel se arma desde `guion.json`: una lista de **beats**. Cada beat es una fra
 }
 ```
 
+## Ilustraciones con código (v3)
+
+Para reels de historias, mitos y curiosidades con dibujos animados (sin IA generativa, gratis):
+
+- `plantilla/ilu.py` trae paletas (`PAL`: noche, nordico, sepia, alarma, espia, papel, retro, cielo) y piezas SVG listas: `svg()` (fondo + brillo), `phone`, `browser`, `card`, `doc`, `key`, `lock`, `waves`, `tower`, `plane`, `headset`, `person` (genérico, nunca alguien real), `check`, `cross`, `stamp`, `bubble`, `arrow`, `gear`, `battery`, `qr` (de mentira), `goboard`, `moth`, `chip`, y `beat()` / `guardar()` (chequea la sintaxis JS con node).
+- En `anim` hay atajos del motor: `IL.pop`, `IL.in`, `IL.out`, `IL.fade`, `IL.draw`, `IL.shake`, `IL.float`, `IL.spin`, `IL.zoom`, `IL.pulse` (además de `F`). `cue(i)` es el tiempo de la palabra `en[i]`.
+- Ejemplos completos en `guiones/gen/` (un `.py` por reel que escribe el guion con su `caption`): bluetooth, contrasenas, bug, incognito, qr, ctrlaltsupr, avion, teclas-fj.
+- Reglas: todo lo importante entre y≈520 y y≈1480 y entre x≈100 y x≈980; el texto de los subtítulos ya ocupa arriba. Con fondos claros usá `tema` `claro` o `estudio`; con fondos oscuros, uno oscuro (el color de los subtítulos sale del tema).
+- Se pueden mezclar con escenas del motor (`cita`, `numero`, etc.) para variar.
+
 ## Campos generales
 
 | Campo | Qué es |

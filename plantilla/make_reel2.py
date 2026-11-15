@@ -2097,6 +2097,7 @@ font-size:22px;letter-spacing:.16em;color:#fff;opacity:0}
 .il-wrap{position:absolute;inset:0;overflow:hidden}
 .il-wrap>svg{position:absolute;left:0;top:0;width:1080px;height:1920px}
 .sub-bloque .cap:not(.low),.sub-karaoke .cap:not(.low){text-shadow:0 6px 28px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.35)}
+.tema-claro .cap,.tema-estudio .cap,.tema-poster .cap{text-shadow:none!important}
 /* subtítulos `bloque`: 1 a 3 palabras grandes en mayúsculas; la clave va en el color de acento */
 .sub-bloque .cap:not(.low){top:250px;font-size:88px;overflow-wrap:anywhere;line-height:1.02;letter-spacing:-.025em;text-transform:uppercase}
 .sub-bloque .cap .kb,.sub-karaoke .cap .kb{display:none}
@@ -3263,6 +3264,18 @@ cierre(c, p){
 }
 };
 
+const IL = {  // atajos para escenas `ilustracion`
+  pop: (s, t, d = .35, e = "back.out(1.8)") => F(s, {opacity: 0, scale: .4, transformOrigin: "50% 50%"}, {opacity: 1, scale: 1, duration: d, ease: e}, t),
+  in: (s, t, dx = 0, dy = 70, d = .42) => F(s, {opacity: 0, x: dx, y: dy}, {opacity: 1, x: 0, y: 0, duration: d, ease: "power3.out"}, t),
+  out: (s, t, d = .22) => F(s, {opacity: 1}, {opacity: 0, duration: d}, t),
+  fade: (s, t, d = .3, to = 1) => F(s, {opacity: 0}, {opacity: to, duration: d}, t),
+  draw: (s, t, len = 1000, d = .8) => F(s, {strokeDashoffset: len}, {strokeDashoffset: 0, duration: d, ease: "power2.out"}, t),
+  shake: (s, t, n = 5, a = 12) => F(s, {x: 0}, {x: a, duration: .05, yoyo: true, repeat: n}, t),
+  float: (s, t, dur, a = 12) => F(s, {y: 0}, {y: -a, duration: 1.1, yoyo: true, repeat: Math.max(1, Math.floor(dur / 1.1)), ease: "sine.inOut"}, t),
+  spin: (s, t, dur, deg = 360) => F(s, {rotation: 0, transformOrigin: "50% 50%"}, {rotation: deg, duration: dur, ease: "none"}, t),
+  zoom: (s, t, dur, k = 1.08) => F(s, {scale: 1, transformOrigin: "50% 50%"}, {scale: k, duration: dur, ease: "sine.inOut"}, t),
+  pulse: (s, t, n = 2, k = 1.12) => F(s, {scale: 1, transformOrigin: "50% 50%"}, {scale: k, duration: .16, yoyo: true, repeat: n * 2 - 1, ease: "sine.inOut"}, t),
+};
 __ILU__
 SC.ilustracion = (c, p) => { const f = ILU[c.id]; if (f) f(c, p, "#"+c.id, i => (p.cues && p.cues[i] !== undefined ? p.cues[i] : c.t0 + .3)); };
 const CALLS = __CALLS__;
