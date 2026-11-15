@@ -23,7 +23,7 @@ MODEL_URLS = {
     "kokoro-v1.0.onnx": "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx",
     "voices-v1.0.bin": "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin",
 }
-SCENE_TYPES = {"terminal", "linea_tiempo", "prompt", "capas", "flujo", "cursores", "chips", "frase", "lista", "reloj", "alerta", "numero",
+SCENE_TYPES = {"ilustracion", "terminal", "linea_tiempo", "prompt", "capas", "flujo", "cursores", "chips", "frase", "lista", "reloj", "alerta", "numero",
                "navegador", "celular", "grafico", "comparacion", "particulas", "cierre",
                # v2.1
                "imagen", "codigo", "pasos", "anillo", "titular", "cita", "tabla", "calendario", "planes",
@@ -734,6 +734,11 @@ def fmt_py(v, dec=0, sep=True):
 
 def scene_html(sid, b, D):
     e = b["escena"]; t = e["tipo"]; p = sid
+    if t == "ilustracion":
+        # escena a medida (v3): SVG/HTML propio + animación GSAP propia; `{id}` se reemplaza por el id de la escena
+        css = (e.get("css") or "").replace("{id}", p)
+        return (f'<div class="il-wrap" id="{p}-il">{(e.get("html") or "").replace("{id}", p)}</div>'
+                + (f"<style>{css}</style>" if css else ""))
     if t in ("sitio", "carrusel", "muro", "notificaciones", "caos", "planilla", "logo", "cuenta"):
         return scene_html_marca(sid, b, D)
     if t == "boceto":
@@ -1422,6 +1427,9 @@ def scene_params(b, t0, t1):
         tags = e.get("etiquetas", [])[:4]
         p["cues"] = scene_cues(b, [x.get("en", "") for x in tags], t0, t1)
         p["n"] = len(tags); p["sello"] = bool(e.get("sello")); p["cue"] = scene_cues(b, [e.get("en", "")], t0, t1)[0]
+    elif t == "ilustracion":
+        p["cues"] = scene_cues(b, list(e.get("en") or []), t0, t1)
+        p["wt"] = [round(w["t0"], 3) for w in b["words"]]
     elif t == "impacto":
         p["cues"] = [round(w["t0"], 3) for w in b["words"]]
         p["kw"] = [w["kw"] is not None for w in b["words"]]
@@ -1611,7 +1619,7 @@ def build_html(guion, beats, groups, D):
         if b["escena"]["tipo"] == "cierre":
             b["escena"].setdefault("fuente_txt", f'Fuente: {guion.get("fuente", "")}' if guion.get("fuente") else "")
         _tp = b["escena"]["tipo"]
-        full = " full" if _tp in ("presentador", "logo", "muro") else (" libre" if _tp == "cuenta" else "")
+        full = " full" if _tp in ("presentador", "logo", "muro") or (_tp == "ilustracion" and b["escena"].get("pantalla", "completa") == "completa") else (" libre" if _tp == "cuenta" else "")
         sc_html.append(f'<div id="{sid}" class="clip scene t-{b["escena"]["tipo"]}" data-start="{t0}" data-duration="{round(t1 - t0, 3)}" data-track-index="{1 + i % 2}">'
                        f'<div class="stage{full}"><div class="safe"><div class="cam"><div class="drift">{scene_html(sid, b, D)}</div></div></div></div></div>')
         prm = scene_params(b, t0, t1)
@@ -1649,7 +1657,9 @@ def build_html(guion, beats, groups, D):
     marca = guion.get("estilo") == "marca"
     hdr = "" if marca else (f'<div id="hdr" class="clip hdr" data-start="0" data-duration="{round(end_t + 0.3, 3)}" data-track-index="4">'
            f'<img src="assets/mark-white.svg" alt=""/><span class="h">tobdev.ia</span><span class="d">{esc(guion.get("etiqueta", guion.get("fecha", "")))}</span></div>')
-    js = (JS.replace("__ACC__", acc).replace("__D__", str(round(D, 3)))
+    ilu = ",\n".join(f'"s{i}": function(c, p, id, cue){{\n{b["escena"].get("anim", "")}\n}}'
+                      for i, b in enumerate(beats) if b["escena"]["tipo"] == "ilustracion")
+    js = (JS.replace("__ILU__", "const ILU = {" + ilu + "};").replace("__ACC__", acc).replace("__D__", str(round(D, 3)))
           .replace("__CALLS__", json.dumps(calls)).replace("__CAPS__", json.dumps(cap_js))
           .replace("__ENDT__", str(round(end_t, 3))).replace("__SEED__", str(seed % 100000)).replace("__TEMA__", tema)
           .replace("__MARCA__", "true" if marca else "false").replace("__SUB__", json.dumps(sub_modo(guion))))
@@ -2083,8 +2093,12 @@ font-size:22px;letter-spacing:.16em;color:#fff;opacity:0}
 .estilo-marca .kb{border:none;background:var(--acc);border-radius:10px;left:-12px;right:-12px;top:6px;bottom:-2px}
 .estilo-marca .kb i{display:none}
 .estilo-marca .kw .w{position:relative}
+/* escena `ilustracion` (v3): dibujo propio a pantalla completa */
+.il-wrap{position:absolute;inset:0;overflow:hidden}
+.il-wrap>svg{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.sub-bloque .cap:not(.low),.sub-karaoke .cap:not(.low){text-shadow:0 6px 28px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.35)}
 /* subtítulos `bloque`: 1 a 3 palabras grandes en mayúsculas; la clave va en el color de acento */
-.sub-bloque .cap:not(.low){top:250px;font-size:96px;overflow-wrap:anywhere;line-height:1.02;letter-spacing:-.025em;text-transform:uppercase}
+.sub-bloque .cap:not(.low){top:250px;font-size:88px;overflow-wrap:anywhere;line-height:1.02;letter-spacing:-.025em;text-transform:uppercase}
 .sub-bloque .cap .kb,.sub-karaoke .cap .kb{display:none}
 .sub-bloque .kw,.sub-karaoke .kw{padding:0;margin:0}
 /* subtítulos `karaoke`: frase apagada y una pastilla de color en la palabra que suena */
@@ -3249,6 +3263,8 @@ cierre(c, p){
 }
 };
 
+__ILU__
+SC.ilustracion = (c, p) => { const f = ILU[c.id]; if (f) f(c, p, "#"+c.id, i => (p.cues && p.cues[i] !== undefined ? p.cues[i] : c.t0 + .3)); };
 const CALLS = __CALLS__;
 const NOPUNCH = {presentador:1, impacto:1, cuenta:1, logo:1, muro:1, caos:1, glitch:1};
 CALLS.forEach(c => { CAM(c); (SC[c.p.tipo] || (()=>{}))(c, c.p); if (!NOPUNCH[c.p.tipo]) PUNCH(c, c.kw); });
@@ -3359,7 +3375,7 @@ def find_browser():
     return None
 
 
-REQUIRED = {"terminal": "lineas", "linea_tiempo": "hitos", "chips": "items", "lista": "items", "flujo": "entradas",
+REQUIRED = {"ilustracion": "html", "terminal": "lineas", "linea_tiempo": "hitos", "chips": "items", "lista": "items", "flujo": "entradas",
             "numero": "valor", "particulas": "valor", "comparacion": "despues", "grafico": "barras", "celular": "mensajes",
             "alerta": "filas", "reloj": "despues", "prompt": "texto", "cursores": "despues", "capas": "items",
             "codigo": "lineas", "pasos": "pasos", "anillo": "valor", "titular": "titulo", "cita": "autor", "tabla": "filas",
@@ -3442,9 +3458,9 @@ def validar(guion, historial=None):
     if tipos and tipos[-1] != "cierre":
         err.append("el último beat tiene que ser 'cierre'")
     for i in range(1, len(tipos)):
-        if tipos[i] == tipos[i - 1]:
+        if tipos[i] == tipos[i - 1] and tipos[i] != "ilustracion":  # cada `ilustracion` es un dibujo distinto
             warn.append(f"beats {i} y {i + 1}: misma escena '{tipos[i]}' seguida")
-    if len(set(t for t in tipos if t != "cierre")) < 5:
+    if len(set(t for t in tipos if t != "cierre")) < 5 and tipos.count("ilustracion") < 4:
         warn.append("menos de 5 tipos de escena distintos")
     if not 8 <= len(beats) <= 12:
         warn.append(f"{len(beats)} beats (lo recomendado es 8 a 12)")
