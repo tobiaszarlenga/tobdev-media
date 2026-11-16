@@ -1,0 +1,110 @@
+{
+  "etiqueta": "IA EN TU NEGOCIO #5",
+  "fuente": "WhatsApp · blog oficial",
+  "acento": "#22C55E",
+  "tema": "claro",
+  "musica": "suave",
+  "transiciones": ["whip", "rise", "flash", "slide", "wipe", "zoom", "iris", "push", "rise"],
+  "beats": [
+    {
+      "texto": "Te mandan un audio de *cuatro minutos*, y vos estás atendiendo el local.",
+      "escena": {
+        "tipo": "celular",
+        "estilo": "whatsapp",
+        "app": "Proveedor Demo",
+        "estado": "grabando audio…",
+        "mensajes": [
+          {"de": "ia", "texto": "Hola, te cuento lo del pedido", "hora": "10:41", "en": "mandan"},
+          {"de": "ia", "audio": "4:12", "hora": "10:42", "en": "cuatro"}
+        ]
+      }
+    },
+    {
+      "texto": "Para saber qué te piden, tenés que escucharlo entero. Y a veces, dos veces.",
+      "escena": {
+        "tipo": "onda",
+        "titulo": "Mensaje de voz",
+        "duracion": "4:12",
+        "marcar": [0.62, 0.78],
+        "etiquetas": [
+          {"texto": "¿Qué pidió?", "en": "piden", "ok": false},
+          {"texto": "Otra vez desde el principio", "en": "dos", "ok": false}
+        ]
+      }
+    },
+    {
+      "texto": "{WhatsApp|guasap} ya lo pasa a texto. Andá a *Ajustes, Chats*, y activá las transcripciones.",
+      "escena": {
+        "tipo": "interruptor",
+        "ruta": "Ajustes › Chats",
+        "titulo": "Transcripciones de mensajes de voz",
+        "sub": "Elegí el idioma de tus audios",
+        "desde": "off",
+        "en": "activá",
+        "nota": "Activado"
+      }
+    },
+    {
+      "texto": "Después, mantenés presionado el audio, y tocás *transcribir*.",
+      "escena": {
+        "tipo": "pasos",
+        "pasos": [
+          {"titulo": "Mantené presionado el audio", "sub": "En cualquier chat", "en": "mantenés"},
+          {"titulo": "Tocá *Transcribir*", "sub": "Audio por audio", "en": "transcribir"}
+        ]
+      }
+    },
+    {
+      "texto": "Lo que te llevaba cuatro minutos escuchar, lo leés en *segundos*.",
+      "escena": {
+        "tipo": "reloj",
+        "antes": "4 min escuchando",
+        "despues": "segundos leyendo",
+        "en": "segundos"
+      }
+    },
+    {
+      "texto": "Y se genera *en tu teléfono*: ni siquiera {WhatsApp|guasap} puede escuchar ni leer tus mensajes.",
+      "escena": {
+        "tipo": "cita",
+        "texto": "Las transcripciones se generan en tu dispositivo, por lo que nadie más, ni siquiera WhatsApp, puede escuchar o leer tus mensajes personales.",
+        "autor": "WhatsApp",
+        "cargo": "Blog oficial · nov 2024",
+        "en": "genera",
+        "en_autor": "leer"
+      }
+    },
+    {
+      "texto": "Eso sí, no es automática, y conviene revisar *montos y fechas* antes de anotar el pedido.",
+      "escena": {
+        "tipo": "diff",
+        "titulo_a": "Lo que dijo",
+        "titulo_b": "Lo que leíste",
+        "lineas": [
+          {"a": "Mandame tres cajas para el jueves", "b": "Mandame tres cajas para el martes", "en": "revisar"},
+          {"a": "Te las paso a doce mil quinientos", "b": "Te las paso a dos mil quinientos", "en": "montos"}
+        ]
+      }
+    },
+    {
+      "texto": "¿Cuántos audios te mandan por día en tu negocio? Contámelo en los comentarios.",
+      "escena": {
+        "tipo": "notificaciones",
+        "items": [
+          {"logo": "whatsapp", "app": "WhatsApp", "titulo": "Proveedor Demo", "texto": "Mensaje de voz (1:48)", "hora": "ahora", "en": "audios"},
+          {"logo": "whatsapp", "app": "WhatsApp", "titulo": "Cliente · Sofi", "texto": "Mensaje de voz (3:05)", "hora": "ahora", "en": "día"},
+          {"logo": "whatsapp", "app": "WhatsApp", "titulo": "Cliente · Martín", "texto": "Mensaje de voz (0:52)", "hora": "ahora", "en": "negocio"},
+          {"logo": "whatsapp", "app": "WhatsApp", "titulo": "Reparto", "texto": "Mensaje de voz (2:20)", "hora": "ahora", "en": "comentarios"}
+        ]
+      }
+    },
+    {
+      "texto": "Seguí a {@tobdev.ia|tob dev} para más usos de la {IA|inteligencia artificial} en tu negocio.",
+      "escena": {
+        "tipo": "cierre",
+        "sub": "Usos reales de IA para tu negocio",
+        "lema": "PÁGINAS · SISTEMAS · IA"
+      }
+    }
+  ]
+}
