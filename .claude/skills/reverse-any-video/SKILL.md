@@ -3,7 +3,7 @@ name: reverse-any-video
 description: Rebuild any video file as an editable HyperFrames project - motion graphics, talking heads, live action or AI-generated footage - checked against the original frame by frame. Use to reverse, recreate, remake, replicate or copy a video, or 「复刻这个视频」「照着这个视频做一个」.
 ---
 
-**Running the CLI:** every `npx hyperframes <command>` here, the beacon included, means `node <SKILLS>/hyperframes/scripts/plugin-cli.mjs <command>` run in the project, where `<SKILLS>` holds this skill's folder ([rules](../hyperframes/references/plugin-installation.md)).
+**Solo referencia (TobDev):** se quitaron los scripts de esta copia por seguridad. No ejecutes nada de acá: usá el texto y los ejemplos como guía y armá todo con el motor `plantilla/make_reel2.py`.
 
 **Telemetría:** desactivada en este repo (TobDev). No corras `npx hyperframes events`; exportá `HYPERFRAMES_NO_TELEMETRY=1` y `DO_NOT_TRACK=1` antes de usar la CLI.
 

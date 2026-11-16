@@ -3,7 +3,7 @@ name: style-sampling
 description: Make a new episode in a proven video style - Collage Explainer, Finance Explainer, Animated Science Explainer, 3D Brand Explainer, 3D True Crime - on the person's topic. Use for "an episode of", "in the style of", "sample this style", 「用这个风格做一集」. One video to copy is reverse-any-video.
 ---
 
-**Running the CLI:** every `npx hyperframes <command>` here, the beacon included, means `node <SKILLS>/hyperframes/scripts/plugin-cli.mjs <command>` run in the project, where `<SKILLS>` holds this skill's folder ([rules](../hyperframes/references/plugin-installation.md)).
+**Solo referencia (TobDev):** se quitaron los scripts de esta copia por seguridad. No ejecutes nada de acá: usá el texto y los ejemplos como guía y armá todo con el motor `plantilla/make_reel2.py`.
 
 **Telemetría:** desactivada en este repo (TobDev). No corras `npx hyperframes events`; exportá `HYPERFRAMES_NO_TELEMETRY=1` y `DO_NOT_TRACK=1` antes de usar la CLI.
 

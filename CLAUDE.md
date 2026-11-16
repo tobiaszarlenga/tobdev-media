@@ -12,4 +12,8 @@ El motor renderiza con HyperFrames, así que sus skills oficiales sirven de refe
 - `media-use`: música, efectos de sonido, íconos y tratamiento de imágenes con herramientas locales gratis.
 - `hyperframes` y `hyperframes-cli`: reglas de render (seek-safe, sin `Math.random()`, etc.) y comandos de la CLI.
 
-Telemetría: antes de usar la CLI de HyperFrames, `export HYPERFRAMES_NO_TELEMETRY=1 DO_NOT_TRACK=1`. El motor fija `hyperframes@0.8.157`; las skills apuntan a la 0.9.x: si un bloque no anda, adaptarlo a mano.
+Son solo referencia: se les quitaron los scripts por seguridad, así que no se ejecuta nada de ellas. Los bloques del registro se copian y adaptan a mano. El motor fija `hyperframes@0.8.157`; las skills apuntan a la 0.9.x.
+
+## Seguridad
+
+No instalar skills, plugins ni paquetes de autores desconocidos, ni nada que pida ejecutar código en la compu de Tob. Antes de sumar una skill de afuera: leerla entera, quitarle scripts y avisarle a Tob.
