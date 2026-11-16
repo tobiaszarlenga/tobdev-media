@@ -72,7 +72,7 @@ Formatos y escenas en `plantilla/ESCENAS.md` → "Estilo marca". Proyectos y lo 
 - [x] Contestar consultas de WhatsApp fuera de horario (2026-10-29, `guiones/2026-10-29-turnos-whatsapp.json`, lo sube Tob a mano)
 - [x] Armar presupuestos en minutos a partir de una lista de precios (2026-11-02; lunes de tip sin acceso a la doc oficial)
 - [x] Responder reseñas de Google con el tono del negocio (2026-11-05)
-- [ ] Resumir audios largos de clientes o proveedores
+- [x] Resumir audios largos de clientes o proveedores (2026-11-16; lunes de tip sin acceso a la doc oficial: transcripciones de WhatsApp)
 - [x] Escribir descripciones de productos para la tienda online (2026-11-09)
 - [ ] Ordenar facturas y gastos del mes
 - [ ] Detectar las preguntas que más te hacen y armar las respuestas frecuentes

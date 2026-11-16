@@ -744,6 +744,30 @@
         "cierre"
       ],
       "voz": "kokoro"
+    },
+    {
+      "fecha": "2026-11-16",
+      "pilar": "uso",
+      "serie": "IA EN TU NEGOCIO #5",
+      "titulo": "Leer los audios largos de WhatsApp: transcripciones de mensajes de voz",
+      "url_fuente": "https://blog.whatsapp.com/introducing-voice-message-transcripts?lang=es",
+      "video": "videos/2026-11-16.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=-5264779997501111928",
+      "acento": "#22C55E",
+      "tema": "claro",
+      "musica": "suave",
+      "escenas": [
+        "celular",
+        "onda",
+        "interruptor",
+        "pasos",
+        "reloj",
+        "cita",
+        "diff",
+        "notificaciones",
+        "cierre"
+      ],
+      "voz": "kokoro"
     }
   ]
 }
