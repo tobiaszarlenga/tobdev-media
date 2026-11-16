@@ -3,7 +3,7 @@ name: hyperframes
 description: Read first to make, edit, animate or render any video with HyperFrames (HTML rendered to video), including launch films, explainers, music videos, charts, maps, vertical clips, title cards, captions and overlays. Holds the render contract, the work loop and what each kind of video needs.
 ---
 
-**Running the CLI:** every `npx hyperframes <command>` here, the beacon included, means `node <SKILLS>/hyperframes/scripts/plugin-cli.mjs <command>` run in the project, where `<SKILLS>` holds this skill's folder ([rules](references/plugin-installation.md)).
+**Solo referencia (TobDev):** se quitaron los scripts de esta copia por seguridad. No ejecutes nada de acá: usá el texto y los ejemplos como guía y armá todo con el motor `plantilla/make_reel2.py`.
 
 **Telemetría:** desactivada en este repo (TobDev). No corras `npx hyperframes events`; exportá `HYPERFRAMES_NO_TELEMETRY=1` y `DO_NOT_TRACK=1` antes de usar la CLI.
 

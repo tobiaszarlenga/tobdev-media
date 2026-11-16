@@ -3,7 +3,7 @@ name: hyperframes-registry
 description: About 450 ready-made HyperFrames blocks and components installed as editable source - transitions, overlays, titles, kinetic type, captions, charts, map overlays, 3D, camera moves. Use it before hand-building any named visual (CRT scanlines, glitch, film grain, a chart); also for hyperframes add and catalog.
 ---
 
-**Running the CLI:** every `npx hyperframes <command>` here, the beacon included, means `node <SKILLS>/hyperframes/scripts/plugin-cli.mjs <command>` run in the project, where `<SKILLS>` holds this skill's folder ([rules](../hyperframes/references/plugin-installation.md)).
+**Solo referencia (TobDev):** se quitaron los scripts de esta copia por seguridad. No ejecutes nada de acá: usá el texto y los ejemplos como guía y armá todo con el motor `plantilla/make_reel2.py`.
 
 **Telemetría:** desactivada en este repo (TobDev). No corras `npx hyperframes events`; exportá `HYPERFRAMES_NO_TELEMETRY=1` y `DO_NOT_TRACK=1` antes de usar la CLI.
 
