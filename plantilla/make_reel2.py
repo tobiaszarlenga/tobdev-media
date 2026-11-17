@@ -3587,6 +3587,10 @@ def main():
         print(el_text(layout_beats(guion))[0])
         print("TEXTO_VOZ_FIN")
         return
+    # Kokoro audible solo si el guion lo pide con "kokoro": true (Tob no lo quiere; en el reel diario nunca)
+    if not (guion.get("voz_archivo") or guion.get("elevenlabs") or guion.get("kokoro")):
+        print("ERROR sin voz: falta voz_archivo (Fish o ElevenLabs). Kokoro no se usa salvo \"kokoro\": true en el guion; en el reel diario nunca: no se publica.")
+        sys.exit(2)
     voz_path = None
     if guion.get("voz_archivo"):
         va = guion["voz_archivo"]
@@ -3626,7 +3630,10 @@ def main():
             try:
                 voice, D = synth_elevenlabs(guion, beats)
                 print("VOZ elevenlabs", guion["elevenlabs"].get("voice_id"))
-            except Exception as e:  # el reel sale igual: Kokoro de respaldo
+            except Exception as e:  # sin Kokoro de respaldo, salvo "kokoro": true en el guion
+                if not guion.get("kokoro"):
+                    print("ERROR voz ElevenLabs falló y no hay respaldo (Kokoro desactivado):", str(e)[:300])
+                    sys.exit(2)
                 print("AVISO voz ElevenLabs falló, uso Kokoro:", str(e)[:300])
                 beats = layout_beats(guion)
                 voice, D = synth(guion, beats)
