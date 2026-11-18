@@ -259,10 +259,85 @@ def synth_external(guion, beats, path):
         b["t_end"] = m(b["t_end"])
         for w in b["words"]:
             w["t0"], w["t1"] = m(w["t0"]), m(w["t1"])
+    ext = anclar_pausas(guion, beats, ext)
     total = len(ext) / SR + 0.1
     track = np.zeros(int((total + 3) * SR), dtype=np.float32)
     track[: len(ext)] = ext
     return track, total
+
+
+def anclar_pausas(guion, beats, ext):
+    """v3: el DTW contra Kokoro a veces corre un cambio de frase 1-2 s (si la voz dice el texto distinto: años,
+    siglas). Acá cada cambio de beat se ancla a una pausa real del audio (la que mejor coincide, en orden), las
+    palabras de cada beat se reacomodan entre sus pausas y cada pausa entre frases se estira hasta `pausa_frases`
+    segundos (por defecto 0,42), así la voz respira y el corte de escena cae en el silencio."""
+    import numpy as np, librosa
+    n = len(beats)
+    if n < 2 or guion.get("pausa_frases") == 0:
+        return ext
+    voiced = librosa.effects.split(ext, top_db=34, frame_length=1024, hop_length=240)
+    gaps = [(a / SR, b / SR) for (_, a), (b, _) in zip(voiced[:-1], voiced[1:]) if (b - a) / SR >= 0.04]
+    est = [(beats[i - 1]["t_end"] + beats[i]["t_speech"]) / 2 for i in range(1, n)]
+    INF = 1e9
+    def cost(i, g):
+        c = abs((g[0] + g[1]) / 2 - est[i])
+        return INF if c > 2.6 else c - 1.2 * min(g[1] - g[0], 0.35)
+    m_, k_ = len(est), len(gaps)
+    dp = [[INF] * k_ for _ in range(m_)]; back = [[-1] * k_ for _ in range(m_)]
+    for j in range(k_):
+        dp[0][j] = cost(0, gaps[j])
+    for i in range(1, m_):
+        best, bj = INF, -1
+        for j in range(k_):
+            if j > 0 and dp[i - 1][j - 1] < best:
+                best, bj = dp[i - 1][j - 1], j - 1
+            cj = cost(i, gaps[j])
+            if best < INF and cj < INF:
+                dp[i][j], back[i][j] = best + cj, bj
+    if not k_ or min(dp[-1]) >= INF:
+        print("AVISO voz: no pude anclar las frases a pausas reales; quedan los tiempos del alineado")
+        return ext
+    j = int(np.argmin(dp[-1])); sel = [0] * m_
+    for i in range(m_ - 1, -1, -1):
+        sel[i] = j; j = back[i][j]
+    anchors = [gaps[j] for j in sel]
+    moved = [abs((a + b) / 2 - e) for (a, b), e in zip(anchors, est)]
+    if max(moved) > 0.25:
+        print(f"VOZ anclada a pausas reales: {sum(x > 0.25 for x in moved)} cambio(s) de frase corregido(s), máx {max(moved):.2f} s")
+    # reacomodar palabras de cada beat entre sus pausas
+    for i, b in enumerate(beats):
+        a0 = anchors[i - 1][1] if i > 0 else b["t_speech"]
+        a1 = anchors[i][0] if i < n - 1 else b["t_end"]
+        o0, o1 = b["t_speech"], b["t_end"]
+        if a1 - a0 < 0.2 or o1 - o0 < 0.05:
+            continue
+        f = lambda t: a0 + (t - o0) * (a1 - a0) / (o1 - o0)
+        for w in b["words"]:
+            w["t0"], w["t1"] = max(a0, min(a1, f(w["t0"]))), max(a0, min(a1, f(w["t1"])))
+        b["t_speech"], b["t_end"] = a0, a1
+    # estirar cada pausa entre frases hasta `pausa_frases`
+    P = float(guion.get("pausa_frases", 0.42))
+    if any((b.get("escena") or {}).get("tipo") == "presentador" for b in beats):
+        P = 0  # con avatar no se estira: los labios van pegados al audio original
+    cuts, shift, out, prev = [], 0.0, [], 0
+    for i, (a, b) in enumerate(anchors):
+        add = max(0.0, P - (b - a))
+        if add <= 0.005:
+            continue
+        mid = int((a + b) / 2 * SR)
+        out += [ext[prev:mid], np.zeros(int(add * SR), dtype=np.float32)]
+        prev = mid
+        cuts.append(((a + b) / 2, add))
+    out.append(ext[prev:])
+    if not cuts:
+        return ext
+    def sh(t):
+        return t + sum(add for c, add in cuts if t > c)
+    for b in beats:
+        b["t_speech"], b["t_end"] = sh(b["t_speech"]), sh(b["t_end"])
+        for w in b["words"]:
+            w["t0"], w["t1"] = sh(w["t0"]), sh(w["t1"])
+    return np.concatenate(out)
 
 
 EL_API = "https://api.elevenlabs.io/v1/text-to-speech/"
