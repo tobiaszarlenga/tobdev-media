@@ -255,11 +255,17 @@ def synth_external(guion, beats, path):
         return float(np.interp(t * SR / hop, ri, ej) * hop / SR)
 
     for b in beats:
+        b["_ref_dur"] = b["t_end"] - b["t_speech"]
         b["t_speech"] = m(b["t_speech"])
         b["t_end"] = m(b["t_end"])
         for w in b["words"]:
             w["t0"], w["t1"] = m(w["t0"]), m(w["t1"])
     ext = anclar_pausas(guion, beats, ext)
+    for i, b in enumerate(beats):  # control: una frase dicha mucho más rápido o lento que lo esperado suele ser balbuceo
+        ref_d, d = b.get("_ref_dur", 0), b["t_end"] - b["t_speech"]
+        if ref_d > 0.8 and not (0.6 <= d / ref_d <= 1.9):
+            print(f"AVISO voz: el beat {i + 1} dura {d:.1f} s y debería rondar {ref_d:.1f} s; puede estar mal dicho "
+                  f"(balbuceo o palabras comidas). Escuchalo y regenerá solo esa frase: «{b['words'][0]['cap']} {b['words'][1]['cap'] if len(b['words']) > 1 else ''}…»")
     total = len(ext) / SR + 0.1
     track = np.zeros(int((total + 3) * SR), dtype=np.float32)
     track[: len(ext)] = ext
@@ -301,6 +307,9 @@ def anclar_pausas(guion, beats, ext):
     for i in range(m_ - 1, -1, -1):
         sel[i] = j; j = back[i][j]
     anchors = [gaps[j] for j in sel]
+    if os.environ.get("REEL_DEBUG"):
+        for i, ((ga, gb), e) in enumerate(zip(anchors, est), 1):
+            print(f"ANCLA beat {i}: pausa {ga:.2f}-{gb:.2f} ({(gb - ga) * 1000:.0f} ms), estimado {e:.2f}")
     moved = [abs((a + b) / 2 - e) for (a, b), e in zip(anchors, est)]
     if max(moved) > 0.25:
         print(f"VOZ anclada a pausas reales: {sum(x > 0.25 for x in moved)} cambio(s) de frase corregido(s), máx {max(moved):.2f} s")
