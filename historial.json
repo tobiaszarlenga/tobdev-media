@@ -768,6 +768,31 @@
         "cierre"
       ],
       "voz": "kokoro"
+    },
+    {
+      "fecha": "2026-11-23",
+      "pilar": "tip",
+      "serie": "TIP #3",
+      "titulo": "/clear, /compact y /context: no arrastrar historia vieja en Claude Code",
+      "url_fuente": "https://code.claude.com/docs/en/commands",
+      "video": "videos/2026-11-23.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=8665024479713117005",
+      "acento": "#D97757",
+      "tema": "grilla",
+      "musica": "tech",
+      "escenas": [
+        "impacto",
+        "numero",
+        "terminal",
+        "triturar",
+        "chips",
+        "cerebro",
+        "prompt",
+        "anillo",
+        "balanza",
+        "cierre"
+      ],
+      "voz": "elevenlabs"
     }
   ]
 }
