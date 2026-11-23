@@ -1,0 +1,145 @@
+{
+ "etiqueta": "TIP #3",
+ "fuente": "Documentación oficial de Claude Code",
+ "acento": "#D97757",
+ "tema": "grilla",
+ "musica": "tech",
+ "voz_archivo": "/tmp/voz-2026-11-23.mp3",
+ "beats": [
+  {
+   "texto": "Si usás {Claude Code|Claude Code} para todo en la *misma sesión*, arrastrás *historia vieja*.",
+   "escena": {
+    "tipo": "impacto",
+    "logo": "claude",
+    "por_linea": 2
+   }
+  },
+  {
+   "texto": "Hay dos comandos para limpiar eso.",
+   "escena": {
+    "tipo": "numero",
+    "valor": 2,
+    "desde": 0,
+    "etiqueta": "*comandos* para limpiar el contexto",
+    "en": "dos"
+   }
+  },
+  {
+   "texto": "El primero, {/clear|barra clear}, arranca una conversación nueva, con el contexto *vacío*.",
+   "escena": {
+    "tipo": "terminal",
+    "titulo": "claude — ~/tienda-online",
+    "lineas": [
+     {
+      "tipo": "cmd",
+      "texto": "/clear",
+      "en": "primero"
+     },
+     {
+      "tipo": "out",
+      "texto": "Nueva conversación",
+      "en": "arranca"
+     },
+     {
+      "tipo": "ok",
+      "texto": "Contexto vacío",
+      "en": "vacío"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "La guía oficial lo recomienda entre tareas que no tienen nada que ver: así la siguiente *no paga* por el historial de la anterior.",
+   "escena": {
+    "tipo": "triturar",
+    "archivo": "sesion-anterior.txt",
+    "lineas": [
+     "Arreglar el login",
+     "Probar el pago",
+     "Cambiar los colores"
+    ],
+    "en": "siguiente",
+    "destino": "Contexto limpio"
+   }
+  },
+  {
+   "texto": "Si le ponés un nombre, después la *retomás* con {/resume|barra resum}.",
+   "escena": {
+    "tipo": "chips",
+    "estilo": "etiqueta",
+    "items": [
+     {
+      "texto": "/clear presupuestos",
+      "icono": "archivo",
+      "en": "nombre"
+     },
+     {
+      "texto": "/resume",
+      "icono": "flecha",
+      "en": "retomás"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "El segundo, {/compact|barra compact}, *resume* la conversación y libera espacio, sin cortar el hilo.",
+   "escena": {
+    "tipo": "cerebro",
+    "a": {
+     "titulo": "Conversación entera"
+    },
+    "b": {
+     "titulo": "Resumen"
+    },
+    "densidad": [
+     0.9,
+     0.35
+    ],
+    "en": "libera",
+    "etiqueta": "Mismo hilo, *menos contexto*"
+   }
+  },
+  {
+   "texto": "Y le podés decir en qué enfocarse: que conserve los cambios de la {API|a pe i} y los comandos de prueba.",
+   "escena": {
+    "tipo": "prompt",
+    "texto": "/compact conservá los cambios de la API y los comandos de prueba",
+    "etiqueta": "Claude Code",
+    "estado": "Compactando…"
+   }
+  },
+  {
+   "texto": "Con {/context|barra cóntext} ves cuánto contexto llevás usado, en una *grilla de colores*.",
+   "escena": {
+    "tipo": "anillo",
+    "valor": 38,
+    "desde": 0,
+    "etiqueta": "Contexto *usado*",
+    "en": "usado"
+   }
+  },
+  {
+   "texto": "La regla: tarea nueva, {/clear|barra clear}. Misma tarea, pero larga, {/compact|barra compact}.",
+   "escena": {
+    "tipo": "balanza",
+    "a": {
+     "texto": "/clear · tarea nueva",
+     "flecha": "empezar de cero"
+    },
+    "b": {
+     "texto": "/compact · misma tarea",
+     "flecha": "seguir con menos"
+    },
+    "en": "Misma",
+    "nota": "elegí según la tarea"
+   }
+  },
+  {
+   "texto": "Guardalo para tu próxima sesión, y seguí a {@tobdev.ia|tob dev} para más tips de {Claude|Claude}.",
+   "escena": {
+    "tipo": "cierre",
+    "sub": "Tips de Claude Code"
+   }
+  }
+ ]
+}
