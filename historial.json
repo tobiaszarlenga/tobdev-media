@@ -793,6 +793,33 @@
         "cierre"
       ],
       "voz": "elevenlabs"
+    },
+    {
+      "fecha": "2026-11-24",
+      "pilar": "noticia",
+      "serie": "24 NOV",
+      "titulo": "Anthropic lanzó Claude Ship (23 nov): Code Review, PR Steward y Claude Approvals revisan, arreglan y aprueban PRs de GitHub según una política del repo; beta para Team y Enterprise, con modo observación",
+      "url_fuente": "https://techcrunch.com/2026/11/23/anthropic-launches-claude-ship-letting-ai-agents-review-fix-and-approve-code-changes/",
+      "video": "videos/2026-11-24.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=3872680883318441136",
+      "acento": "#11BFD6",
+      "tema": "noche",
+      "musica": "urgente",
+      "escenas": [
+        "marcas",
+        "titular",
+        "bandeja",
+        "cursores",
+        "flujo",
+        "codigo",
+        "balanza",
+        "planes",
+        "glitch",
+        "interruptor",
+        "firma",
+        "cierre"
+      ],
+      "voz": "elevenlabs"
     }
   ]
 }
