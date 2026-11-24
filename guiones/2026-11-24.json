@@ -1,0 +1,239 @@
+{
+  "etiqueta": "24 NOV",
+  "fuente": "TechCrunch · Anthropic (docs de Claude Code)",
+  "acento": "#11BFD6",
+  "tema": "noche",
+  "musica": "urgente",
+  "transiciones": [
+    "flash",
+    "rise",
+    "wipe",
+    "zoom",
+    "slide",
+    "whip",
+    "swing",
+    "iris",
+    "flash",
+    "push",
+    "zoom"
+  ],
+  "beats": [
+    {
+      "texto": "Ahora {Claude|Claude} no solo escribe tu código. También lo *aprueba*.",
+      "escena": {
+        "tipo": "marcas",
+        "titulo": "Claude Ship",
+        "logos": [
+          {
+            "marca": "claude",
+            "texto": "Claude",
+            "estado": "Revisa y aprueba",
+            "ok": true,
+            "en": "Claude"
+          },
+          {
+            "marca": "github",
+            "texto": "GitHub",
+            "estado": "Pull requests",
+            "ok": true,
+            "en": "aprueba"
+          }
+        ],
+        "union": "flecha"
+      }
+    },
+    {
+      "texto": "Se llama {Claude Ship|Claude Ship}, y {Anthropic|Anthropic} lo lanzó el *veintitrés de noviembre*.",
+      "escena": {
+        "tipo": "titular",
+        "titulo": "Anthropic lanza *Claude Ship*: agentes que aprueban código",
+        "bajada": "Funciona sobre pull requests de GitHub",
+        "medio": "TechCrunch",
+        "fecha": "23 NOV 2026",
+        "logo": "anthropic",
+        "en": "veintitrés"
+      }
+    },
+    {
+      "texto": "Son tres agentes que trabajan sobre los *cambios* que tu equipo sube a {GitHub|guit jab}.",
+      "escena": {
+        "tipo": "bandeja",
+        "app": "Pull requests · tienda-demo",
+        "items": [
+          {
+            "de": "PR #212",
+            "asunto": "Arreglo del carrito",
+            "texto": "3 archivos cambiados",
+            "hora": "09:12",
+            "en": "tres"
+          },
+          {
+            "de": "PR #213",
+            "asunto": "Nuevo texto del footer",
+            "texto": "1 archivo cambiado",
+            "hora": "09:40",
+            "en": "cambios"
+          },
+          {
+            "de": "PR #214",
+            "asunto": "Cambio en el login",
+            "texto": "5 archivos cambiados",
+            "hora": "10:05",
+            "en": "equipo"
+          }
+        ],
+        "marcar": 2,
+        "sello": "EN REVISIÓN",
+        "en": "GitHub"
+      }
+    },
+    {
+      "texto": "El primero, {Code Review|coud riviú}, revisa cada cambio y deja comentados los *problemas*.",
+      "escena": {
+        "tipo": "cursores",
+        "personas": [
+          "Claude",
+          "Sofi"
+        ],
+        "comentario": "@Sofi esta consulta no valida el ID del usuario",
+        "en_comentario": "revisa",
+        "antes": "Cambio en el login",
+        "despues": "Cambio en el login · 1 problema",
+        "en_cambio": "problemas",
+        "aplicado": "Comentario publicado"
+      }
+    },
+    {
+      "texto": "El segundo, {PR Steward|pi ar stiuard}, arregla las pruebas que fallan y los conflictos. Pero *no aprueba* nada.",
+      "escena": {
+        "tipo": "flujo",
+        "entradas": [
+          {
+            "texto": "Pruebas en rojo",
+            "icono": "alerta",
+            "en": "pruebas"
+          },
+          {
+            "texto": "Conflictos",
+            "icono": "codigo",
+            "en": "conflictos"
+          },
+          {
+            "texto": "Comentarios de revisión",
+            "icono": "chat",
+            "en": "Pero"
+          }
+        ],
+        "salida": "Listo para que alguien lo apruebe",
+        "en": "aprueba"
+      }
+    },
+    {
+      "texto": "Y el tercero, {Claude Approvals|Claude aprúvals}, aprueba según *reglas* que tu equipo escribe en un archivo del proyecto.",
+      "escena": {
+        "tipo": "codigo",
+        "archivo": ".claude/approvals.yml",
+        "lineas": [
+          {
+            "texto": "version: 1",
+            "en": "tercero"
+          },
+          {
+            "texto": "mode: observe",
+            "en": "aprueba"
+          },
+          {
+            "texto": "# docs y textos: puede aprobar Claude",
+            "en": "reglas"
+          },
+          {
+            "texto": "# pagos y login: siempre una persona",
+            "en": "archivo",
+            "marcar": true
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Los cambios de rutina los puede aprobar solo. Los riesgosos van a una *persona*.",
+      "escena": {
+        "tipo": "balanza",
+        "a": {
+          "texto": "Rutina: aprueba Claude",
+          "flecha": "sube"
+        },
+        "b": {
+          "texto": "Riesgo: revisa una persona",
+          "flecha": "baja"
+        },
+        "en": "riesgosos",
+        "nota": "según la política de tu repo"
+      }
+    },
+    {
+      "texto": "Está en *beta*, para los planes {Team|tim} y {Enterprise|énterprais}, y solo en {GitHub|guit jab}.",
+      "escena": {
+        "tipo": "planes",
+        "planes": [
+          {
+            "nombre": "Team",
+            "precio": "Beta",
+            "detalle": "Repos de GitHub",
+            "en": "Team"
+          },
+          {
+            "nombre": "Enterprise",
+            "precio": "Beta",
+            "detalle": "Repos de GitHub",
+            "destacado": true,
+            "tag": "Incluido",
+            "en": "Enterprise"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Pero ojo. {Anthropic|Anthropic} avisa que puede *pasar por alto* errores y fallas de seguridad.",
+      "escena": {
+        "tipo": "glitch",
+        "por_linea": 2,
+        "etiqueta": "AVISO · ANTHROPIC"
+      }
+    },
+    {
+      "texto": "Por eso recomienda arrancar en *modo observación*: te muestra qué aprobaría, sin aprobar nada.",
+      "escena": {
+        "tipo": "interruptor",
+        "ruta": "Claude Approvals › Política",
+        "titulo": "Modo observación",
+        "sub": "Muestra qué decidiría, sin aprobar",
+        "desde": "off",
+        "en": "observación",
+        "nota": "Guardado"
+      }
+    },
+    {
+      "texto": "La última firma, mejor que sea tuya. ¿Le dejarías aprobar cambios a una {IA|inteligencia artificial}? Te leo en los *comentarios*.",
+      "escena": {
+        "tipo": "firma",
+        "titulo": "Cambio en el login",
+        "lineas": [
+          "Revisión de Claude: 1 problema",
+          "Pruebas: en verde"
+        ],
+        "etiqueta": "Aprobado por",
+        "nombre": "vos",
+        "en": "tuya"
+      }
+    },
+    {
+      "texto": "Seguí a {@tobdev.ia|tob dev} para las noticias de {IA|inteligencia artificial} que sirven.",
+      "escena": {
+        "tipo": "cierre",
+        "sub": "Noticias de IA que sirven",
+        "cta": "Seguí a @tobdev.ia"
+      }
+    }
+  ],
+  "voz_archivo": "/tmp/voz-2026-11-24.mp3"
+}
