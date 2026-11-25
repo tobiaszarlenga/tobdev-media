@@ -1,0 +1,166 @@
+{
+ "etiqueta": "PARA TODOS #6",
+ "fuente": "Skitka y Mosier, NASA Ames · Dratsch y otros, Radiology 2023",
+ "acento": "#5B7FE0",
+ "tema": "editorial",
+ "musica": "suspenso",
+ "transiciones": [
+  "rise",
+  "wipe",
+  "iris",
+  "swing",
+  "zoom",
+  "rise",
+  "wipe",
+  "iris"
+ ],
+ "voz_archivo": "/tmp/voz-2026-11-25.mp3",
+ "beats": [
+  {
+   "texto": "Cuando una máquina te sugiere algo, *dejás de mirar*. Y no es pereza: tiene nombre.",
+   "escena": {
+    "tipo": "retrato",
+    "archivo": "img/2026-11-25-pantalla.jpg",
+    "credito": "Ilustración generada con IA",
+    "parecido": {
+     "texto": "Confianza en la máquina",
+     "valor": 92,
+     "en": "sugiere"
+    },
+    "afinidad": {
+     "texto": "Atención propia",
+     "desde": 85,
+     "valor": 22,
+     "en": "mirar"
+    }
+   }
+  },
+  {
+   "texto": "El {GPS|ge pe ese} te dice que dobles, y doblás. Aunque veas que la calle *está cortada*.",
+   "escena": {
+    "tipo": "imagen",
+    "archivo": "img/2026-11-25-gps.jpg",
+    "credito": "Ilustración generada con IA",
+    "movimiento": "acercar",
+    "en": "cortada"
+   }
+  },
+  {
+   "texto": "Se llama *sesgo de automatización*: le creemos a la máquina, aunque lo que vemos diga otra cosa.",
+   "escena": {
+    "tipo": "balanza",
+    "a": {
+     "texto": "Lo que sugiere la máquina",
+     "flecha": "↓"
+    },
+    "b": {
+     "texto": "Lo que ves con tus ojos",
+     "flecha": "↑"
+    },
+    "en": "creemos",
+    "nota": "sesgo de automatización"
+   }
+  },
+  {
+   "texto": "En un estudio para la {NASA|nasa}, sin ayuda la gente acertó el *noventa y siete por ciento*. Con una ayuda que esa vez falló, el sesenta y cinco.",
+   "escena": {
+    "tipo": "ranking",
+    "titulo": "Aciertos en los mismos eventos",
+    "filas": [
+     {
+      "texto": "Sin ayuda",
+      "valor": 97,
+      "en": "acertó"
+     },
+     {
+      "texto": "Con ayuda que falló",
+      "valor": 65,
+      "en": "falló"
+     }
+    ],
+    "marcar": 1,
+    "escala": "100",
+    "nota": "Skitka y Mosier · NASA Ames"
+   }
+  },
+  {
+   "texto": "En dos mil veintitrés, veintisiete radiólogos leyeron mamografías con sugerencias de una {IA|inteligencia artificial}, algunas *mal a propósito*.",
+   "escena": {
+    "tipo": "particulas",
+    "valor": 27,
+    "sufijo": "",
+    "etiqueta": "radiólogos · 50 mamografías",
+    "en": "radiólogos"
+   }
+  },
+  {
+   "texto": "Con la sugerencia correcta, los menos experimentados acertaban casi el ochenta por ciento. Con la incorrecta, *menos del veinte*.",
+   "escena": {
+    "tipo": "cerebro",
+    "a": {
+     "titulo": "Sugerencia correcta"
+    },
+    "b": {
+     "titulo": "Sugerencia incorrecta"
+    },
+    "densidad": [
+     0.8,
+     0.18
+    ],
+    "en": "incorrecta",
+    "etiqueta": "*menos del 20%* de aciertos"
+   }
+  },
+  {
+   "texto": "Y los más experimentados, con más de quince años en promedio, cayeron del ochenta y dos al *cuarenta y cinco por ciento*.",
+   "escena": {
+    "tipo": "grafico",
+    "titulo": "Aciertos según la sugerencia",
+    "barras": [
+     {
+      "label": "Novatos · bien",
+      "valor": 80,
+      "texto": "~80%"
+     },
+     {
+      "label": "Novatos · mal",
+      "valor": 19,
+      "texto": "<20%"
+     },
+     {
+      "label": "Expertos · bien",
+      "valor": 82,
+      "texto": "82%"
+     },
+     {
+      "label": "Expertos · mal",
+      "valor": 45.5,
+      "texto": "45,5%"
+     }
+    ],
+    "marcar": 3,
+    "en": "cuarenta"
+   }
+  },
+  {
+   "texto": "La máquina no es el problema. El problema es *dejar de revisar*. Que la {IA|inteligencia artificial} proponga; la última mirada, tuya.",
+   "escena": {
+    "tipo": "firma",
+    "titulo": "Antes de aceptar",
+    "lineas": [
+     "La IA propone",
+     "Vos lo comparás con lo que ves"
+    ],
+    "etiqueta": "Revisado por",
+    "nombre": "vos",
+    "en": "tuya"
+   }
+  },
+  {
+   "texto": "¿Alguna vez seguiste al {GPS|ge pe ese} *sabiendo que estaba mal*? Contámelo, y seguí a {@tobdev.ia|tob dev}.",
+   "escena": {
+    "tipo": "cierre"
+   }
+  }
+ ]
+}
