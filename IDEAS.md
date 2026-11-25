@@ -61,7 +61,7 @@ Formatos y escenas en `plantilla/ESCENAS.md` → "Estilo marca". Proyectos y lo 
 
 - [x] El valle inquietante (Mori, 1970) y el riesgo de usar la IA para todo (MIT "Your Brain on ChatGPT"; Microsoft Research, CHI 2025) (2026-10-29, `guiones/2026-10-29-valle.json`, lo sube Tob a mano)
 - [x] Efecto ELIZA (1966): por qué le atribuimos entendimiento a un programa que solo devuelve patrones, y qué pasa cuando le contamos la vida a un chatbot (2026-11-04, `guiones/2026-11-04.json`)
-- [ ] Sesgo de automatización: cuando la máquina sugiere, dejamos de mirar (verificar: estudios en aviación o medicina; ejemplo de GPS)
+- [x] Sesgo de automatización: cuando la máquina sugiere, dejamos de mirar (2026-11-25, `guiones/2026-11-25.json`: Skitka y Mosier, NASA Ames; Dratsch y otros, Radiology 2023; ejemplo del GPS)
 - [ ] La paradoja de la automatización (Bainbridge, 1983): cuanto más automatizás, más importante es el humano que queda (verificar)
 - [ ] Ley de Goodhart: cuando la métrica se vuelve el objetivo, deja de servir (y qué pasa con los textos "optimizados" por IA) (verificar)
 - [ ] Efecto Google (Sparrow, 2011): recordamos dónde está la información, no la información; ¿qué pasa ahora con la IA? (verificar)

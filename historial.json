@@ -820,6 +820,30 @@
         "cierre"
       ],
       "voz": "elevenlabs"
+    },
+    {
+      "fecha": "2026-11-25",
+      "pilar": "para_todos",
+      "serie": "PARA TODOS #6",
+      "titulo": "Sesgo de automatización: cuando la máquina sugiere, dejamos de mirar (NASA Ames: 97% vs 65%; Radiology 2023: radiólogos con sugerencias de IA incorrectas)",
+      "url_fuente": "https://www.rsna.org/news/2023/may/ai-bias-may-impair-accuracy · https://ntrs.nasa.gov/api/citations/19980048379/downloads/19980048379.pdf",
+      "video": "videos/2026-11-25.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=3715139176152909120",
+      "acento": "#5B7FE0",
+      "tema": "editorial",
+      "musica": "suspenso",
+      "escenas": [
+        "retrato",
+        "imagen",
+        "balanza",
+        "ranking",
+        "particulas",
+        "cerebro",
+        "grafico",
+        "firma",
+        "cierre"
+      ],
+      "voz": "elevenlabs"
     }
   ]
 }
