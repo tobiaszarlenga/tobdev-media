@@ -844,6 +844,32 @@
         "cierre"
       ],
       "voz": "elevenlabs"
+    },
+    {
+      "fecha": "2026-11-26",
+      "pilar": "uso",
+      "serie": "IA EN TU NEGOCIO #6",
+      "titulo": "Facturas del mes en PDF a un Excel con Claude (crear y editar archivos)",
+      "url_fuente": "https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude",
+      "video": "videos/2026-11-26.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=4423320236404785570",
+      "acento": "#F59E0B",
+      "tema": "poster",
+      "musica": "retro",
+      "escenas": [
+        "impacto",
+        "triturar",
+        "tabla",
+        "grafico",
+        "interruptor",
+        "chips",
+        "diff",
+        "numero",
+        "censura",
+        "comparacion",
+        "cierre"
+      ],
+      "voz": "elevenlabs"
     }
   ]
 }

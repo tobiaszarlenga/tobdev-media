@@ -74,5 +74,5 @@ Formatos y escenas en `plantilla/ESCENAS.md` → "Estilo marca". Proyectos y lo 
 - [x] Responder reseñas de Google con el tono del negocio (2026-11-05)
 - [x] Resumir audios largos de clientes o proveedores (2026-11-16; lunes de tip sin acceso a la doc oficial: transcripciones de WhatsApp)
 - [x] Escribir descripciones de productos para la tienda online (2026-11-09)
-- [ ] Ordenar facturas y gastos del mes
+- [x] Ordenar facturas y gastos del mes (2026-11-26; jueves sin noticia verificable: facturas en PDF a Excel con Claude)
 - [ ] Detectar las preguntas que más te hacen y armar las respuestas frecuentes
