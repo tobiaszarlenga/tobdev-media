@@ -1,0 +1,227 @@
+{
+  "etiqueta": "IA EN TU NEGOCIO #6",
+  "fuente": "Claude · centro de ayuda",
+  "acento": "#F59E0B",
+  "tema": "poster",
+  "musica": "retro",
+  "voz_archivo": "/tmp/voz-2026-11-26.mp3",
+  "beats": [
+    {
+      "texto": "Fin de mes. *Cuarenta facturas* en {PDF|pe de efe}, y cero ganas de tipearlas.",
+      "escena": {
+        "tipo": "impacto",
+        "por_linea": 2
+      }
+    },
+    {
+      "texto": "Se las subís a {Claude|Claude}, y le pedís que saque los datos de cada una.",
+      "escena": {
+        "tipo": "triturar",
+        "archivo": "factura_0031.pdf",
+        "lineas": [
+          "Distribuidora Demo SRL",
+          "Fecha: 03/11/2026",
+          "Concepto: insumos",
+          "Total: $48.200"
+        ],
+        "en": "datos",
+        "destino": "Claude",
+        "contador": 40,
+        "unidad": "facturas"
+      }
+    },
+    {
+      "texto": "Fecha, proveedor, monto y categoría, en un *{Excel|éxcel}* con fórmulas y formato.",
+      "escena": {
+        "tipo": "tabla",
+        "titulo": "gastos_noviembre.xlsx",
+        "columnas": [
+          "Fecha",
+          "Proveedor",
+          "Monto"
+        ],
+        "filas": [
+          [
+            "03/11",
+            "Distribuidora Demo",
+            "$48.200"
+          ],
+          [
+            "07/11",
+            "Gas del Barrio",
+            "$12.900"
+          ],
+          [
+            "12/11",
+            "Fletes Ruta 9",
+            "$31.500"
+          ],
+          [
+            "18/11",
+            "Librería Centro",
+            "$6.300"
+          ]
+        ],
+        "marcar": 0,
+        "en": "fórmulas"
+      }
+    },
+    {
+      "texto": "Y si le pedís un gráfico, ves de un vistazo en qué se fue la plata del mes.",
+      "escena": {
+        "tipo": "grafico",
+        "titulo": "Gastos de noviembre",
+        "barras": [
+          {
+            "label": "Insumos",
+            "valor": 48,
+            "texto": "$48.200"
+          },
+          {
+            "label": "Fletes",
+            "valor": 31,
+            "texto": "$31.500"
+          },
+          {
+            "label": "Servicios",
+            "valor": 13,
+            "texto": "$12.900"
+          },
+          {
+            "label": "Librería",
+            "valor": 6,
+            "texto": "$6.300"
+          }
+        ],
+        "marcar": 0,
+        "en": "plata"
+      }
+    },
+    {
+      "texto": "Para que funcione, en Ajustes, Capacidades, activás *crear y editar archivos*.",
+      "escena": {
+        "tipo": "interruptor",
+        "ruta": "Settings › Capabilities",
+        "titulo": "Create and edit files",
+        "sub": "Excel, Word, PowerPoint y PDF",
+        "desde": "off",
+        "en": "activás",
+        "nota": "Guardado"
+      }
+    },
+    {
+      "texto": "Está en todos los planes, incluso el *gratis*, en la {web|ueb}, la compu y el celular.",
+      "escena": {
+        "tipo": "chips",
+        "estilo": "etiqueta",
+        "items": [
+          {
+            "texto": "Plan gratis",
+            "icono": "check",
+            "en": "gratis"
+          },
+          {
+            "texto": "Web",
+            "icono": "globo",
+            "en": "web"
+          },
+          {
+            "texto": "Compu",
+            "icono": "chip",
+            "en": "compu"
+          },
+          {
+            "texto": "Celular",
+            "icono": "telefono",
+            "en": "celular"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Eso sí: *revisá* los totales antes de mandárselos a tu contador. Se puede equivocar.",
+      "escena": {
+        "tipo": "diff",
+        "titulo_a": "La factura",
+        "titulo_b": "La planilla",
+        "lineas": [
+          {
+            "a": "Proveedor: Distribuidora Demo",
+            "b": "Proveedor: Distribuidora Demo",
+            "en": "revisá"
+          },
+          {
+            "a": "Total: $48.200",
+            "b": "Total: $42.800",
+            "en": "totales"
+          }
+        ]
+      }
+    },
+    {
+      "texto": "Y cada archivo puede pesar hasta *treinta megas*.",
+      "escena": {
+        "tipo": "numero",
+        "valor": 30,
+        "sufijo": " MB",
+        "etiqueta": "máximo por *archivo*",
+        "en": "megas"
+      }
+    },
+    {
+      "texto": "Antes de subirlas, tapá los datos que no quieras compartir.",
+      "escena": {
+        "tipo": "censura",
+        "titulo": "Antes de subir",
+        "archivo": "factura_0031.pdf",
+        "lineas": [
+          {
+            "texto": "Cliente: [[Juan Pérez]]",
+            "en": "tapá"
+          },
+          {
+            "texto": "Teléfono: [[381 555-0142]]",
+            "en": "datos"
+          },
+          {
+            "texto": "Total: $48.200",
+            "en": "quieras"
+          }
+        ],
+        "sello": "LISTA PARA SUBIR",
+        "en": "compartir"
+      }
+    },
+    {
+      "texto": "¿Las seguís tipeando a mano? Contame en los comentarios cómo lo hacés hoy.",
+      "escena": {
+        "tipo": "comparacion",
+        "antes": {
+          "titulo": "A mano",
+          "items": [
+            "Tipear factura por factura",
+            "Sumar con calculadora"
+          ],
+          "icono": "reloj",
+          "en": "mano"
+        },
+        "despues": {
+          "titulo": "Con Claude",
+          "items": [
+            "Subir los PDF",
+            "Revisar la planilla"
+          ],
+          "logo": "claude",
+          "en": "comentarios"
+        }
+      }
+    },
+    {
+      "texto": "Seguí a {@tobdev.ia|tob dev} para más {IA|inteligencia artificial} en tu negocio.",
+      "escena": {
+        "tipo": "cierre",
+        "sub": "IA en tu negocio"
+      }
+    }
+  ]
+}
