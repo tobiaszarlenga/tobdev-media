@@ -1,0 +1,229 @@
+{
+ "etiqueta": "TOBDEV #6",
+ "estilo": "marca",
+ "tema": "claro",
+ "fondo": "liso",
+ "acento": "#22C55E",
+ "musica": "tech",
+ "fuente": "",
+ "transiciones": [
+  "whip",
+  "zoom",
+  "flash",
+  "rise",
+  "swing",
+  "slide",
+  "iris",
+  "push",
+  "zoom"
+ ],
+ "voz_archivo": "/tmp/voz-2026-11-27.mp3",
+ "beats": [
+  {
+   "texto": "Tu obra se sigue en un {Excel|éxel} que *solo entiende* una persona.",
+   "escena": {
+    "tipo": "caos",
+    "foto": "../portfolio/fotos/estres-laptop.jpg",
+    "credito": "Foto: Vitaly Gariev · Unsplash",
+    "apps": [
+     {
+      "icono": "lista",
+      "color": "#1D6F42",
+      "n": "!",
+      "en": "Excel"
+     },
+     {
+      "logo": "whatsapp",
+      "n": 17,
+      "en": "obra"
+     },
+     {
+      "logo": "gmail",
+      "n": 4,
+      "en": "sigue"
+     },
+     {
+      "icono": "archivo",
+      "color": "#E5484D",
+      "n": 3,
+      "en": "persona"
+     }
+    ],
+    "notis": [
+     {
+      "texto": "avance_obra_FINAL_v4.xlsx",
+      "tono": "rojo",
+      "en": "Excel"
+     },
+     {
+      "texto": "¿Lote 14 al 60 o al 70?",
+      "tono": "amarillo",
+      "en": "solo"
+     },
+     {
+      "texto": "¿Cuándo cobro la quincena?",
+      "tono": "neutro",
+      "en": "entiende"
+     },
+     {
+      "texto": "Fórmula rota en fila 212",
+      "tono": "rojo",
+      "en": "persona"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y a fin de mes, con ese archivo, se liquida a *cada contratista*.",
+   "escena": {
+    "tipo": "calendario",
+    "mes": "Noviembre",
+    "anio": 2026,
+    "inicio": 6,
+    "cantidad": 30,
+    "marcas": [
+     {
+      "dia": 30,
+      "texto": "Liquidación",
+      "en": "mes"
+     },
+     {
+      "dia": 27,
+      "texto": "Revisar Excel",
+      "en": "archivo"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Por eso, en {TobDev|tob dev}, hice el *Certificador* de Obras.",
+   "escena": {
+    "tipo": "logo",
+    "fondo": "navy",
+    "sub": "Sistemas a medida",
+    "lema": "PÁGINAS · SISTEMAS · IA"
+   }
+  },
+  {
+   "texto": "Un sistema para constructoras de viviendas en serie: el avance, *por lote* y por rubro.",
+   "escena": {
+    "tipo": "sitio",
+    "url": "certificador · obra demo",
+    "nombre": "Certificador de Obras",
+    "rubro": "Sistema · Constructoras",
+    "escritorio": "../portfolio/capturas/certificador/reporte.jpg",
+    "celular": "../portfolio/capturas/certificador/celular-medir.jpg",
+    "chips": [
+     {
+      "texto": "Avance por lote",
+      "en": "lote"
+     },
+     {
+      "texto": "Avance por rubro",
+      "en": "rubro"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "En la obra, el avance se dicta *por voz*: revoque al setenta.",
+   "escena": {
+    "tipo": "onda",
+    "titulo": "Nota de voz · Lote 14",
+    "duracion": "0:03",
+    "marcar": [
+     0.15,
+     0.8
+    ],
+    "etiquetas": [
+     {
+      "texto": "Revoque",
+      "en": "revoque",
+      "ok": true
+     },
+     {
+      "texto": "70 %",
+      "en": "setenta",
+      "ok": true
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Y se carga desde el celular, aunque *no haya señal*.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "celular",
+    "nombre": "Certificador de Obras",
+    "rubro": "Carga en la obra",
+    "celular": [
+     {
+      "img": "../portfolio/capturas/certificador/celular-medir.jpg",
+      "scroll": 0
+     }
+    ],
+    "chips": [
+     {
+      "texto": "Carga por voz",
+      "en": "carga"
+     },
+     {
+      "texto": "Funciona sin señal",
+      "en": "señal"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "Si el lote estaba al cuarenta, certifica *solo la diferencia*: nada se cobra dos veces.",
+   "escena": {
+    "tipo": "anillo",
+    "valor": 70,
+    "desde": 40,
+    "etiqueta": "Se certifica *solo la diferencia*",
+    "en": "diferencia"
+   }
+  },
+  {
+   "texto": "Con precios congelados por fecha, la retención del cinco por ciento, y el *certificado* listo en {PDF|pe de efe}.",
+   "escena": {
+    "tipo": "firma",
+    "titulo": "Certificado de obra · Lote 14",
+    "lineas": [
+     "Precios congelados por fecha",
+     "Retención del 5 %",
+     "Solo la diferencia del período"
+    ],
+    "etiqueta": "Aprobado por",
+    "nombre": "Jefe de obra",
+    "en": "certificado"
+   }
+  },
+  {
+   "texto": "Ya está en producción, y se está validando con *usuarios reales*.",
+   "escena": {
+    "tipo": "sitio",
+    "layout": "escritorio",
+    "url": "certificador · obra demo",
+    "nombre": "Certificador de Obras",
+    "rubro": "Certificado en PDF",
+    "escritorio": "../portfolio/capturas/certificador/certificado.jpg",
+    "chips": [
+     {
+      "texto": "Certificado en PDF",
+      "en": "producción"
+     }
+    ]
+   }
+  },
+  {
+   "texto": "¿Tu empresa todavía depende de un {Excel|éxel}? Escribime *sistema*, y vemos el tuyo. Seguí a {@tobdev.ia|tob dev}.",
+   "escena": {
+    "tipo": "cierre",
+    "sub": "Sistemas a medida para tu negocio",
+    "cta": "Escribime “SISTEMA”",
+    "lema": "PÁGINAS · SISTEMAS · IA"
+   }
+  }
+ ]
+}
