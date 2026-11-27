@@ -54,7 +54,7 @@ Formatos y escenas en `plantilla/ESCENAS.md` → "Estilo marca". Proyectos y lo 
 - [ ] Caso real: Certificador de Obras, el medidor dicta "revoque al 70" desde el celular y se carga aunque no haya señal (sitio con `celular-medir`, chips "Carga por voz" / "Funciona sin señal")
 - [ ] Suspenso: un dedo a punto de tocar "Inscribí tu equipo" (Torneo JOGO) y la inscripción que llega por WhatsApp
 - [ ] Problema → trabajos: "Tu negocio vive en Instagram y nadie encuentra el precio" → carrusel de páginas con carta, catálogo y botón de WhatsApp (Casa Pan, El Gordo Burger, D12tinto, Malala)
-- [ ] Problema → marca: "Tu obra se sigue en un Excel que solo entiende una persona" → Certificador (planilla → logo → sitio)
+- [x] Problema → marca: "Tu obra se sigue en un Excel que solo entiende una persona" → Certificador (planilla → logo → sitio) (2026-11-27, `guiones/2026-11-27.json`: caos → calendario → logo → sitio, sin `planilla` por el bug)
 - [ ] Rubros: "¿Tenés una ortopedia, un laboratorio o una marca de ropa?" → un sitio por rubro con scroll (Férulas Tuc, Infinity Labs, D12tinto)
 
 ## ensayo (miércoles por medio) — ideas con nombre propio, formato ensayo (ver CONTENIDO.md)

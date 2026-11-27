@@ -870,6 +870,31 @@
         "cierre"
       ],
       "voz": "elevenlabs"
+    },
+    {
+      "fecha": "2026-11-27",
+      "pilar": "marca",
+      "serie": "TOBDEV #6",
+      "titulo": "Problema → marca: tu obra se sigue en un Excel que solo entiende una persona → Certificador de Obras (carga por voz, sin señal, solo la diferencia, certificado en PDF)",
+      "url_fuente": "portfolio/sitios.json",
+      "video": "videos/2026-11-27.mp4",
+      "metricool": "https://app.metricool.com/planner/calendar?blogId=7428605&openWithPostUuid=2922184843940808408",
+      "acento": "#22C55E",
+      "tema": "claro",
+      "musica": "tech",
+      "escenas": [
+        "caos",
+        "calendario",
+        "logo",
+        "sitio",
+        "onda",
+        "sitio",
+        "anillo",
+        "firma",
+        "sitio",
+        "cierre"
+      ],
+      "voz": "elevenlabs"
     }
   ]
 }
